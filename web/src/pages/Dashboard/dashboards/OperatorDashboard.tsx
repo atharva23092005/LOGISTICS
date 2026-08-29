@@ -2,7 +2,8 @@ import { useState, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
   Truck, AlertTriangle, Clock, CheckCircle, Navigation, Zap,
-  CloudRain, Map, BarChart3, Shield, Cpu, RefreshCw, Layers, Compass
+  CloudRain, Map, BarChart3, Shield, Cpu, RefreshCw, Layers, Compass,
+  HeartPulse, Fuel, Package, Droplets, Wheat, X, Award, Wrench
 } from 'lucide-react'
 import { toast } from 'sonner'
 import { KpiCard }           from '@/components/cards/KpiCard'
@@ -17,13 +18,14 @@ import { Button }  from '@/components/ui/button'
 import { Badge }   from '@/components/ui/badge'
 import { Tabs }    from '@/components/ui/tabs'
 import { Modal }   from '@/components/ui/modal'
+import { WeatherIcon } from '@/components/ui/WeatherIcon'
+import { cn } from '@/utils/cn'
 import { useVehicleStore } from '@/stores/vehicleStore'
 import { useAlertStore }   from '@/stores/alertStore'
 import { useMapStore }     from '@/stores/mapStore'
 import { useAppStore }     from '@/stores/appStore'
 import { mockWeather }     from '@/mock/weather'
 import { mockDistricts }   from '@/mock/districts'
-import { weatherIcon }     from '@/utils/format'
 import type { LogisticsAlert, Vehicle } from '@/types'
 
 const selVehicles  = (s: ReturnType<typeof useVehicleStore.getState>) => s.vehicles
@@ -107,7 +109,7 @@ export function OperatorDashboard() {
 
   const executeDispatch = () => {
     setDispatchModal(false)
-    toast.success(`🚛 Convoy of ${dispatchForm.vehiclesCount} vehicles dispatched!`, {
+    toast.success(`Convoy of ${dispatchForm.vehiclesCount} vehicles dispatched!`, {
       description: `${dispatchForm.cargo} routed to ${dispatchForm.destination} via ${dispatchForm.corridor}.`
     })
   }
@@ -274,7 +276,7 @@ export function OperatorDashboard() {
                   <div key={w.district} className="app-card p-2.5 text-xs">
                     <div className="flex items-center justify-between mb-1.5">
                       <span className="font-semibold text-text">{w.district}</span>
-                      <span>{weatherIcon(w.condition)}</span>
+                      <WeatherIcon condition={w.condition} className="h-4 w-4" />
                     </div>
                     <div className="grid grid-cols-2 gap-x-3 gap-y-0.5 text-2xs">
                       <span className="text-text-dim">Rain</span>
@@ -301,27 +303,6 @@ export function OperatorDashboard() {
             onAlertClick={handleMapAlert}
           />
           <LayerControl />
-
-          {/* Floating Selected Vehicle Card */}
-          {selectedV && (
-            <div className="absolute top-4 left-1/2 -translate-x-1/2 w-full max-w-sm px-3 z-20 animate-scale-in">
-              <div className="surface-elevated rounded-xl px-4 py-3 flex items-center justify-between gap-4 shadow-modal border border-border">
-                <span className="text-xl p-1 rounded-lg bg-surface-2">
-                  {selectedV.type === 'ambulance' ? '🚑' : selectedV.type === 'tanker' ? '⛽' : '🚛'}
-                </span>
-                <div className="flex-1 min-w-0">
-                  <div className="text-xs font-bold font-mono text-text truncate">{selectedV.registrationNo}</div>
-                  <div className="text-2xs text-text-muted truncate">{selectedV.cargo} • {selectedV.driver}</div>
-                </div>
-                <div className="flex items-center gap-1.5 flex-shrink-0">
-                  <Badge variant={selectedV.status === 'on_route' ? 'success' : selectedV.status === 'delayed' ? 'warning' : 'danger'}>
-                    {selectedV.status.replace('_', ' ').toUpperCase()}
-                  </Badge>
-                  <Button size="icon-sm" variant="ghost" onClick={() => { setSelectedV(null); selectVehicle(null) }}>✕</Button>
-                </div>
-              </div>
-            </div>
-          )}
 
           {/* Bottom Telemetry Bar */}
           <div className="absolute bottom-0 left-0 right-0 flex items-center justify-center gap-4 md:gap-8 px-4 py-2.5 glass border-t border-border/40 text-2xs z-10">
@@ -375,18 +356,21 @@ export function OperatorDashboard() {
                   <Shield className="h-3.5 w-3.5 text-primary" /> Emergency Priority Queue
                 </div>
                 {[
-                  { icon: '🏥', label: 'Medical Supplies', count: vehicles.filter(v => v.cargoCategory === 'medical').length, c: 'text-danger' },
-                  { icon: '🌾', label: 'Food Grains', count: vehicles.filter(v => v.cargoCategory === 'food').length, c: 'text-warning' },
-                  { icon: '💧', label: 'Water Purification', count: vehicles.filter(v => v.cargoCategory === 'water').length, c: 'text-info' },
-                  { icon: '📦', label: 'Rescue & Tools', count: vehicles.filter(v => v.cargoCategory === 'other').length, c: 'text-text-muted' },
-                ].map((p, i) => (
-                  <div key={p.label} className="flex items-center gap-2 py-2 border-b border-border/50 last:border-0 text-xs">
-                    <span className="font-bold text-text-dim w-4">#{i + 1}</span>
-                    <span>{p.icon}</span>
-                    <span className={`font-semibold flex-1 ${p.c}`}>{p.label}</span>
-                    <span className="font-bold text-text">{p.count} units</span>
-                  </div>
-                ))}
+                  { icon: HeartPulse, label: 'Medical Supplies', count: vehicles.filter(v => v.cargoCategory === 'medical').length, c: 'text-danger' },
+                  { icon: Wheat, label: 'Food Grains', count: vehicles.filter(v => v.cargoCategory === 'food').length, c: 'text-warning' },
+                  { icon: Droplets, label: 'Water Purification', count: vehicles.filter(v => v.cargoCategory === 'water').length, c: 'text-info' },
+                  { icon: Package, label: 'Rescue & Tools', count: vehicles.filter(v => v.cargoCategory === 'other').length, c: 'text-text-muted' },
+                ].map((p, i) => {
+                  const PIcon = p.icon
+                  return (
+                    <div key={p.label} className="flex items-center gap-2.5 py-2 border-b border-border/50 last:border-0 text-xs">
+                      <span className="font-bold text-text-dim w-4">#{i + 1}</span>
+                      <PIcon className={cn('h-3.5 w-3.5', p.c)} />
+                      <span className={cn('font-semibold flex-1', p.c)}>{p.label}</span>
+                      <span className="font-bold text-text tabular-nums">{p.count} units</span>
+                    </div>
+                  )
+                })}
               </div>
 
               {emergencyVehicles.filter(v => v.status === 'stopped').length > 0 && (
@@ -447,9 +431,12 @@ export function OperatorDashboard() {
         size="sm"
       >
         <div className="space-y-4">
-          <div className="p-3 rounded-xl bg-success/10 border border-success/25 text-xs text-text-muted">
-            <span className="font-semibold text-success">🏆 AI Recommendation: </span>
-            Dispatch medical convoy via NH-27 safe corridor with priority route clearance.
+          <div className="p-3 rounded-xl bg-success/10 border border-success/25 text-xs text-text-muted flex items-start gap-2">
+            <Award className="h-4 w-4 text-success flex-shrink-0 mt-0.5" />
+            <div>
+              <span className="font-semibold text-success">AI Recommendation: </span>
+              Dispatch medical convoy via NH-27 safe corridor with priority route clearance.
+            </div>
           </div>
 
           <div className="space-y-2.5 text-xs">
@@ -486,9 +473,9 @@ export function OperatorDashboard() {
                 value={dispatchForm.cargo}
                 onChange={(e) => setDispatchForm({ ...dispatchForm, cargo: e.target.value })}
               >
-                <option value="Medical Supplies">🏥 Medical Supplies & Blood Bank</option>
-                <option value="Food & Rations">🌾 Food Grains & Drinking Water</option>
-                <option value="Rescue Equipment">🛠 Rescue Gear & Power Generators</option>
+                <option value="Medical Supplies">Medical Supplies & Blood Bank</option>
+                <option value="Food & Rations">Food Grains & Drinking Water</option>
+                <option value="Rescue Equipment">Rescue Gear & Power Generators</option>
               </select>
             </div>
 

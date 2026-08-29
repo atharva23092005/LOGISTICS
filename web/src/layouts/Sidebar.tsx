@@ -2,7 +2,7 @@ import { NavLink, useLocation } from 'react-router-dom'
 import {
   LayoutDashboard, Map, Route, Truck, Bell, BarChart3,
   AlertOctagon, Settings, ChevronLeft, ChevronRight,
-  Zap, Radio, X,
+  Zap, Radio, X, PanelLeftClose, PanelLeftOpen, PanelLeft
 } from 'lucide-react'
 import { cn } from '@/utils/cn'
 import { useAppStore }   from '@/stores/appStore'
@@ -69,12 +69,16 @@ export function Sidebar({ onMobileClose }: SidebarProps) {
     )}>
       {/* ── Logo ─────────────────────────────────────────────────────────── */}
       <div className={cn(
-        'flex items-center h-topbar flex-shrink-0 border-b border-border px-3 gap-3',
+        'flex items-center h-topbar flex-shrink-0 border-b border-border px-3 gap-2.5',
         collapsed && 'lg:justify-center lg:px-0'
       )}>
         {/* Logo mark */}
-        <div className="flex-shrink-0">
-          <div className="h-8 w-8 rounded-lg bg-primary/15 border border-primary/40 flex items-center justify-center text-primary">
+        <div
+          className="flex-shrink-0 cursor-pointer"
+          onClick={() => collapsed && setSidebarCollapsed(false)}
+          title={collapsed ? "Click to expand sidebar" : undefined}
+        >
+          <div className="h-8 w-8 rounded-lg bg-primary/15 border border-primary/40 flex items-center justify-center text-primary hover:bg-primary/25 transition-colors">
             <Zap className="h-4 w-4" />
           </div>
         </div>
@@ -84,6 +88,19 @@ export function Sidebar({ onMobileClose }: SidebarProps) {
             <div className="text-xs font-bold text-text tracking-tight leading-tight">NER LOGISTICS</div>
             <div className="text-2xs text-text-subtle leading-tight">Intelligence Platform</div>
           </div>
+        )}
+
+        {/* Desktop Header Collapse Button */}
+        {!collapsed && (
+          <Tooltip content="Collapse Sidebar (Ctrl+B)" side="right">
+            <button
+              onClick={() => setSidebarCollapsed(true)}
+              className="hidden lg:flex p-1.5 rounded-md text-text-muted hover:text-white hover:bg-surface-2 transition-colors ml-auto flex-shrink-0"
+              title="Collapse sidebar"
+            >
+              <PanelLeftClose className="h-4 w-4" />
+            </button>
+          </Tooltip>
         )}
 
         {/* Mobile close */}
@@ -174,18 +191,29 @@ export function Sidebar({ onMobileClose }: SidebarProps) {
         )}
 
         {/* Collapse toggle — desktop only */}
-        <button
-          onClick={() => setSidebarCollapsed(!collapsed)}
-          className="nav-item w-full hidden lg:flex"
-        >
-          {collapsed
-            ? <ChevronRight className="h-4 w-4 text-text-muted mx-auto" />
-            : <>
-                <ChevronLeft className="h-4 w-4 text-text-muted flex-shrink-0" />
-                <span className="text-sm text-text-muted">Collapse</span>
-              </>
-          }
-        </button>
+        {collapsed ? (
+          <Tooltip content="Expand Sidebar (Ctrl+B)" side="right">
+            <button
+              onClick={() => setSidebarCollapsed(false)}
+              className="nav-item w-full hidden lg:flex items-center justify-center p-2 rounded-lg hover:bg-surface-2 text-text-muted hover:text-white transition-colors"
+              title="Expand sidebar (Ctrl+B)"
+            >
+              <PanelLeftOpen className="h-4 w-4 text-primary" />
+            </button>
+          </Tooltip>
+        ) : (
+          <button
+            onClick={() => setSidebarCollapsed(true)}
+            className="nav-item w-full hidden lg:flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-surface-2 text-text-muted hover:text-white transition-colors"
+            title="Collapse sidebar (Ctrl+B)"
+          >
+            <PanelLeftClose className="h-4 w-4 text-text-muted flex-shrink-0" />
+            <span className="text-sm text-text-muted flex-1 text-left">Collapse</span>
+            <span className="text-[10px] font-mono text-text-dim px-1.5 py-0.5 rounded bg-surface-3 border border-border/50">
+              Ctrl+B
+            </span>
+          </button>
+        )}
       </div>
     </aside>
   )

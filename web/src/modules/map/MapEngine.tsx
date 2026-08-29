@@ -8,14 +8,15 @@
  *  - Static & Stable Selection: Telemetry stays fixed and readable in the Inspector Card with real-time live data updates without jumping.
  */
 import { useEffect, useRef, useState, useCallback } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import maplibregl from 'maplibre-gl'
 import {
   X, Navigation, Phone, Clock, Gauge, Fuel, AlertTriangle, Eye, Compass,
-  ShieldCheck, ArrowRight
+  ShieldCheck, ArrowRight, HeartPulse, Truck, RotateCcw
 } from 'lucide-react'
 import { toast } from 'sonner'
 import { cn } from '@/utils/cn'
+import { Modal, Button } from '@/components/ui'
 import { useMapStore, type MapLayer, type BasemapStyle } from '@/stores/mapStore'
 import { useVehicleStore } from '@/stores/vehicleStore'
 import { useAlertStore }   from '@/stores/alertStore'
@@ -104,13 +105,14 @@ function getStyleSpec(styleKey: BasemapStyle): maplibregl.StyleSpecification {
   }
 }
 
-function vehicleIconText(type: string): string {
-  switch (type) {
-    case 'ambulance': return '🚑'
-    case 'tanker':    return '⛽'
-    case 'van':       return '🚐'
-    default:          return '🚛'
+function getVehicleMarkerSvg(type: string): string {
+  if (type === 'ambulance') {
+    return `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.66 0 3-1.34 3-3V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v4c0 1.66 1.34 3 3 3"/><path d="M14 9h-4"/><path d="M12 7v4"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></svg>`
   }
+  if (type === 'tanker') {
+    return `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="3" x2="15" y1="22" y2="22"/><line x1="4" x2="14" y1="9" y2="9"/><path d="M14 22V4a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v18"/></svg>`
+  }
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/></svg>`
 }
 
 type SelectedEntity =
@@ -125,6 +127,7 @@ interface MapEngineProps {
   onVehicleClick?: (v: Vehicle) => void
   onAlertClick?: (a: LogisticsAlert) => void
   onRoadClick?: (r: RoadSegment) => void
+  hideInspector?: boolean
 }
 
 export function MapEngine({
@@ -133,6 +136,7 @@ export function MapEngine({
   onVehicleClick,
   onAlertClick,
   onRoadClick,
+  hideInspector = false,
 }: MapEngineProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const mapRef = useRef<maplibregl.Map | null>(null)
@@ -164,8 +168,36 @@ export function MapEngine({
 
   const activeLayers = layers ?? storeActiveLayers
   const activeAlerts = allAlerts.filter((a) => a.status === 'active')
+  const location = useLocation()
+  const [rerouteModalVehicle, setRerouteModalVehicle] = useState<Vehicle | null>(null)
 
-  // Keep selected vehicle or alert data live as simulator updates
+  // Reset inspector drawer whenever navigating to another section/page
+  useEffect(() => {
+    setSelectedEntity(null)
+    setIsFollowingVehicle(false)
+    setShowReplay(false)
+    setRerouteModalVehicle(null)
+  }, [location.pathname])
+
+  // Sync selected vehicle when chosen from external panels/stores
+  const storeSelectedVehicleId = useVehicleStore((s) => s.selectedVehicleId)
+  useEffect(() => {
+    if (storeSelectedVehicleId) {
+      const v = useVehicleStore.getState().vehicles.find((veh) => veh.id === storeSelectedVehicleId)
+      if (v) {
+        setSelectedEntity({ type: 'vehicle', data: v })
+      }
+    }
+  }, [storeSelectedVehicleId])
+
+  const confirmReroute = useCallback(() => {
+    if (!rerouteModalVehicle) return
+    toast.success(`Rerouting ${rerouteModalVehicle.registrationNo}`, {
+      description: 'New safe route via NH-27 corridor dispatched to driver.'
+    })
+    setRerouteModalVehicle(null)
+  }, [rerouteModalVehicle])
+
   const activeSelectedVehicle =
     selectedEntity?.type === 'vehicle'
       ? vehicles.find((v) => v.id === selectedEntity.data.id) ?? selectedEntity.data
@@ -476,8 +508,8 @@ export function MapEngine({
         // Center Type Icon
         const icon = document.createElement('div')
         icon.className = 'marker-icon'
-        icon.style.cssText = `font-size: 11px; line-height: 1; z-index: 2; pointer-events: none; ${isZoomedOut ? 'display: none;' : ''}`
-        icon.textContent = vehicleIconText(v.type)
+        icon.style.cssText = `display: flex; align-items: center; justify-content: center; z-index: 2; pointer-events: none; ${isZoomedOut ? 'display: none;' : ''}`
+        icon.innerHTML = getVehicleMarkerSvg(v.type)
         innerEl.appendChild(icon)
 
         rootEl.appendChild(innerEl)
@@ -496,6 +528,7 @@ export function MapEngine({
         rootEl.addEventListener('click', (e) => {
           e.stopPropagation()
           e.preventDefault()
+          useVehicleStore.getState().selectVehicle(v.id)
           setSelectedEntity({ type: 'vehicle', data: v })
           onVehicleClick?.(v)
         })
@@ -608,7 +641,7 @@ export function MapEngine({
       <div ref={containerRef} className="w-full h-full" />
 
       {/* ── Single Unified Floating Glass Inspector Drawer (Zero Overlap) ── */}
-      {selectedEntity && (
+      {!hideInspector && selectedEntity && (
         <div className="absolute top-3 right-3 z-30 w-72 sm:w-80 max-w-[calc(100vw-1.5rem)] animate-scale-in">
           {/* ── VEHICLE CARD OR REPLAY SCRUBBER ── */}
           {selectedEntity.type === 'vehicle' && activeSelectedVehicle && (
@@ -622,7 +655,11 @@ export function MapEngine({
                 {/* Card Header */}
                 <div className="flex items-center justify-between border-b border-white/10 pb-2.5">
                   <div className="flex items-center gap-2">
-                    <span className="text-lg">{vehicleIconText(activeSelectedVehicle.type)}</span>
+                    <div className="p-1.5 rounded-lg bg-surface-2 border border-white/5 text-primary flex items-center justify-center flex-shrink-0">
+                      {activeSelectedVehicle.type === 'ambulance' ? <HeartPulse className="h-4 w-4 text-danger" /> :
+                       activeSelectedVehicle.type === 'tanker' ? <Fuel className="h-4 w-4 text-warning" /> :
+                       <Truck className="h-4 w-4 text-primary" />}
+                    </div>
                     <div>
                       <div className="font-mono font-bold text-xs text-white">
                         {activeSelectedVehicle.registrationNo}
@@ -646,6 +683,7 @@ export function MapEngine({
                     <button
                       onClick={() => {
                         setSelectedEntity(null)
+                        useVehicleStore.getState().selectVehicle(null)
                         setIsFollowingVehicle(false)
                         setShowReplay(false)
                       }}
@@ -692,11 +730,28 @@ export function MapEngine({
                   </div>
                 </div>
 
+                {/* Route Progress Bar */}
+                <div className="space-y-1 bg-white/5 p-2 rounded-xl border border-white/5">
+                  <div className="flex justify-between text-2xs text-text-muted">
+                    <span>Route Progress</span>
+                    <span className="font-semibold text-white">{activeSelectedVehicle.progress}%</span>
+                  </div>
+                  <div className="w-full bg-white/10 rounded-full h-1.5 overflow-hidden">
+                    <div
+                      className="bg-primary h-full rounded-full transition-all duration-300"
+                      style={{ width: `${activeSelectedVehicle.progress}%` }}
+                    />
+                  </div>
+                </div>
+
                 {/* Driver & Cargo info */}
                 <div className="text-2xs space-y-1 bg-white/5 p-2.5 rounded-xl border border-white/5">
-                  <div className="flex justify-between">
+                  <div className="flex justify-between items-center">
                     <span className="text-text-muted">Driver:</span>
-                    <strong className="text-white">{activeSelectedVehicle.driver}</strong>
+                    <div className="flex items-center gap-1.5">
+                      <strong className="text-white">{activeSelectedVehicle.driver}</strong>
+                      <span className="text-text-dim text-[10px]">({activeSelectedVehicle.driverPhone})</span>
+                    </div>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-text-muted">Cargo:</span>
@@ -712,30 +767,53 @@ export function MapEngine({
                 <div className="flex items-center gap-1.5 pt-1">
                   <button
                     onClick={() => setShowReplay(true)}
-                    className="flex items-center justify-center gap-1 py-1.5 px-2.5 rounded-xl text-2xs font-semibold bg-white/10 hover:bg-white/15 text-text hover:text-white border border-white/10 transition-all"
+                    className="flex items-center justify-center gap-1 py-1.5 px-2 rounded-xl text-2xs font-semibold bg-white/10 hover:bg-white/15 text-text hover:text-white border border-white/10 transition-all"
+                    title="Replay Trip & Telemetry"
                   >
                     <Clock className="h-3.5 w-3.5 text-primary" />
                     <span>Replay</span>
                   </button>
+
                   <button
                     onClick={() => setIsFollowingVehicle(!isFollowingVehicle)}
                     className={cn(
-                      'flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-xl text-2xs font-semibold transition-all',
+                      'flex-1 flex items-center justify-center gap-1 py-1.5 rounded-xl text-2xs font-semibold transition-all',
                       isFollowingVehicle
                         ? 'bg-primary text-white shadow-md'
                         : 'bg-white/10 hover:bg-white/15 text-text hover:text-white border border-white/10'
                     )}
+                    title={isFollowingVehicle ? "Stop following vehicle" : "Follow vehicle camera"}
                   >
                     <Eye className="h-3.5 w-3.5" />
-                    {isFollowingVehicle ? 'Tracking' : 'Follow'}
+                    <span>{isFollowingVehicle ? 'Tracking' : 'Follow'}</span>
                   </button>
-                  <a
-                    href={`tel:${activeSelectedVehicle.driverPhone}`}
+
+                  <button
+                    onClick={() => setRerouteModalVehicle(activeSelectedVehicle)}
+                    className="flex items-center justify-center gap-1 py-1.5 px-2 rounded-xl text-2xs font-semibold bg-warning/15 hover:bg-warning/25 text-warning border border-warning/30 transition-all"
+                    title="AI Safe Reroute"
+                  >
+                    <RotateCcw className="h-3.5 w-3.5" />
+                    <span>Reroute</span>
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      navigator.clipboard.writeText(activeSelectedVehicle.driverPhone)
+                      toast.info(`Calling ${activeSelectedVehicle.driver}`, {
+                        description: `Phone number ${activeSelectedVehicle.driverPhone} copied to clipboard.`
+                      })
+                    }}
                     className="flex items-center justify-center p-2 rounded-xl bg-white/10 hover:bg-white/15 text-text hover:text-white border border-white/10"
-                    title="Call Driver"
+                    title={`Call Driver: ${activeSelectedVehicle.driverPhone}`}
                   >
                     <Phone className="h-3.5 w-3.5 text-success" />
-                  </a>
+                  </button>
+                </div>
+
+                {/* Live GPS Ping Status */}
+                <div className="text-[10px] text-text-subtle text-center pt-0.5">
+                  Live GPS Ping • Updated {timeAgo(activeSelectedVehicle.lastUpdate)}
                 </div>
               </div>
             )
@@ -774,8 +852,9 @@ export function MapEngine({
                 </div>
               </div>
               {selectedEntity.data.reason && (
-                <div className="bg-danger/10 border border-danger/20 p-2.5 rounded-xl text-2xs text-danger leading-relaxed">
-                  ⚠️ {selectedEntity.data.reason}
+                <div className="bg-danger/10 border border-danger/20 p-2.5 rounded-xl text-2xs text-danger leading-relaxed flex items-start gap-1.5">
+                  <AlertTriangle className="h-3.5 w-3.5 text-danger flex-shrink-0 mt-0.5" />
+                  <span>{selectedEntity.data.reason}</span>
                 </div>
               )}
             </div>
@@ -923,6 +1002,43 @@ export function MapEngine({
           <span>Vehicles: <strong className="text-primary">{vehicles.length}</strong></span>
         </div>
       </div>
+
+      {/* ── Vehicle AI Reroute Modal ────────────────────────────────────── */}
+      <Modal
+        open={!!rerouteModalVehicle}
+        onClose={() => setRerouteModalVehicle(null)}
+        title="Vehicle AI Reroute"
+        description={rerouteModalVehicle ? `${rerouteModalVehicle.registrationNo} — ${rerouteModalVehicle.cargo}` : ''}
+        size="sm"
+      >
+        {rerouteModalVehicle && (
+          <div className="space-y-4">
+            <div className="p-3 rounded-xl bg-warning/10 border border-warning/25 text-xs text-text-muted">
+              AI recommends rerouting via <strong className="text-success">NH-27 Safe Corridor</strong> (Risk 18% vs current 87%).
+            </div>
+            <div className="space-y-2 text-xs">
+              {[
+                { label: 'Recommended Route', val: 'Via NH-27 & SH-15 Safe Bypass', cls: 'text-text font-semibold' },
+                { label: 'Distance Variance', val: '+35 km (+40 min)', cls: 'text-warning font-medium' },
+                { label: 'Landslide Risk Score', val: '18% Safe (was 87% Critical)', cls: 'text-success font-bold' },
+              ].map((r) => (
+                <div key={r.label} className="flex justify-between px-3 py-2 rounded-lg bg-surface-2 border border-border/40">
+                  <span className="text-text-muted">{r.label}</span>
+                  <span className={r.cls}>{r.val}</span>
+                </div>
+              ))}
+            </div>
+            <div className="flex gap-2">
+              <Button variant="outline" className="flex-1 text-xs" onClick={() => setRerouteModalVehicle(null)}>
+                Cancel
+              </Button>
+              <Button variant="default" className="flex-1 text-xs" onClick={confirmReroute}>
+                <Navigation className="h-3.5 w-3.5" /> Confirm Safe Reroute
+              </Button>
+            </div>
+          </div>
+        )}
+      </Modal>
     </div>
   )
 }

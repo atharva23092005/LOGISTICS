@@ -1,25 +1,20 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useMemo } from 'react'
 import {
   Navigation, Cpu, CheckCircle, Compass, Sparkles, MapPin, Layers, Send, Mountain, TableProperties,
-  Award, Clock
+  Award, Clock, AlertTriangle, ShieldCheck, ShieldAlert, ArrowRight, ArrowRightLeft,
+  ChevronRight, Edit3, X, CloudRain, CheckCircle2, AlertOctagon, Info, Eye, SlidersHorizontal
 } from 'lucide-react'
 import { toast } from 'sonner'
 import { cn } from '@/utils/cn'
 import { MapEngine }             from '@/modules/map/MapEngine'
-import { RouteCard }             from '@/components/cards/RouteCard'
-import { RiskCard }              from '@/components/cards/RiskCard'
-import { RouteWhyPanel }         from '@/components/ai/RouteWhyPanel'
-import { ElevationProfile }      from '@/modules/routing/ElevationProfile'
-import { RouteComparisonMatrix } from '@/modules/routing/RouteComparisonMatrix'
+import { RouteIntelligenceHeader } from '@/components/routing/RouteIntelligenceHeader'
+import { RouteSelectionList }     from '@/components/routing/RouteSelectionList'
+import { RouteDetailsPanel }      from '@/components/routing/RouteDetailsPanel'
 import { Button }                from '@/components/ui/button'
-import { Select }                from '@/components/ui/select'
 import { Badge }                 from '@/components/ui/badge'
-import { Tabs }                  from '@/components/ui/tabs'
+import { Modal }                 from '@/components/ui/modal'
 import { DemoControl }           from '@/components/demo/DemoControl'
 import { useRouteStore }         from '@/stores/routeStore'
-import { mockPredictions }       from '@/mock/predictions'
-import { mockWeather }           from '@/mock/weather'
-import { weatherIcon }           from '@/utils/format'
 import type { RouteOption }      from '@/types'
 
 // ── Module-level stable selectors ─────────────────────────────────────────────
@@ -34,37 +29,12 @@ const selSetForm       = (s: ReturnType<typeof useRouteStore.getState>) => s.set
 const selCalculate     = (s: ReturnType<typeof useRouteStore.getState>) => s.calculateRoutes
 const selCalculating   = (s: ReturnType<typeof useRouteStore.getState>) => s.isCalculating
 
-const DISTRICT_OPTIONS = [
-  { value: 'Guwahati',   label: 'Guwahati' },
-  { value: 'Jorhat',     label: 'Jorhat' },
-  { value: 'Dibrugarh',  label: 'Dibrugarh' },
-  { value: 'East Siang', label: 'East Siang' },
-  { value: 'Itanagar',   label: 'Itanagar' },
-  { value: 'Tawang',     label: 'Tawang' },
-  { value: 'Shillong',   label: 'Shillong' },
-]
-const CARGO_OPTIONS = [
-  { value: 'Medical Supplies',   label: 'Medical Supplies & Vaccines' },
-  { value: 'Food Grains',        label: 'Food Grains & Rations' },
-  { value: 'Water Purification', label: 'Water Purification Units' },
-  { value: 'Fuel',               label: 'POL / Diesel Fuel' },
-  { value: 'Construction',       label: 'Heavy Construction' },
-  { value: 'Other',              label: 'General Freight' },
-]
-const PRIORITY_OPTIONS = [
-  { value: 'emergency', label: 'Emergency (Highest)' },
-  { value: 'high',      label: 'High Priority' },
-  { value: 'medium',    label: 'Medium Priority' },
-  { value: 'low',       label: 'Standard Transit' },
-]
-
-const LEFT_TABS = [
-  { id: 'routes',    label: 'Routes' },
-  { id: 'compare',   label: 'Compare' },
-  { id: 'elevation', label: 'Terrain' },
-  { id: 'why',       label: 'Why AI?' },
-  { id: 'risk',      label: 'Hazards' },
-  { id: 'weather',   label: 'Weather' },
+const OVERRIDE_REASONS = [
+  'Time-critical medical cargo requiring direct route',
+  'Vehicle weight / axle constraint on bypass bridges',
+  'Field officer confirmed alternate corridor is clear',
+  'Senior SEOC emergency directive',
+  'Other operational reason',
 ]
 
 export function RoutesPage() {
@@ -79,33 +49,67 @@ export function RoutesPage() {
   const calculate    = useRouteStore(selCalculate)
   const calculating  = useRouteStore(selCalculating)
 
-  const [tab, setTab] = useState('routes')
-  const [mobileTab, setMobileTab] = useState<'planner' | 'map'>('planner')
+  // 3-Section mobile/tablet tab: 'planner' | 'map' | 'details'
+  const [mobileTab, setMobileTab] = useState<'planner' | 'map' | 'details'>('planner')
   const [dispatched, setDispatched] = useState(false)
-  const [showElevationModal, setShowElevationModal] = useState(false)
+  const [rightPanelOpen, setRightPanelOpen] = useState(true)
 
-  const selectedRoute = routeOptions.find(r => r.id === selectedId) ?? routeOptions[0]
-  const recommended   = routeOptions.find(r => r.isAIRecommended) ?? routeOptions[0]
-  const alternatives  = routeOptions.filter(r => !r.isAIRecommended)
+  // Override modal state
+  const [overrideModal, setOverrideModal] = useState(false)
+  const [overrideTarget, setOverrideTarget] = useState<RouteOption | null>(null)
+  const [overrideReason, setOverrideReason] = useState(OVERRIDE_REASONS[0])
+  const [customReason, setCustomReason] = useState('')
 
-  const handleDispatch = (route: RouteOption) => {
+  const selectedRoute = routeOptions.find((r) => r.id === selectedId) ?? routeOptions[0]
+  const recommendedRoute = routeOptions.find((r) => r.isAIRecommended) ?? routeOptions[0]
+
+  const handleDispatch = useCallback((route: RouteOption) => {
     setDispatched(true)
     toast.success(`Dispatched convoy via ${route.label}`, {
-      description: `ETA: ${Math.floor(route.duration / 60)}h ${route.duration % 60}m • Distance: ${route.distance}km • Safe corridor locked`,
+      description: `ETA: ${Math.floor(route.duration / 60)}h ${route.duration % 60}m • Distance: ${route.distance}km • Safe corridor locked.`,
+      duration: 6000,
     })
     setTimeout(() => setDispatched(false), 8000)
-  }
+  }, [])
 
-  const handleAccept = useCallback((route: RouteOption) => {
-    selectRoute(route.id)
-    handleDispatch(route)
-  }, [selectRoute])
+  const handleOpenOverride = useCallback((route: RouteOption) => {
+    setOverrideTarget(route)
+    setOverrideReason(OVERRIDE_REASONS[0])
+    setCustomReason('')
+    setOverrideModal(true)
+  }, [])
 
-  const handleOverride = useCallback((route: RouteOption, reason: string) => {
-    selectRoute(route.id)
-    toast.warning(`Manual route override: ${route.label}`, {
-      description: `Reason: ${reason} • Risk score: ${route.riskScore}% — Proceed with convoy escort.`,
+  const handleConfirmOverride = useCallback(() => {
+    if (!overrideTarget) return
+    const reason = overrideReason === 'Other operational reason' ? customReason : overrideReason
+    if (!reason.trim()) {
+      toast.error('Please specify the override reason')
+      return
+    }
+
+    selectRoute(overrideTarget.id)
+    setOverrideModal(false)
+    toast.warning(`Manual Route Override Confirmed`, {
+      description: `Dispatched via ${overrideTarget.label} • Reason: ${reason}`,
+      duration: 7000,
     })
+    handleDispatch(overrideTarget)
+  }, [overrideTarget, overrideReason, customReason, selectRoute, handleDispatch])
+
+  const handleSwapLocations = useCallback(() => {
+    setForm({
+      origin: destination,
+      destination: origin,
+    })
+    toast.info('Swapped origin and destination hubs')
+  }, [origin, destination, setForm])
+
+  const handleSelectFromList = useCallback((id: string) => {
+    selectRoute(id)
+    // On mobile, keep flow moving
+    if (window.innerWidth < 768) {
+      setMobileTab('map')
+    }
   }, [selectRoute])
 
   return (
@@ -118,33 +122,44 @@ export function RoutesPage() {
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-sm md:text-base font-bold text-text">AI Multi-Modal Route Optimizer</h1>
+              <h1 className="text-sm md:text-base font-bold text-text">Route Intelligence & Multi-Modal Optimizer</h1>
               <span className="badge-info text-2xs hidden sm:inline-flex">v2.4 Geo-AI</span>
             </div>
             <p className="text-2xs text-text-muted hidden sm:block">
-              Topographic analysis • Landslide trigger modeling • Safe North Bank bypass
+              Topographic analysis • Landslide trigger modeling • 3-Section real-time operational cockpit
             </p>
           </div>
         </div>
 
         <div className="flex items-center gap-2">
-          {/* Mobile switcher */}
-          <div className="flex md:hidden items-center bg-surface-3 p-1 rounded-xl border border-border">
+          {/* 3-Way Responsive Section Switcher for Tablet / Mobile */}
+          <div className="flex xl:hidden items-center bg-surface-3 p-1 rounded-xl border border-border">
             <button
               onClick={() => setMobileTab('planner')}
-              className={`px-3 py-1 text-xs font-semibold rounded-lg transition-colors ${
-                mobileTab === 'planner' ? 'bg-primary text-white shadow-sm' : 'text-text-muted'
-              }`}
+              className={cn(
+                'px-2.5 py-1 text-xs font-semibold rounded-lg transition-colors',
+                mobileTab === 'planner' ? 'bg-primary text-white shadow-sm' : 'text-text-muted hover:text-white'
+              )}
             >
-              Planner
+              1. Routes
             </button>
             <button
               onClick={() => setMobileTab('map')}
-              className={`px-3 py-1 text-xs font-semibold rounded-lg transition-colors ${
-                mobileTab === 'map' ? 'bg-primary text-white shadow-sm' : 'text-text-muted'
-              }`}
+              className={cn(
+                'px-2.5 py-1 text-xs font-semibold rounded-lg transition-colors',
+                mobileTab === 'map' ? 'bg-primary text-white shadow-sm' : 'text-text-muted hover:text-white'
+              )}
             >
-              Map
+              2. Map
+            </button>
+            <button
+              onClick={() => setMobileTab('details')}
+              className={cn(
+                'px-2.5 py-1 text-xs font-semibold rounded-lg transition-colors',
+                mobileTab === 'details' ? 'bg-primary text-white shadow-sm' : 'text-text-muted hover:text-white'
+              )}
+            >
+              3. AI Cards
             </button>
           </div>
 
@@ -152,178 +167,99 @@ export function RoutesPage() {
         </div>
       </div>
 
-      {/* ── WORKSPACE ──────────────────────────────────────────────────────── */}
+      {/* ── 3-SECTION OPERATIONAL WORKSPACE ───────────────────────────────── */}
       <div className="flex-1 flex overflow-hidden relative">
 
-        {/* ── LEFT PANEL — Planner & Details ───────────────────────────────── */}
-        <div className={`w-full md:w-80 lg:w-[420px] flex-shrink-0 border-r border-border bg-surface flex-col overflow-hidden ${
-          mobileTab === 'planner' ? 'flex' : 'hidden md:flex'
-        }`}>
-          {/* Planner inputs */}
-          <div className="p-3 border-b border-border/80 space-y-2.5 bg-surface-2/40">
-            <div className="grid grid-cols-2 gap-2">
-              <div>
-                <label className="text-2xs font-semibold text-text-muted uppercase tracking-wider block mb-1">Origin</label>
-                <Select options={DISTRICT_OPTIONS} value={origin}
-                  onChange={e => setForm({ origin: e.target.value })} />
-              </div>
-              <div>
-                <label className="text-2xs font-semibold text-text-muted uppercase tracking-wider block mb-1">Destination</label>
-                <Select options={DISTRICT_OPTIONS} value={destination}
-                  onChange={e => setForm({ destination: e.target.value })} />
-              </div>
-            </div>
+        {/* ── SECTION 1: ROUTE PLANNER & CORRIDOR SELECTION (LEFT PANEL) ── */}
+        <div
+          className={cn(
+            'w-full md:w-80 lg:w-[320px] xl:w-[340px] flex-shrink-0 border-r border-border bg-surface flex flex-col overflow-hidden',
+            mobileTab === 'planner' ? 'flex' : 'hidden lg:flex'
+          )}
+        >
+          {/* Corridor Parameters & Journey Header */}
+          <RouteIntelligenceHeader
+            origin={origin}
+            destination={destination}
+            cargo={cargo}
+            priority={priority}
+            isCalculating={calculating}
+            onOriginChange={(val) => setForm({ origin: val })}
+            onDestinationChange={(val) => setForm({ destination: val })}
+            onCargoChange={(val) => setForm({ cargo: val })}
+            onPriorityChange={(val) => setForm({ priority: val })}
+            onCalculate={() => {
+              calculate()
+              if (window.innerWidth < 1280) {
+                setMobileTab('details')
+              }
+            }}
+            onSwapLocations={handleSwapLocations}
+          />
 
-            <div className="grid grid-cols-2 gap-2">
-              <div>
-                <label className="text-2xs font-semibold text-text-muted uppercase tracking-wider block mb-1">Cargo</label>
-                <Select options={CARGO_OPTIONS} value={cargo}
-                  onChange={e => setForm({ cargo: e.target.value })} />
-              </div>
-              <div>
-                <label className="text-2xs font-semibold text-text-muted uppercase tracking-wider block mb-1">Priority</label>
-                <Select options={PRIORITY_OPTIONS} value={priority}
-                  onChange={e => setForm({ priority: e.target.value })} />
-              </div>
-            </div>
-
-            <Button
-              className="w-full h-8 text-xs font-semibold"
-              size="sm"
-              loading={calculating}
-              onClick={() => {
-                calculate()
-                setMobileTab('map')
-              }}
-            >
-              <Cpu className="h-3.5 w-3.5" />
-              {calculating ? 'Calculating Multi-Modal Routes…' : 'Calculate AI Routes'}
-            </Button>
-          </div>
-
-          {/* Tab bar */}
-          <div className="p-2 border-b border-border bg-surface flex-shrink-0">
-            <Tabs
-              tabs={LEFT_TABS}
-              active={tab}
-              onChange={setTab}
-              variant="pill"
+          {/* Computed Routes List */}
+          <div className="flex-1 overflow-y-auto p-3 space-y-3">
+            <RouteSelectionList
+              routes={routeOptions}
+              selectedId={selectedRoute?.id || 'route-3'}
+              onSelectRoute={handleSelectFromList}
             />
-          </div>
 
-          {/* Tab content */}
-          <div className="flex-1 overflow-y-auto p-2.5 space-y-2.5">
-            {/* Route cards */}
-            {tab === 'routes' && routeOptions.map((r, i) => (
-              <RouteCard
-                key={r.id}
-                route={r}
-                selected={selectedId === r.id}
-                rank={i + 1}
-                onSelect={(id) => {
-                  selectRoute(id)
-                  setMobileTab('map')
-                }}
-                onDispatch={() => handleDispatch(r)}
-              />
-            ))}
-
-            {/* Side-by-side Route Comparison Matrix */}
-            {tab === 'compare' && (
-              <RouteComparisonMatrix onDispatch={handleDispatch} className="w-full" />
-            )}
-
-            {/* Elevation & Terrain Profile Tab */}
-            {tab === 'elevation' && (
-              <ElevationProfile
-                route={selectedRoute || recommended}
-                className="w-full"
-              />
-            )}
-
-            {/* WHY panel — explainable AI */}
-            {tab === 'why' && recommended && (
-              <RouteWhyPanel
-                recommended={recommended}
-                alternatives={alternatives}
-                onAccept={handleAccept}
-                onOverride={handleOverride}
-              />
-            )}
-            {tab === 'why' && !recommended && (
-              <div className="text-center py-10 app-card p-4">
-                <Sparkles className="h-8 w-8 text-primary mx-auto mb-2 opacity-70" />
-                <p className="text-xs font-semibold text-text">Calculate routes first</p>
-                <p className="text-2xs text-text-muted mt-1">AI explainability matrix will populate here.</p>
-              </div>
-            )}
-
-            {/* AI Risk cards */}
-            {tab === 'risk' && mockPredictions.slice(0, 3).map(p => (
-              <RiskCard key={p.id} prediction={p} showTimeline />
-            ))}
-
-            {/* Weather */}
-            {tab === 'weather' && mockWeather.slice(0, 4).map(w => (
-              <div key={w.district} className="app-card p-3 text-xs space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="font-semibold text-text">{w.district}</span>
-                  <span className="text-lg">{weatherIcon(w.condition)}</span>
-                </div>
-                <div className="grid grid-cols-2 gap-1 text-2xs">
-                  <span className="text-text-muted">Rainfall</span>
-                  <span className="text-text text-right font-medium">{w.rainfall}mm/hr</span>
-                  <span className="text-text-muted">Visibility</span>
-                  <span className="text-text text-right">{w.visibility}km</span>
-                  <span className="text-text-muted">Landslide Risk</span>
-                  <span className={`text-right font-bold ${w.landslideRisk >= 75 ? 'text-danger' : w.landslideRisk >= 50 ? 'text-warning' : 'text-success'}`}>
-                    {w.landslideRisk}%
-                  </span>
-                </div>
-                {/* Forecast mini-bars */}
-                <div className="flex items-end gap-1 h-8 pt-1 border-t border-border/40">
-                  {w.forecast.map(f => (
-                    <div key={f.hour} className="flex-1 flex flex-col items-center gap-0.5">
-                      <div
-                        className={`w-full rounded-sm ${f.risk >= 75 ? 'bg-danger' : f.risk >= 50 ? 'bg-warning' : 'bg-info'}`}
-                        style={{ height: `${Math.max(3, (f.risk / 100) * 24)}px` }}
-                      />
-                      <div className="text-[8px] text-text-subtle">+{f.hour}h</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))}
+            {/* Quick Helper Badge */}
+            <div className="p-2.5 rounded-xl bg-surface-2 border border-border/60 text-2xs text-text-muted space-y-1">
+              <span className="font-semibold text-text flex items-center gap-1">
+                <Info className="h-3 w-3 text-primary" />
+                <span>Selection Tip</span>
+              </span>
+              <p className="text-[11px] text-text-dim leading-relaxed">
+                Clicking any route updates the live map and displays its explainable AI breakdown in Section 3.
+              </p>
+            </div>
           </div>
         </div>
 
-        {/* ── CENTER — Map & Elevation Drawer ──────────────────────────────── */}
-        <div className={`flex-1 relative overflow-hidden min-w-0 bg-background ${
-          mobileTab === 'map' ? 'flex' : 'hidden md:flex'
-        }`}>
-          <MapEngine layers={['roads', 'routes', 'vehicles', 'alerts']} />
-
-          {/* Collapsible Elevation Modal / Drawer on Map View */}
-          {showElevationModal && selectedRoute && (
-            <div className="absolute top-16 right-4 z-20 w-96 max-w-[calc(100vw-2rem)] animate-scale-in">
-              <ElevationProfile
-                route={selectedRoute}
-                onClose={() => setShowElevationModal(false)}
-              />
-            </div>
+        {/* ── SECTION 2: LIVE GEOGRAPHIC MAP ENGINE (CENTER STAGE) ──────────── */}
+        <div
+          className={cn(
+            'flex-1 relative overflow-hidden min-w-0 bg-background',
+            mobileTab === 'map' ? 'flex' : 'hidden md:flex'
           )}
+        >
+          <MapEngine layers={['roads', 'routes', 'vehicles', 'alerts', 'safeCorridors']} />
 
-          {/* Selected route bottom callout */}
+          {/* Toggle Details Panel Button (for medium screens) */}
+          <div className="hidden lg:flex xl:hidden absolute top-4 right-4 z-10">
+            <Button
+              size="sm"
+              variant="secondary"
+              className="text-xs shadow-lg bg-surface/90 backdrop-blur border border-border"
+              onClick={() => setRightPanelOpen(!rightPanelOpen)}
+            >
+              <SlidersHorizontal className="h-3.5 w-3.5 mr-1" />
+              {rightPanelOpen ? 'Hide AI Cards' : 'Show AI Cards'}
+            </Button>
+          </div>
+
+          {/* Persistent Selected Route Action Callout at Bottom of Map */}
           {selectedRoute && !dispatched && (
-            <div className="absolute bottom-4 left-3 right-3 md:left-6 md:right-6 z-10 max-w-2xl mx-auto animate-scale-in">
-              <div className="surface-elevated rounded-xl p-3 md:p-3.5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-modal border border-border/80 bg-surface/95 backdrop-blur">
+            <div className="absolute bottom-4 left-3 right-3 md:left-6 md:right-6 z-10 max-w-xl mx-auto animate-scale-in">
+              <div className="surface-elevated rounded-2xl p-3 md:p-3.5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-2xl border border-border/80 bg-surface/95 backdrop-blur-md">
                 <div className="min-w-0">
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="text-xs md:text-sm font-bold text-text truncate">{selectedRoute.label}</span>
-                    {selectedRoute.isAIRecommended && (
+                    <span className="text-xs md:text-sm font-bold text-text truncate">
+                      {selectedRoute.label}
+                    </span>
+                    {selectedRoute.isAIRecommended ? (
                       <Badge variant="success" className="text-2xs font-bold flex items-center gap-1">
-                        <Award className="h-2.5 w-2.5" />
-                        AI Pick
+                        <Sparkles className="h-2.5 w-2.5" />
+                        AI Optimal
+                      </Badge>
+                    ) : (
+                      <Badge
+                        variant={selectedRoute.riskScore >= 75 ? 'danger' : 'warning'}
+                        className="text-2xs font-bold"
+                      >
+                        {selectedRoute.riskScore >= 75 ? 'Blocked Route' : 'Caution Route'}
                       </Badge>
                     )}
                   </div>
@@ -334,41 +270,149 @@ export function RoutesPage() {
                     </span>
                     <span className="flex items-center gap-1">
                       <Clock className="h-3 w-3 text-text-dim" />
-                      <strong>{Math.floor(selectedRoute.duration/60)}h {selectedRoute.duration%60}m</strong>
+                      <strong>{Math.floor(selectedRoute.duration / 60)}h {selectedRoute.duration % 60}m</strong>
                     </span>
-                    <span className={cn(
-                      'font-bold',
-                      selectedRoute.riskScore >= 75 ? 'text-danger' :
-                      selectedRoute.riskScore >= 50 ? 'text-warning' :
-                      'text-success'
-                    )}>
+                    <span
+                      className={cn(
+                        'font-bold',
+                        selectedRoute.riskScore >= 75
+                          ? 'text-danger'
+                          : selectedRoute.riskScore >= 50
+                          ? 'text-warning'
+                          : 'text-success'
+                      )}
+                    >
                       Risk: {selectedRoute.riskScore}%
                     </span>
                   </div>
                 </div>
+
                 <div className="flex items-center gap-2 w-full sm:w-auto">
                   <Button
                     size="sm"
-                    variant="outline"
-                    className="h-7 text-xs font-semibold bg-white/5 hover:bg-white/10"
-                    onClick={() => setShowElevationModal(!showElevationModal)}
-                  >
-                    <Mountain className="h-3.5 w-3.5 text-primary mr-1" /> Terrain Profile
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="default"
-                    className="w-full sm:w-auto h-7 text-xs font-semibold shadow-sm"
+                    className={cn(
+                      'w-full sm:w-auto h-8 text-xs font-bold shadow-md',
+                      selectedRoute.isAIRecommended
+                        ? 'bg-emerald-600 hover:bg-emerald-500 text-white'
+                        : 'bg-primary hover:bg-primary-hover text-white'
+                    )}
                     onClick={() => handleDispatch(selectedRoute)}
                   >
-                    <Send className="h-3 w-3 mr-1" /> Confirm & Dispatch
+                    <Send className="h-3.5 w-3.5 mr-1" />
+                    Dispatch Convoy
                   </Button>
                 </div>
               </div>
             </div>
           )}
         </div>
+
+        {/* ── SECTION 3: DEDICATED INTELLIGENCE & DECISION DETAILS (RIGHT PANEL) ── */}
+        <div
+          className={cn(
+            'w-full md:w-96 lg:w-[380px] xl:w-[420px] flex-shrink-0 bg-surface flex flex-col overflow-hidden border-l border-border',
+            mobileTab === 'details'
+              ? 'flex'
+              : rightPanelOpen
+              ? 'hidden xl:flex'
+              : 'hidden'
+          )}
+        >
+          {selectedRoute && (
+            <RouteDetailsPanel
+              selectedRoute={selectedRoute}
+              recommendedRoute={recommendedRoute}
+              onDispatch={handleDispatch}
+              onOverride={handleOpenOverride}
+            />
+          )}
+        </div>
       </div>
+
+      {/* ── Manual Route Override Modal ── */}
+      {overrideModal && overrideTarget && (
+        <Modal
+          title="Manual Route Override Authorization"
+          open={overrideModal}
+          onClose={() => setOverrideModal(false)}
+        >
+          <div className="space-y-4 text-xs">
+            <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-200 space-y-1">
+              <div className="font-bold flex items-center gap-1.5 text-amber-300">
+                <AlertTriangle className="h-4 w-4" />
+                <span>Overriding AI Recommended Safe Corridor</span>
+              </div>
+              <p className="text-[11px] text-amber-200/90 leading-relaxed">
+                You are manually selecting <strong>{overrideTarget.label}</strong> with a hazard risk index of{' '}
+                <strong className={overrideTarget.riskScore >= 75 ? 'text-rose-400' : 'text-amber-300'}>
+                  {overrideTarget.riskScore}%
+                </strong>. This decision will be logged to SEOC audit streams.
+              </p>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-2xs font-semibold text-text-muted uppercase tracking-wider block">
+                Select Operational Justification
+              </label>
+              <div className="space-y-1.5">
+                {OVERRIDE_REASONS.map((r) => (
+                  <label
+                    key={r}
+                    className={cn(
+                      'flex items-center gap-2 p-2.5 rounded-xl border cursor-pointer transition-all',
+                      overrideReason === r
+                        ? 'bg-primary/15 border-primary text-white font-semibold'
+                        : 'bg-surface-2 border-border text-text-muted hover:text-white'
+                    )}
+                  >
+                    <input
+                      type="radio"
+                      name="overrideReason"
+                      value={r}
+                      checked={overrideReason === r}
+                      onChange={(e) => setOverrideReason(e.target.value)}
+                      className="accent-primary"
+                    />
+                    <span>{r}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            {overrideReason === 'Other operational reason' && (
+              <div className="space-y-1.5">
+                <label className="text-2xs font-semibold text-text-muted uppercase tracking-wider block">
+                  Custom Operational Remarks
+                </label>
+                <textarea
+                  value={customReason}
+                  onChange={(e) => setCustomReason(e.target.value)}
+                  placeholder="Enter details, field officer badge ID, or authority order..."
+                  className="w-full bg-surface-2 border border-border rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-primary resize-none h-20"
+                />
+              </div>
+            )}
+
+            <div className="flex items-center justify-end gap-2 pt-2 border-t border-border">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setOverrideModal(false)}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="warning"
+                size="sm"
+                className="font-bold"
+                onClick={handleConfirmOverride}
+              >
+                Authorize & Dispatch Override
+              </Button>
+            </div>
+          </div>
+        </Modal>
+      )}
     </div>
   )
 }

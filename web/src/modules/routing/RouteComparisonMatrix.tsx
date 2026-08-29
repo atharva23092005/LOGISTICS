@@ -181,12 +181,14 @@ export function RouteComparisonMatrix({ onDispatch, className }: RouteComparison
                   {/* Active Hazards */}
                   <td className="py-3 px-3 text-2xs text-text-muted max-w-[200px]">
                     {route.avoidedHazards && route.avoidedHazards.length > 0 ? (
-                      <div className="text-success font-medium truncate">
-                        ✓ Avoids {route.avoidedHazards[0]}
+                      <div className="text-success font-medium truncate flex items-center gap-1">
+                        <CheckCircle2 className="h-3 w-3 inline flex-shrink-0" />
+                        <span>Avoids {route.avoidedHazards[0]}</span>
                       </div>
                     ) : (
-                      <div className="text-danger font-medium truncate">
-                        ⚠️ NH-415 Km 42 Mudslide Active
+                      <div className="text-danger font-medium truncate flex items-center gap-1">
+                        <AlertTriangle className="h-3 w-3 inline flex-shrink-0" />
+                        <span>NH-415 Km 42 Mudslide Active</span>
                       </div>
                     )}
                   </td>

@@ -143,7 +143,7 @@ export function DistrictAdminDashboard() {
   const handleEscalateToState = useCallback(() => {
     activateEmergency(`District Admin Escalation: Critical Landslide Blockade on NH-415 in ${selectedDistrict}`)
     emit('EMERGENCY_ACTIVATED', { reason: `Major infrastructure disruption in ${selectedDistrict}` })
-    toast.error(`🚨 Escalated to State Emergency Control (SEOC)`, {
+    toast.error(`Escalated to State Emergency Control (SEOC)`, {
       description: 'NDRF Base Station and State Road Authority notified for emergency deployment.',
       duration: 8000,
     })
@@ -397,8 +397,11 @@ export function DistrictAdminDashboard() {
                   <div>Temperature: <strong>{districtWeather.temperature}°C</strong></div>
                   <div>Soil Saturation: <strong className="text-rose-400">88% (Critical)</strong></div>
                 </div>
-                <div className="p-2.5 rounded-lg bg-rose-950/40 border border-rose-800/40 text-rose-300 text-[11px]">
-                  ⚠️ <strong>Threshold Warning:</strong> Precipitation exceeding 50mm/hr combined with steep slope gradient (24.5°) triggers automated landslide risk score of 0.87.
+                <div className="p-2.5 rounded-lg bg-rose-950/40 border border-rose-800/40 text-rose-300 text-[11px] flex items-start gap-2">
+                  <AlertTriangle className="h-4 w-4 text-warning flex-shrink-0 mt-0.5" />
+                  <div>
+                    <strong>Threshold Warning:</strong> Precipitation exceeding 50mm/hr combined with steep slope gradient (24.5°) triggers automated landslide risk score of 0.87.
+                  </div>
                 </div>
               </div>
             </div>

@@ -63,18 +63,18 @@ export function DemoControl() {
         updateRoadStatus('nh415-seg1', 'blocked', 87)
         updateVehicle('v3', { status: 'delayed' })
         setNetworkOnline(true)
-        toast.success('✅ Reset to normal operations')
+        toast.success('Reset to normal operations')
         break
       case 'heavy_rain':
         emit('WEATHER_ALERT', { district: 'East Siang', rainfall: 84, riskScore: 78 })
-        toast.warning('🌧 Heavy rainfall — East Siang', {
+        toast.warning('Heavy rainfall — East Siang', {
           description: '84mm/hr · Landslide and flood risk elevated.',
           duration: 5000,
         })
         break
       case 'landslide_prediction':
         emit('LANDSLIDE_PREDICTED', { roadId: 'nh415-seg1', roadName: 'NH-415', riskScore: 72 })
-        toast.warning('⚠️ AI: Landslide Risk 72% — NH-415', {
+        toast.warning('AI: Landslide Risk 72% — NH-415', {
           description: 'High probability in next 6 hours. Consider rerouting.',
           duration: 6000,
         })
@@ -85,19 +85,19 @@ export function DemoControl() {
         updateVehicle('v4', { status: 'stopped', speed: 0 })
         updateVehicle('v6', { status: 'stopped', speed: 0 })
         updateVehicle('v9', { status: 'stopped', speed: 0 })
-        toast.error('🔴 NH-415 BLOCKED', { description: '3 vehicles stranded. Rerouting required.', duration: 7000 })
+        toast.error('NH-415 BLOCKED', { description: '3 vehicles stranded. Rerouting required.', duration: 7000 })
         break
       case 'vehicle_delayed':
         updateVehicle('v3', { status: 'delayed', speed: 18 })
         emit('VEHICLE_DELAYED', { vehicleId: 'v3', reason: 'Road flooding' })
-        toast.warning('🚛 AS-14-EF-4567 Delayed', { description: 'Speed 18km/h — NH-37 flooding.', duration: 5000 })
+        toast.warning('AS-14-EF-4567 Delayed', { description: 'Speed 18km/h — NH-37 flooding.', duration: 5000 })
         break
       case 'field_report':
         emit('FIELD_INCIDENT_REPORTED', {
           location: { lat: 26.9000, lng: 93.9000 },
           type: 'road_damage', reportedBy: 'Field Officer Sunil Pegu',
         })
-        toast.info('📱 Field Report Received', {
+        toast.info('Field Report Received', {
           description: 'Bridge crack detected on SH-15 — awaiting verification.',
           duration: 5000,
         })
@@ -105,7 +105,7 @@ export function DemoControl() {
       case 'emergency':
         activateEmergency('Critical multi-point road blockage — East Siang')
         emit('EMERGENCY_ACTIVATED', { reason: 'Critical blockage' })
-        toast.error('🚨 EMERGENCY MODE ACTIVATED', {
+        toast.error('EMERGENCY MODE ACTIVATED', {
           description: 'Priority: Medical → Food → Water. Safe corridors active.',
           duration: 8000,
         })
@@ -116,82 +116,82 @@ export function DemoControl() {
   // ── Auto-play chain ─────────────────────────────────────────────────────
   const buildChain = useCallback((): ChainStep[] => [
     {
-      id: 'step-1', label: 'Heavy Rainfall Detected', icon: '🌧', delay: 0,
+      id: 'step-1', label: 'Heavy Rainfall Detected', icon: 'rain', delay: 0,
       fn: () => {
         emit('WEATHER_ALERT', { district: 'East Siang', rainfall: 84, riskScore: 78 })
-        toast.warning('Step 1/10 🌧 Heavy Rainfall — East Siang', { description: '84mm/hr · Risk escalating', duration: 4000 })
+        toast.warning('Step 1/10: Heavy Rainfall — East Siang', { description: '84mm/hr · Risk escalating', duration: 4000 })
       },
     },
     {
-      id: 'step-2', label: 'AI Predicts Landslide', icon: '🤖', delay: 3500,
+      id: 'step-2', label: 'AI Predicts Landslide', icon: 'ai', delay: 3500,
       fn: () => {
         emit('LANDSLIDE_PREDICTED', { roadId: 'nh415-seg1', roadName: 'NH-415', riskScore: 72 })
-        toast.warning('Step 2/10 🤖 AI Prediction: NH-415 Landslide 72%', { description: 'Confidence: 86% · Horizon: 6h', duration: 4000 })
+        toast.warning('Step 2/10: AI Prediction: NH-415 Landslide 72%', { description: 'Confidence: 86% · Horizon: 6h', duration: 4000 })
       },
     },
     {
-      id: 'step-3', label: 'Road Risk Escalates', icon: '⛰️', delay: 3500,
+      id: 'step-3', label: 'Road Risk Escalates', icon: 'risk', delay: 3500,
       fn: () => {
         updateRoadStatus('nh415-seg1', 'blocked', 87)
-        toast.error('Step 3/10 ⛰️ NH-415 Risk → 87% CRITICAL', { description: 'Road status changing to BLOCKED', duration: 4000 })
+        toast.error('Step 3/10: NH-415 Risk → 87% CRITICAL', { description: 'Road status changing to BLOCKED', duration: 4000 })
       },
     },
     {
-      id: 'step-4', label: 'Critical Alert Generated', icon: '🔴', delay: 3500,
+      id: 'step-4', label: 'Critical Alert Generated', icon: 'alert', delay: 3500,
       fn: () => {
         emit('ROAD_BLOCKED', { roadId: 'nh415-seg1', roadName: 'NH-415', affectedVehicles: ['v4','v6','v9'] })
-        toast.error('Step 4/10 🔴 ALERT: NH-415 Blocked — Landslide Confirmed', { description: '3 vehicles affected · 12 deliveries at risk', duration: 4000 })
+        toast.error('Step 4/10: ALERT: NH-415 Blocked — Landslide Confirmed', { description: '3 vehicles affected · 12 deliveries at risk', duration: 4000 })
       },
     },
     {
-      id: 'step-5', label: 'Vehicles Stopped', icon: '🚛', delay: 3500,
+      id: 'step-5', label: 'Vehicles Stopped', icon: 'vehicle', delay: 3500,
       fn: () => {
         updateVehicle('v4', { status: 'stopped', speed: 0 })
         updateVehicle('v6', { status: 'stopped', speed: 0 })
         updateVehicle('v9', { status: 'stopped', speed: 0 })
         emit('VEHICLE_STOPPED', { vehicleId: 'v4' })
         emit('VEHICLE_STOPPED', { vehicleId: 'v6' })
-        toast.warning('Step 5/10 🚛 3 Vehicles Stopped — AR-01-GH-2345 (Emergency)', { description: 'Emergency medical convoy stranded on NH-415', duration: 4000 })
+        toast.warning('Step 5/10: 3 Vehicles Stopped — AR-01-GH-2345 (Emergency)', { description: 'Emergency medical convoy stranded on NH-415', duration: 4000 })
       },
     },
     {
-      id: 'step-6', label: 'Alternate Routes Generated', icon: '🗺️', delay: 4000,
+      id: 'step-6', label: 'Alternate Routes Generated', icon: 'route', delay: 4000,
       fn: () => {
-        toast.info('Step 6/10 🗺️ AI Route Analysis Complete', {
-          description: 'Route C via NH-6 & NH-13: Risk 28% · ✅ AI Recommended',
+        toast.info('Step 6/10: AI Route Analysis Complete', {
+          description: 'Route C via NH-6 & NH-13: Risk 28% · AI Recommended',
           duration: 5000,
         })
       },
     },
     {
-      id: 'step-7', label: 'Reroute Confirmed', icon: '✅', delay: 4000,
+      id: 'step-7', label: 'Reroute Confirmed', icon: 'reroute', delay: 4000,
       fn: () => {
         updateVehicle('v4', { routeId: 'route-3' })
         updateVehicle('v6', { routeId: 'route-3' })
         emit('VEHICLE_REROUTED', { vehicleId: 'v4', newRouteId: 'route-3' })
-        toast.success('Step 7/10 ✅ Convoy Rerouted via NH-6', { description: 'Medical supplies via safe corridor · New ETA 5h 45m', duration: 5000 })
+        toast.success('Step 7/10: Convoy Rerouted via NH-6', { description: 'Medical supplies via safe corridor · New ETA 5h 45m', duration: 5000 })
       },
     },
     {
-      id: 'step-8', label: 'Field Officer Reports', icon: '📱', delay: 4000,
+      id: 'step-8', label: 'Field Officer Reports', icon: 'field', delay: 4000,
       fn: () => {
         setNetworkOnline(false)
         emit('FIELD_INCIDENT_REPORTED', { type: 'landslide', location: { lat: 27.75, lng: 95.2 }, reportedBy: 'Field Officer Karma Singh' })
-        toast.info('Step 8/10 📱 Field Report: Landslide Confirmed (OFFLINE)', { description: 'GPS captured · 2 photos · Saved locally · Pending sync', duration: 5000 })
+        toast.info('Step 8/10: Field Report: Landslide Confirmed (OFFLINE)', { description: 'GPS captured · 2 photos · Saved locally · Pending sync', duration: 5000 })
       },
     },
     {
-      id: 'step-9', label: 'Offline Sync', icon: '🔄', delay: 5000,
+      id: 'step-9', label: 'Offline Sync', icon: 'sync', delay: 5000,
       fn: () => {
         setNetworkOnline(true)
         emit('OFFLINE_SYNC', { reportCount: 1, photosUploaded: 2 })
-        toast.success('Step 9/10 🔄 Field Report Synced', { description: '✓ Report uploaded · ✓ GPS verified · ✓ Photos synced', duration: 5000 })
+        toast.success('Step 9/10: Field Report Synced', { description: 'Report uploaded · GPS verified · Photos synced', duration: 5000 })
       },
     },
     {
-      id: 'step-10', label: 'Command Center Updated', icon: '📡', delay: 3500,
+      id: 'step-10', label: 'Command Center Updated', icon: 'command', delay: 3500,
       fn: () => {
-        toast.success('Step 10/10 📡 Command Center Updated', {
+        toast.success('Step 10/10: Command Center Updated', {
           description: 'Field incident confirmed · Road marked BLOCKED · All vehicles rerouted · Incident logged',
           duration: 6000,
         })

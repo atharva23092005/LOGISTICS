@@ -106,42 +106,11 @@ export function MapPage() {
       <div className="flex-1 flex overflow-hidden relative">
         {/* Map Canvas */}
         <div className="flex-1 relative overflow-hidden">
-          <MapEngine onVehicleClick={handleVehicleClick} onAlertClick={handleAlertClick} />
+          <MapEngine
+            onVehicleClick={handleVehicleClick}
+            onAlertClick={handleAlertClick}
+          />
           <LayerControl />
-
-          {/* Floating Selected Vehicle Card */}
-          {selectedVehicle && (
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 w-full max-w-md px-4 animate-scale-in">
-              <VehicleCard
-                vehicle={selectedVehicle}
-                selected
-                onSelect={() => setSelectedVehicle(null)}
-              />
-            </div>
-          )}
-
-          {/* Floating Selected Alert Card */}
-          {selectedAlert && (
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 w-full max-w-md px-4 space-y-1.5 animate-scale-in">
-              <div className="shadow-2xl rounded-xl">
-                <AlertCard
-                  alert={selectedAlert}
-                  selected
-                  onSelect={() => setSelectedAlert(null)}
-                  onAcknowledge={acknowledge}
-                  onViewMap={() => {}}
-                />
-              </div>
-              <Button
-                variant="secondary"
-                size="sm"
-                className="w-full h-7 text-xs font-semibold shadow-sm bg-surface/90 backdrop-blur"
-                onClick={() => setSelectedAlert(null)}
-              >
-                Dismiss Alert Callout
-              </Button>
-            </div>
-          )}
         </div>
 
         {/* Desktop Side Panel */}

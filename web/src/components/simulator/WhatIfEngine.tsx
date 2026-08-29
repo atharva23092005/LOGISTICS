@@ -4,7 +4,10 @@
  * then shows Before / After / With-AI-Rerouting cascade.
  */
 import { useState, useCallback } from 'react'
-import { Zap, AlertTriangle, TrendingDown, TrendingUp, Navigation, RotateCcw, Activity } from 'lucide-react'
+import { 
+  Zap, AlertTriangle, TrendingDown, TrendingUp, Navigation, RotateCcw, Activity,
+  HeartPulse, Wheat, Droplets, Package, LucideIcon
+} from 'lucide-react'
 import { toast } from 'sonner'
 import { cn } from '@/utils/cn'
 import { Button } from '@/components/ui/button'
@@ -28,26 +31,25 @@ function runSimulation(
   const affectedPct = affected / total
 
   const before = {
-    onTimePct:        82,
-    avgDelayMin:      42,
+    onTimePct:        Math.round(88 - Math.random() * 4),
+    avgDelayMin:      14,
     affectedVehicles: 0,
     cargoAtRiskLakh:  0,
   }
 
-  const severityMult = severityLabel === 'Critical' ? 1.0 : severityLabel === 'High' ? 0.72 : 0.45
-  const rainfallMult = Math.min(1, rainfall / 100)
-  const impact       = severityMult * rainfallMult
+  const mult = severityLabel === 'Critical' ? 1.0 : severityLabel === 'High' ? 0.65 : 0.35
+  const rainMult = rainfall > 80 ? 1.3 : rainfall > 50 ? 1.1 : 1.0
 
   const after = {
-    onTimePct:        Math.max(30, Math.round(before.onTimePct - 25 * impact)),
-    avgDelayMin:      Math.round(before.avgDelayMin + 115 * impact),
-    affectedVehicles: Math.max(1, Math.round(total * 0.48 * impact + affected)),
-    cargoAtRiskLakh:  parseFloat((8.4 * impact).toFixed(1)),
+    onTimePct:        Math.max(20, Math.round(before.onTimePct - affectedPct * 70 * mult * rainMult)),
+    avgDelayMin:      Math.round(before.avgDelayMin + 120 * mult * rainMult),
+    affectedVehicles: Math.max(1, Math.round(affected * mult)),
+    cargoAtRiskLakh:  Math.round((affected * 3.4) * mult),
   }
 
   const recovered = Math.round(after.affectedVehicles * 0.82)
   const withRerouting = {
-    onTimePct:           Math.min(before.onTimePct - 3, after.onTimePct + Math.round(22 * impact)),
+    onTimePct:           Math.min(before.onTimePct - 3, after.onTimePct + Math.round(22 * mult)),
     avgDelayMin:         Math.round(after.avgDelayMin * 0.38 + before.avgDelayMin * 0.15),
     vehiclesRecovered:   recovered,
     cargoProtectedLakh:  parseFloat((after.cargoAtRiskLakh * 0.94).toFixed(1)),
@@ -120,9 +122,9 @@ const ROAD_OPTIONS = [
   { value: 'nh6-seg1',   label: 'NH-6 — Shillong–Guwahati' },
 ]
 const SEVERITY_OPTIONS = [
-  { value: 'Critical', label: '🔴 Critical — Full Blockage' },
-  { value: 'High',     label: '🟡 High — Partial, slow traffic' },
-  { value: 'Medium',   label: '🔵 Medium — Caution advised' },
+  { value: 'Critical', label: 'Critical — Full Blockage' },
+  { value: 'High',     label: 'High — Partial, slow traffic' },
+  { value: 'Medium',   label: 'Medium — Caution advised' },
 ]
 const RAINFALL_OPTIONS = [
   { value: '110', label: '110 mm/hr — Extreme' },
@@ -130,11 +132,11 @@ const RAINFALL_OPTIONS = [
   { value: '55',  label: '55 mm/hr — Moderate' },
   { value: '28',  label: '28 mm/hr — Light' },
 ]
-const CATEGORY_CONFIG = {
-  medical: { icon: '🏥', color: 'text-danger',  bg: 'bg-danger/10',  label: 'Medical' },
-  food:    { icon: '🌾', color: 'text-warning', bg: 'bg-warning/10', label: 'Food' },
-  water:   { icon: '💧', color: 'text-info',    bg: 'bg-info/10',    label: 'Water' },
-  other:   { icon: '📦', color: 'text-text-muted', bg: 'bg-surface-2', label: 'Other' },
+const CATEGORY_CONFIG: Record<string, { icon: LucideIcon; color: string; bg: string; label: string }> = {
+  medical: { icon: HeartPulse, color: 'text-danger',  bg: 'bg-danger/10',  label: 'Medical' },
+  food:    { icon: Wheat,      color: 'text-warning', bg: 'bg-warning/10', label: 'Food' },
+  water:   { icon: Droplets,   color: 'text-info',    bg: 'bg-info/10',    label: 'Water' },
+  other:   { icon: Package,    color: 'text-text-muted', bg: 'bg-surface-2', label: 'Other' },
 }
 
 export function WhatIfEngine() {
@@ -173,7 +175,7 @@ export function WhatIfEngine() {
         v.affectedByRoadId === roadId || v.routeId?.includes(roadId.split('-')[0])
       ).map(v => v.id),
     })
-    toast.success('🚨 Simulation activated — system responding', {
+    toast.success('Simulation activated — system responding', {
       description: `Rerouting ${result.withRerouting.vehiclesRecovered} vehicles via safe corridors.`,
       duration: 6000,
     })
@@ -296,11 +298,12 @@ export function WhatIfEngine() {
               <div className="space-y-1.5">
                 {result.dispatchPriority.filter(d => d.count > 0).map((d, i) => {
                   const cfg = CATEGORY_CONFIG[d.category]
+                  const CIcon = cfg.icon
                   return (
                     <div key={d.category} className={cn('flex items-center gap-3 p-2 rounded-lg border', cfg.bg,
                       d.category === 'medical' ? 'border-danger/20' : d.category === 'food' ? 'border-warning/20' : 'border-border')}>
                       <span className="text-sm font-bold text-text-muted w-4">#{i+1}</span>
-                      <span className="text-base">{cfg.icon}</span>
+                      <CIcon className={cn('h-4 w-4 flex-shrink-0', cfg.color)} />
                       <span className={cn('text-xs font-semibold flex-1', cfg.color)}>{cfg.label}</span>
                       <span className="text-xs font-bold text-text">{d.count} vehicle{d.count !== 1 ? 's' : ''}</span>
                     </div>

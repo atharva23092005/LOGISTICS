@@ -52,7 +52,7 @@ export function EmergencyResponseSection() {
               <div>
                 <div className="flex items-center gap-2">
                   <h3 className="text-base sm:text-lg font-black text-white">
-                    🚨 EMERGENCY MODE: FLASH FLOOD WARNING — BRAHMAPUTRA BASIN
+                    EMERGENCY MODE: FLASH FLOOD WARNING — BRAHMAPUTRA BASIN
                   </h3>
                 </div>
                 <p className="text-xs text-text-muted">

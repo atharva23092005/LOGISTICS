@@ -63,7 +63,7 @@ export function RouteCard({ route, selected, rank, onSelect, onDispatch }: Route
               </span>
             </div>
             <div className="text-2xs text-text-muted mt-0.5 truncate">
-              {route.via.join(' ➔ ')}
+              {route.via.join(' → ')}
             </div>
           </div>
         </div>
@@ -116,9 +116,10 @@ export function RouteCard({ route, selected, rank, onSelect, onDispatch }: Route
           {route.avoidedHazards.map((hazard) => (
             <span
               key={hazard}
-              className="text-[9px] font-semibold px-1.5 py-0.5 rounded bg-success/15 text-success border border-success/30"
+              className="text-[9px] font-semibold px-1.5 py-0.5 rounded bg-success/15 text-success border border-success/30 inline-flex items-center gap-1"
             >
-              ✓ {hazard}
+              <CheckCircle className="h-2.5 w-2.5 inline" />
+              <span>{hazard}</span>
             </span>
           ))}
         </div>

@@ -10,7 +10,6 @@ import { Input } from '@/components/ui/input'
 import { mockDistricts } from '@/mock/districts'
 import { mockWeather } from '@/mock/weather'
 import { mockRoads } from '@/mock/roads'
-import { weatherIcon } from '@/utils/format'
 import { cn } from '@/utils/cn'
 
 type Language = 'en' | 'as' | 'hi' | 'bn'

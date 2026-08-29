@@ -4,7 +4,7 @@ import {
 } from 'recharts'
 import {
   Mountain, TrendingUp, AlertTriangle, ShieldCheck,
-  ChevronDown, X, Info
+  ChevronDown, X, Info, MapPin
 } from 'lucide-react'
 import { cn } from '@/utils/cn'
 import type { RouteOption } from '@/types'
@@ -191,8 +191,9 @@ function CustomElevationTooltip({ active, payload }: any) {
 
   return (
     <div className="glass-panel p-2.5 rounded-xl border border-white/10 shadow-xl bg-[#0D1626]/95 backdrop-blur-md text-text text-xs space-y-1 max-w-xs">
-      <div className="font-bold text-white text-2xs border-b border-white/10 pb-1">
-        📍 {data.locationName}
+      <div className="font-bold text-white text-2xs border-b border-white/10 pb-1 flex items-center gap-1">
+        <MapPin className="h-3 w-3 text-primary flex-shrink-0" />
+        <span>{data.locationName}</span>
       </div>
       <div className="grid grid-cols-2 gap-x-3 gap-y-0.5 text-[11px]">
         <div className="text-text-muted">Distance:</div>
@@ -205,8 +206,9 @@ function CustomElevationTooltip({ active, payload }: any) {
         </div>
       </div>
       {isHazard && (
-        <div className="mt-1 pt-1 border-t border-danger/20 text-[10px] text-danger font-medium leading-tight">
-          ⚠️ {data.hazardWarning}
+        <div className="mt-1 pt-1 border-t border-danger/20 text-[10px] text-danger font-medium leading-tight flex items-start gap-1">
+          <AlertTriangle className="h-3 w-3 text-danger flex-shrink-0 mt-0.5" />
+          <span>{data.hazardWarning}</span>
         </div>
       )}
     </div>

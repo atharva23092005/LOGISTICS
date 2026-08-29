@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom'
 import { Sidebar }  from './Sidebar'
 import { TopBar }   from './TopBar'
 import { useAppStore } from '@/stores/appStore'
+import { useVehicleStore } from '@/stores/vehicleStore'
 import { cn } from '@/utils/cn'
 
 const selEmergency = (s: ReturnType<typeof useAppStore.getState>) => s.emergency
@@ -22,12 +23,22 @@ export function AppShell({ children }: AppShellProps) {
   // Mobile: drawer open/close
   const [mobileOpen, setMobileOpen] = useState(false)
 
-  // Close mobile drawer on route change
-  useEffect(() => { setMobileOpen(false) }, [location.pathname])
-
-  // Close on Escape key
+  // Close mobile drawer on route change & clear vehicle selection
   useEffect(() => {
-    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') setMobileOpen(false) }
+    setMobileOpen(false)
+    useVehicleStore.getState().selectVehicle(null)
+  }, [location.pathname])
+
+  // Close on Escape key & Toggle Sidebar on Ctrl+B / Cmd+B
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setMobileOpen(false)
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'b') {
+        e.preventDefault()
+        const current = useAppStore.getState().sidebarCollapsed
+        useAppStore.getState().setSidebarCollapsed(!current)
+      }
+    }
     window.addEventListener('keydown', handler)
     return () => window.removeEventListener('keydown', handler)
   }, [])

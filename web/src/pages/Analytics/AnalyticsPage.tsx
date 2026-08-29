@@ -387,8 +387,9 @@ export function AnalyticsPage() {
                   <TrendingUp className="h-4 w-4 text-primary" />
                   <div>
                     <span className="text-sm font-bold text-white">Disruption Trends (12 Months)</span>
-                    <span className="text-2xs text-amber-400 ml-2 font-medium">
-                      ⚠️ Monsoonal Peak in June–July
+                    <span className="text-2xs text-amber-400 ml-2 font-medium inline-flex items-center gap-1">
+                      <AlertTriangle className="h-3 w-3 inline" />
+                      Monsoonal Peak in June–July
                     </span>
                   </div>
                 </div>

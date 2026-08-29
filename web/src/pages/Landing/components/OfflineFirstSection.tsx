@@ -170,8 +170,9 @@ export function OfflineFirstSection() {
                       </div>
                     )}
                     {STEPS[activeStep].mockContent.photos && (
-                      <div className="text-2xs text-primary font-semibold">
-                        📷 {STEPS[activeStep].mockContent.photos}
+                      <div className="text-2xs text-primary font-semibold flex items-center justify-center gap-1">
+                        <Camera className="h-3 w-3" />
+                        <span>{STEPS[activeStep].mockContent.photos}</span>
                       </div>
                     )}
                     {STEPS[activeStep].mockContent.checks && (

@@ -5,7 +5,10 @@
  */
 import { useMemo, useState, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Cpu, ChevronRight, X, CheckCircle, AlertTriangle, Navigation, Truck, CloudRain } from 'lucide-react'
+import {
+  Cpu, ChevronRight, X, CheckCircle, AlertTriangle, Navigation,
+  Truck, CloudRain, HeartPulse, Mountain, Ban, AlertOctagon
+} from 'lucide-react'
 import { toast } from 'sonner'
 import { cn } from '@/utils/cn'
 import { Button } from '@/components/ui/button'
@@ -19,6 +22,31 @@ import type { CopilotRecommendation } from '@/types'
 const selVehicles = (s: ReturnType<typeof useVehicleStore.getState>) => s.vehicles
 const selAlerts   = (s: ReturnType<typeof useAlertStore.getState>)   => s.alerts
 const selRoads    = (s: ReturnType<typeof useRouteStore.getState>)   => s.roads
+
+function renderCopilotIcon(icon: string) {
+  switch (icon) {
+    case 'heart-pulse':
+    case 'ambulance':
+    case '🚑':
+      return <HeartPulse className="h-3.5 w-3.5 text-danger flex-shrink-0" />
+    case 'mountain':
+    case '⛰️':
+      return <Mountain className="h-3.5 w-3.5 text-warning flex-shrink-0" />
+    case 'alert':
+    case '⚠️':
+      return <AlertTriangle className="h-3.5 w-3.5 text-warning flex-shrink-0" />
+    case 'truck':
+    case '🚛':
+      return <Truck className="h-3.5 w-3.5 text-primary flex-shrink-0" />
+    case 'ban':
+    case '🚫':
+      return <Ban className="h-3.5 w-3.5 text-danger flex-shrink-0" />
+    case 'octagon':
+    case '🔴':
+    default:
+      return <AlertOctagon className="h-3.5 w-3.5 text-danger flex-shrink-0" />
+  }
+}
 
 function useCopilotRecommendations(): CopilotRecommendation[] {
   const vehicles = useVehicleStore(selVehicles)
@@ -38,7 +66,7 @@ function useCopilotRecommendations(): CopilotRecommendation[] {
         description: `${v.cargo} convoy stranded. NH-6 safe corridor available (Risk 22%).`,
         action: 'reroute',
         actionLabel: 'Reroute Now',
-        icon: '🚑',
+        icon: 'heart-pulse',
         relatedVehicleIds: [v.id],
         relatedRoadId: v.affectedByRoadId,
       })
@@ -55,7 +83,7 @@ function useCopilotRecommendations(): CopilotRecommendation[] {
           description: `AI confidence: ${p.confidence}%. ${p.recommendation}`,
           action: 'navigate-routes',
           actionLabel: 'View Routes',
-          icon: '⛰️',
+          icon: 'mountain',
           relatedRoadId: p.roadId,
         })
       })
@@ -72,7 +100,7 @@ function useCopilotRecommendations(): CopilotRecommendation[] {
           description: `Risk rising to ${p.riskScore}%. ${affected > 0 ? `${affected} vehicles on this route.` : 'Pre-position emergency vehicle.'}`,
           action: 'navigate-alerts',
           actionLabel: 'Monitor',
-          icon: '⚠️',
+          icon: 'alert',
           relatedRoadId: p.roadId,
         })
       })
@@ -87,7 +115,7 @@ function useCopilotRecommendations(): CopilotRecommendation[] {
         description: `Cascade impact detected. Consider alternate routing for ${delayed.filter(v => v.priority !== 'low').length} priority vehicles.`,
         action: 'navigate-fleet',
         actionLabel: 'Review Fleet',
-        icon: '🚛',
+        icon: 'truck',
         relatedVehicleIds: delayed.map(v => v.id),
       })
     }
@@ -103,7 +131,7 @@ function useCopilotRecommendations(): CopilotRecommendation[] {
           description: `Road blocked since ${new Date(r.blockedSince ?? '').toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}. Calculate alternate routes.`,
           action: 'navigate-routes',
           actionLabel: 'Recalculate',
-          icon: '🚫',
+          icon: 'ban',
           relatedRoadId: r.id,
           relatedVehicleIds: r.affectedVehicles,
         })
@@ -120,7 +148,7 @@ function useCopilotRecommendations(): CopilotRecommendation[] {
         description: `Immediate review required. Oldest: ${critAlerts[0]?.title ?? '—'}`,
         action: 'navigate-alerts',
         actionLabel: 'Review Alerts',
-        icon: '🔴',
+        icon: 'octagon',
       })
     }
 
@@ -152,7 +180,7 @@ export function CopilotPanel({ className }: Props) {
 
   const handleAccept = useCallback((rec: CopilotRecommendation) => {
     setAccepted(s => new Set([...s, rec.id]))
-    toast.success(`✅ Action taken: ${rec.title}`)
+    toast.success(`Action taken: ${rec.title}`)
     setTimeout(() => {
       setDismissed(s => new Set([...s, rec.id]))
     }, 1800)
@@ -205,7 +233,7 @@ export function CopilotPanel({ className }: Props) {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start justify-between gap-1">
                       <div className="flex items-center gap-1.5 min-w-0">
-                        <span className="text-sm">{rec.icon}</span>
+                        {renderCopilotIcon(rec.icon)}
                         <span className="text-xs font-semibold text-text leading-tight">{rec.title}</span>
                       </div>
                       <button onClick={() => handleDismiss(rec.id)}

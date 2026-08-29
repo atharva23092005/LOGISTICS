@@ -45,17 +45,26 @@ export function NotificationPanel({ onClose }: NotificationPanelProps) {
           </Button>
         </div>
       </div>
-      <div className="max-h-96 overflow-y-auto p-3 space-y-2">
-        {activeAlerts.length === 0
-          ? <div className="text-center py-8 text-xs text-text-muted">No active notifications</div>
-          : activeAlerts.map(a => (
-              <AlertCard key={a.id} alert={a} compact onAcknowledge={acknowledge} />
-            ))
-        }
+      <div className="max-h-96 overflow-y-auto p-3 space-y-2 hide-scrollbar">
+        {activeAlerts.length === 0 ? (
+          <div className="text-center py-10 px-4 space-y-2">
+            <div className="h-10 w-10 rounded-full bg-surface-2 border border-border flex items-center justify-center mx-auto text-text-muted">
+              <Bell className="h-5 w-5 opacity-40" />
+            </div>
+            <div className="text-xs font-semibold text-text">No active alerts</div>
+            <p className="text-[11px] text-text-dim max-w-[200px] mx-auto">
+              All regional corridors and fleet telemetries are running normally.
+            </p>
+          </div>
+        ) : (
+          activeAlerts.map(a => (
+            <AlertCard key={a.id} alert={a} compact onAcknowledge={acknowledge} />
+          ))
+        )}
       </div>
-      <div className="p-3 border-t border-border">
-        <Button variant="ghost" size="sm" className="w-full text-primary" onClick={handleViewAll}>
-          View All Alerts
+      <div className="p-2.5 border-t border-border bg-surface-2/30">
+        <Button variant="outline" size="sm" className="w-full text-xs font-semibold" onClick={handleViewAll}>
+          View Incident Management Queue
         </Button>
       </div>
     </div>

@@ -79,7 +79,7 @@ export function FleetIntelligenceSection() {
                   variant={detourActive ? 'success' : 'warning'}
                   className="text-2xs font-bold"
                 >
-                  {detourActive ? '✓ REROUTED SAFE' : '🟡 AT RISK'}
+                  {detourActive ? 'REROUTED SAFE' : 'AT RISK'}
                 </Badge>
               </div>
 

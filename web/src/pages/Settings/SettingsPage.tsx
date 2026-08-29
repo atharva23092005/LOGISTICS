@@ -51,7 +51,7 @@ export function SettingsPage() {
     if (user) {
       login({ ...user, name, email })
     }
-    toast.success('✅ Profile details updated successfully!')
+    toast.success('Profile details updated successfully!')
   }
 
   return (

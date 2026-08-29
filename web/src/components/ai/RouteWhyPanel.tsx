@@ -4,7 +4,10 @@
  * and a Human-in-the-Loop Accept / Override flow with reason capture.
  */
 import { useState, useCallback } from 'react'
-import { CheckCircle, AlertTriangle, Shield, Cpu, ChevronDown, ChevronUp, Edit3 } from 'lucide-react'
+import {
+  CheckCircle, AlertTriangle, Shield, Cpu, ChevronDown, ChevronUp, Edit3,
+  Sparkles, MapPin, Clock
+} from 'lucide-react'
 import { toast } from 'sonner'
 import { cn } from '@/utils/cn'
 import { Button } from '@/components/ui/button'
@@ -24,7 +27,7 @@ const OVERRIDE_REASONS = [
 interface Props {
   recommended: RouteOption
   alternatives: RouteOption[]
-  onAccept:   (route: RouteOption) => void
+  onAccept: (route: RouteOption) => void
   onOverride: (route: RouteOption, reason: string) => void
 }
 
@@ -39,7 +42,7 @@ export function RouteWhyPanel({ recommended, alternatives, onAccept, onOverride 
   const handleAccept = useCallback(() => {
     setDecided('accepted')
     onAccept(recommended)
-    toast.success('✅ AI recommendation accepted', {
+    toast.success('AI recommendation accepted', {
       description: `${recommended.label} dispatched. Driver notified.`,
       duration: 5000,
     })
@@ -59,7 +62,7 @@ export function RouteWhyPanel({ recommended, alternatives, onAccept, onOverride 
     setDecided('overridden')
     setOverrideModal(false)
     onOverride(selectedAlt, reason)
-    toast.warning(`⚠️ AI recommendation overridden`, {
+    toast.warning(`AI recommendation overridden`, {
       description: `Selected: ${selectedAlt.label} · Reason: ${reason}`,
       duration: 6000,
     })
@@ -122,7 +125,10 @@ export function RouteWhyPanel({ recommended, alternatives, onAccept, onOverride 
                 <div className={cn('p-2 rounded-lg border', riskBg(recommended.riskScore))}>
                   <div className="flex items-center justify-between">
                     <div>
-                      <span className="text-[10px] font-bold text-success mr-1.5">🏆 AI PICK</span>
+                      <span className="text-[10px] font-bold text-success mr-1.5 inline-flex items-center gap-1">
+                        <Sparkles className="h-3 w-3 inline text-success" />
+                        AI PICK
+                      </span>
                       <span className="text-xs text-text">{recommended.via.join(' → ')}</span>
                     </div>
                     <span className={cn('text-xs font-bold', riskColor(recommended.riskScore))}>
@@ -130,8 +136,8 @@ export function RouteWhyPanel({ recommended, alternatives, onAccept, onOverride 
                     </span>
                   </div>
                   <div className="flex gap-3 mt-1 text-[10px] text-text-muted">
-                    <span>📍 {recommended.distance}km</span>
-                    <span>⏱ {Math.floor(recommended.duration/60)}h {recommended.duration%60}m</span>
+                    <span className="inline-flex items-center gap-1"><MapPin className="h-3 w-3 text-text-subtle" /> {recommended.distance}km</span>
+                    <span className="inline-flex items-center gap-1"><Clock className="h-3 w-3 text-text-subtle" /> {Math.floor(recommended.duration/60)}h {recommended.duration%60}m</span>
                   </div>
                 </div>
 
@@ -149,8 +155,8 @@ export function RouteWhyPanel({ recommended, alternatives, onAccept, onOverride 
                     </div>
                     <div className="flex items-center justify-between mt-1">
                       <div className="flex gap-3 text-[10px] text-text-muted">
-                        <span>📍 {alt.distance}km</span>
-                        <span>⏱ {Math.floor(alt.duration/60)}h {alt.duration%60}m</span>
+                        <span className="inline-flex items-center gap-1"><MapPin className="h-3 w-3 text-text-subtle" /> {alt.distance}km</span>
+                        <span className="inline-flex items-center gap-1"><Clock className="h-3 w-3 text-text-subtle" /> {Math.floor(alt.duration/60)}h {alt.duration%60}m</span>
                       </div>
                       {!decided && (
                         <button

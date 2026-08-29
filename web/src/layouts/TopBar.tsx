@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom'
 import {
   Bell, Wifi, WifiOff, User, ChevronDown,
   LogOut, Settings, AlertOctagon, Play,
-  Cpu, Menu, X, Zap,
+  Cpu, Menu, X, Zap, PanelLeftClose, PanelLeftOpen, PanelLeft,
+  Navigation, Building2, BarChart3, Smartphone, Truck, Globe
 } from 'lucide-react'
 import { cn } from '@/utils/cn'
 import {
@@ -23,6 +24,8 @@ const selDeactivate       = (s: ReturnType<typeof useAppStore.getState>)   => s.
 const selLogout           = (s: ReturnType<typeof useAppStore.getState>)   => s.logout
 const selNetworkOnline    = (s: ReturnType<typeof useAppStore.getState>)   => s.networkOnline
 const selDemoMode         = (s: ReturnType<typeof useAppStore.getState>)   => s.demoMode
+const selSidebarCollapsed = (s: ReturnType<typeof useAppStore.getState>)   => s.sidebarCollapsed
+const selSetSidebarCollapsed = (s: ReturnType<typeof useAppStore.getState>) => s.setSidebarCollapsed
 const selAlertActiveCount = (s: ReturnType<typeof useAlertStore.getState>) =>
   s.alerts.filter(a => a.status === 'active').length
 
@@ -44,6 +47,8 @@ export function TopBar({ onMenuToggle, mobileMenuOpen }: TopBarProps) {
   const logout            = useAppStore(selLogout)
   const networkOnline     = useAppStore(selNetworkOnline)
   const demoMode          = useAppStore(selDemoMode)
+  const sidebarCollapsed  = useAppStore(selSidebarCollapsed)
+  const setSidebarCollapsed = useAppStore(selSetSidebarCollapsed)
   const alertActive       = useAlertStore(selAlertActiveCount)
 
   const [notifOpen,   setNotifOpen]   = useState(false)
@@ -75,6 +80,21 @@ export function TopBar({ onMenuToggle, mobileMenuOpen }: TopBarProps) {
               : <Menu className="h-5 w-5" />
             }
           </button>
+
+          {/* Desktop sidebar collapse toggle */}
+          <Tooltip content={sidebarCollapsed ? "Expand Navigation (Ctrl+B)" : "Collapse Navigation (Ctrl+B)"} side="bottom">
+            <button
+              onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+              className="hidden lg:flex p-1.5 rounded-lg text-text-muted hover:text-text hover:bg-surface-2 transition-colors flex-shrink-0"
+              title={sidebarCollapsed ? "Expand sidebar (Ctrl+B)" : "Collapse sidebar (Ctrl+B)"}
+            >
+              {sidebarCollapsed ? (
+                <PanelLeftOpen className="h-4 w-4 text-primary" />
+              ) : (
+                <PanelLeft className="h-4 w-4" />
+              )}
+            </button>
+          </Tooltip>
 
           {/* Mobile logo */}
           <div className="flex items-center gap-2 lg:hidden">
@@ -193,7 +213,7 @@ export function TopBar({ onMenuToggle, mobileMenuOpen }: TopBarProps) {
 
               {/* Surface / Role Switcher for Demo & Presentation */}
               <div className="px-2 py-1 text-[10px] font-bold text-text-muted uppercase tracking-wider">
-                Switch Client Surface
+                Switch Operational Role
               </div>
               <DropdownMenuItem
                 onClick={() => {
@@ -201,11 +221,13 @@ export function TopBar({ onMenuToggle, mobileMenuOpen }: TopBarProps) {
                   toast.success('Switched to: Dispatcher (Command Center)')
                   navigate('/dashboard')
                 }}
-                className="gap-2 text-xs"
+                className="gap-2.5 text-xs py-2"
               >
-                <span>🎯</span>
-                <div className="flex-1">
-                  <div className="font-semibold">Dispatcher</div>
+                <div className="h-6 w-6 rounded-md bg-primary/10 border border-primary/20 flex items-center justify-center flex-shrink-0 text-primary">
+                  <Navigation className="h-3.5 w-3.5" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="font-semibold text-text">Dispatcher</div>
                   <div className="text-[10px] text-text-muted">Full Live Map & Dispatch</div>
                 </div>
               </DropdownMenuItem>
@@ -215,11 +237,13 @@ export function TopBar({ onMenuToggle, mobileMenuOpen }: TopBarProps) {
                   toast.success('Switched to: District Admin (East Siang)')
                   navigate('/dashboard')
                 }}
-                className="gap-2 text-xs"
+                className="gap-2.5 text-xs py-2"
               >
-                <span>🏛️</span>
-                <div className="flex-1">
-                  <div className="font-semibold">District Admin</div>
+                <div className="h-6 w-6 rounded-md bg-warning/10 border border-warning/20 flex items-center justify-center flex-shrink-0 text-warning">
+                  <Building2 className="h-3.5 w-3.5" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="font-semibold text-text">District Admin</div>
                   <div className="text-[10px] text-text-muted">District Verification Queue</div>
                 </div>
               </DropdownMenuItem>
@@ -229,11 +253,13 @@ export function TopBar({ onMenuToggle, mobileMenuOpen }: TopBarProps) {
                   toast.success('Switched to: Senior Official (Read-Only)')
                   navigate('/dashboard')
                 }}
-                className="gap-2 text-xs"
+                className="gap-2.5 text-xs py-2"
               >
-                <span>📊</span>
-                <div className="flex-1">
-                  <div className="font-semibold">Senior Official</div>
+                <div className="h-6 w-6 rounded-md bg-info/10 border border-info/20 flex items-center justify-center flex-shrink-0 text-info">
+                  <BarChart3 className="h-3.5 w-3.5" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="font-semibold text-text">Senior Official</div>
                   <div className="text-[10px] text-text-muted">Read-Only Analytics & Trends</div>
                 </div>
               </DropdownMenuItem>
@@ -243,11 +269,13 @@ export function TopBar({ onMenuToggle, mobileMenuOpen }: TopBarProps) {
                   toast.success('Switched to: Field Officer (Offline App)')
                   navigate('/dashboard')
                 }}
-                className="gap-2 text-xs"
+                className="gap-2.5 text-xs py-2"
               >
-                <span>📱</span>
-                <div className="flex-1">
-                  <div className="font-semibold">Field Officer App</div>
+                <div className="h-6 w-6 rounded-md bg-success/10 border border-success/20 flex items-center justify-center flex-shrink-0 text-success">
+                  <Smartphone className="h-3.5 w-3.5" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="font-semibold text-text">Field Officer App</div>
                   <div className="text-[10px] text-text-muted">Offline Reports & Sync</div>
                 </div>
               </DropdownMenuItem>
@@ -257,22 +285,26 @@ export function TopBar({ onMenuToggle, mobileMenuOpen }: TopBarProps) {
                   toast.success('Switched to: Driver App')
                   navigate('/driver')
                 }}
-                className="gap-2 text-xs"
+                className="gap-2.5 text-xs py-2"
               >
-                <span>🚛</span>
-                <div className="flex-1">
-                  <div className="font-semibold">Driver / Transporter</div>
+                <div className="h-6 w-6 rounded-md bg-amber-500/10 border border-amber-500/20 flex items-center justify-center flex-shrink-0 text-amber-400">
+                  <Truck className="h-3.5 w-3.5" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="font-semibold text-text">Driver / Transporter</div>
                   <div className="text-[10px] text-text-muted">Live Reroute & SMS Alert</div>
                 </div>
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => navigate('/public')}
-                className="gap-2 text-xs text-blue-400"
+                className="gap-2.5 text-xs py-2 text-primary hover:text-primary"
               >
-                <span>🌐</span>
-                <div className="flex-1">
+                <div className="h-6 w-6 rounded-md bg-primary/10 border border-primary/30 flex items-center justify-center flex-shrink-0 text-primary">
+                  <Globe className="h-3.5 w-3.5" />
+                </div>
+                <div className="flex-1 min-w-0">
                   <div className="font-semibold">Public Citizen Portal</div>
-                  <div className="text-[10px] text-blue-400/70">Anonymous Road Status</div>
+                  <div className="text-[10px] text-text-muted">Anonymous Road Status</div>
                 </div>
               </DropdownMenuItem>
 

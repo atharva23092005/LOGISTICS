@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react'
 import {
-  Search, Truck, RotateCcw, Phone, AlertTriangle, Compass, Copy, Navigation, Clock
+  Search, Truck, RotateCcw, Phone, AlertTriangle, Compass, Copy, Navigation, Clock,
+  HeartPulse, Fuel, X
 } from 'lucide-react'
 import { toast } from 'sonner'
 import { MapEngine }          from '@/modules/map/MapEngine'
@@ -83,7 +84,7 @@ export function FleetPage() {
 
   const confirmReroute = useCallback(() => {
     if (!rerouteModal) return
-    toast.success(`🔄 Rerouting ${rerouteModal.registrationNo}`, {
+    toast.success(`Rerouting ${rerouteModal.registrationNo}`, {
       description: 'New safe route via NH-27 corridor dispatched to driver.'
     })
     setRerouteModal(null)
@@ -91,7 +92,7 @@ export function FleetPage() {
 
   const handleCallDriver = (v: Vehicle) => {
     navigator.clipboard.writeText(v.driverPhone)
-    toast.info(`📞 Calling ${v.driver}: ${v.driverPhone}`, {
+    toast.info(`Calling ${v.driver}: ${v.driverPhone}`, {
       description: 'Phone number copied to clipboard.'
     })
   }
@@ -205,96 +206,6 @@ export function FleetPage() {
             layers={['roads', 'vehicles', 'alerts']}
             onVehicleClick={handleSelect}
           />
-
-          {/* Selected Vehicle Float Card / Trip Replay Scrubber */}
-          {selectedVehicle && (
-            <div className="absolute top-4 right-4 z-20 w-80 md:w-96 animate-scale-in">
-              {showReplay ? (
-                <TripReplayScrubber
-                  vehicle={selectedVehicle}
-                  onClose={() => setShowReplay(false)}
-                />
-              ) : (() => {
-                const v = selectedVehicle
-                const etaMins = Math.max(0, Math.floor((new Date(v.eta).getTime() - Date.now()) / 60000))
-                return (
-                  <div className="surface-elevated rounded-2xl p-4 space-y-3 shadow-modal border border-border/80">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <span className="text-lg p-1 rounded-lg bg-surface-2 border border-white/5">
-                          {v.type === 'ambulance' ? '🚑' : v.type === 'tanker' ? '⛽' : '🚛'}
-                        </span>
-                        <div>
-                          <div className="text-sm font-bold font-mono text-text">{v.registrationNo}</div>
-                          <div className="text-2xs text-text-muted">{v.district} District</div>
-                        </div>
-                      </div>
-                      <Button size="icon-sm" variant="ghost" onClick={() => selectVehicle(null)}>✕</Button>
-                    </div>
-
-                    <div className="space-y-1.5 text-xs bg-surface-2/60 p-2.5 rounded-xl border border-border/40">
-                      {[
-                        ['Cargo', v.cargo],
-                        ['Driver', `${v.driver} (${v.driverPhone})`],
-                        ['Speed', `${v.speed} km/h`],
-                        ['ETA', formatDuration(etaMins)],
-                        ['Remaining', formatDistance(v.distanceRemaining)],
-                        ['Fuel Level', `${v.fuelLevel}%`],
-                      ].map(([l, val]) => (
-                        <div key={l} className="flex justify-between text-2xs">
-                          <span className="text-text-muted">{l}:</span>
-                          <span className="text-text font-semibold">{val}</span>
-                        </div>
-                      ))}
-                    </div>
-
-                    <div>
-                      <div className="flex justify-between text-2xs text-text-muted mb-1">
-                        <span>Route Progress</span>
-                        <span className="font-semibold text-text">{v.progress}%</span>
-                      </div>
-                      <Progress value={v.progress} />
-                    </div>
-
-                    {/* Trip Replay Trigger Button */}
-                    <Button
-                      size="sm"
-                      variant="secondary"
-                      className="w-full text-xs bg-white/5 hover:bg-white/10"
-                      onClick={() => setShowReplay(true)}
-                    >
-                      <Clock className="h-3.5 w-3.5 text-primary" /> Replay Trip & Telemetry History
-                    </Button>
-
-                    <div className="flex gap-2">
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        className="flex-1 text-xs"
-                        onClick={() => handleCallDriver(v)}
-                      >
-                        <Phone className="h-3 w-3" /> Call Driver
-                      </Button>
-                      {v.status !== 'on_route' && (
-                        <Button
-                          size="sm"
-                          variant="warning"
-                          className="flex-1 text-xs font-semibold"
-                          onClick={() => handleReroute(v)}
-                        >
-                          <RotateCcw className="h-3 w-3" /> Reroute
-                        </Button>
-                      )}
-                    </div>
-
-                    <div className="text-[10px] text-text-subtle text-center">
-                      Live GPS Ping • Updated {timeAgo(v.lastUpdate)}
-                    </div>
-                  </div>
-                )
-              })()}
-            </div>
-          )}
         </div>
       </div>
 

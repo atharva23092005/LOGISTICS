@@ -106,7 +106,7 @@ export const mockRouteOptions: RouteOption[] = [
     ],
     via: ['Guwahati', 'Nagaon', 'Tezpur', 'Gohpur', 'Banderdewa', 'Itanagar'],
     whyReasons: [
-      '🏆 Lowest overall hazard exposure (18% vs 87% direct route).',
+      'Lowest overall hazard exposure (18% vs 87% direct route).',
       'All bridges on North Bank SH-15 verified structurally sound with green inspection tags.',
       'Terrain gradient stays under 7.4° slope (minimal landslide trigger risk).',
       'Bypasses active NH-415 mudslide bottleneck with zero congestion.',
@@ -126,7 +126,7 @@ export const mockRouteOptions: RouteOption[] = [
     avoidedHazards: [],
     via: ['Guwahati', 'Kaziranga', 'Jorhat', 'Dibrugarh', 'NH-415 Km 42'],
     whyReasons: [
-      '⚠️ CRITICAL: Blocked by active landslide at NH-415 Km 42 near Itanagar.',
+      'CRITICAL: Blocked by active landslide at NH-415 Km 42 near Itanagar.',
       '120m roadway covered by heavy mud and fallen boulders at 24.5° slope gradient.',
       'High soil saturation index (>85%) indicates recurring slope failure danger.',
     ],

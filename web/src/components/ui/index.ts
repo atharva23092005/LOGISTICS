@@ -27,3 +27,4 @@ export { Popover, PopoverTrigger, PopoverContent, PopoverAnchor } from './popove
 export { Separator } from './separator'
 export { Switch } from './switch'
 export { ScrollArea, ScrollBar } from './scroll-area'
+export { WeatherIcon } from './WeatherIcon'

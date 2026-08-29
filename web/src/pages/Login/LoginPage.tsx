@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Zap, Eye, EyeOff, Shield, Map, Truck, ArrowRight } from 'lucide-react'
+import { Zap, Eye, EyeOff, Shield, Map, Truck, ArrowRight, Globe } from 'lucide-react'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Input }  from '@/components/ui/input'
@@ -32,6 +32,7 @@ export function LoginPage() {
       login(acc.user)
       toast.success(`Welcome, ${acc.user.name} (${acc.label})`)
       if (acc.user.role === 'driver') navigate('/driver')
+      else if (acc.user.role === 'field_officer') navigate('/field-officer')
       else navigate('/dashboard')
     } else {
       toast.error('Invalid credentials')
@@ -43,6 +44,7 @@ export function LoginPage() {
     login(acc.user)
     toast.success(`Logged in as ${acc.user.name} (${acc.label})`)
     if (acc.user.role === 'driver') navigate('/driver')
+    else if (acc.user.role === 'field_officer') navigate('/field-officer')
     else navigate('/dashboard')
   }
 
@@ -174,8 +176,9 @@ export function LoginPage() {
                 onClick={() => navigate('/public')}
                 className="w-full py-2.5 px-3 rounded-xl bg-blue-600/10 hover:bg-blue-600/20 text-blue-400 border border-blue-500/30 text-xs font-semibold flex items-center justify-center gap-2 transition-colors"
               >
-                <span>🌐 Open Public Citizen Road Portal (No Login)</span>
-                <ArrowRight className="h-3.5 w-3.5" />
+                <Globe className="h-3.5 w-3.5" />
+                <span>Open Public Citizen Road Portal (No Login)</span>
+                <ArrowRight className="h-3.5 w-3.5 ml-auto" />
               </button>
             </div>
           </div>

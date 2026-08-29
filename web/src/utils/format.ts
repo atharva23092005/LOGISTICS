@@ -73,14 +73,19 @@ export function priorityColor(priority: string): string {
   return map[priority] ?? 'text-text-muted'
 }
 
-export function weatherIcon(condition: string): string {
+export function weatherLabel(condition: string): string {
   const map: Record<string, string> = {
-    clear: '☀️',
-    cloudy: '☁️',
-    rain: '🌧',
-    heavy_rain: '⛈',
-    storm: '🌪',
-    fog: '🌫',
+    clear: 'Clear Skies',
+    cloudy: 'Overcast',
+    rain: 'Moderate Rain',
+    heavy_rain: 'Heavy Torrential Rain',
+    storm: 'Thunderstorm Warning',
+    fog: 'Dense Fog / Low Visibility',
   }
-  return map[condition] ?? '🌡'
+  return map[condition] ?? 'Normal'
 }
+
+export function weatherIcon(condition: string): string {
+  return weatherLabel(condition)
+}
+

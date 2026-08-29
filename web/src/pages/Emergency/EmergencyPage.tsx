@@ -2,7 +2,8 @@ import { useState, useCallback } from 'react'
 import {
   AlertOctagon, Shield, Truck, Navigation, Phone, Radio, CheckCircle,
   Zap, Send, Copy, AlertTriangle, ExternalLink, RefreshCw, Layers, Compass,
-  Building2, ShieldAlert, Plane, HeartPulse
+  Building2, ShieldAlert, Plane, HeartPulse, Wheat, Droplets, Package,
+  Fuel, X, Target, Check, AlertCircle, LucideIcon
 } from 'lucide-react'
 import { toast } from 'sonner'
 import { MapEngine } from '@/modules/map/MapEngine'
@@ -31,13 +32,25 @@ interface SafeCorridor {
   color: string
 }
 
-const PRIORITY_CONFIG = [
+interface PriorityItem {
+  category: string
+  label: string
+  icon: LucideIcon
+  color: string
+  badge: 'danger' | 'warning' | 'info' | 'muted'
+  order: number
+  target: string
+  readyVehicles: number
+  preferredCorridor: string
+}
+
+const PRIORITY_CONFIG: PriorityItem[] = [
   {
     category: 'medical',
     label: 'Medical Supplies',
-    icon: '🏥',
+    icon: HeartPulse,
     color: 'border-danger/40 bg-danger/5 hover:border-danger/60',
-    badge: 'danger' as const,
+    badge: 'danger',
     order: 1,
     target: 'District Hospital Pasighat & Relief Camps',
     readyVehicles: 3,
@@ -46,9 +59,9 @@ const PRIORITY_CONFIG = [
   {
     category: 'food',
     label: 'Food & Rations',
-    icon: '🌾',
+    icon: Wheat,
     color: 'border-warning/40 bg-warning/5 hover:border-warning/60',
-    badge: 'warning' as const,
+    badge: 'warning',
     order: 2,
     target: 'Shelter Hubs 1 & 2 (East Siang)',
     readyVehicles: 5,
@@ -57,9 +70,9 @@ const PRIORITY_CONFIG = [
   {
     category: 'water',
     label: 'Water & Sanitation',
-    icon: '💧',
+    icon: Droplets,
     color: 'border-info/40 bg-info/5 hover:border-info/60',
-    badge: 'info' as const,
+    badge: 'info',
     order: 3,
     target: 'Purification Plants & Water Tankers',
     readyVehicles: 4,
@@ -68,9 +81,9 @@ const PRIORITY_CONFIG = [
   {
     category: 'other',
     label: 'Rescue & Heavy Gear',
-    icon: '📦',
+    icon: Package,
     color: 'border-border bg-surface-2/50 hover:border-primary/40',
-    badge: 'muted' as const,
+    badge: 'muted',
     order: 4,
     target: 'NDRF Base Station & Helipad Alpha',
     readyVehicles: 2,
@@ -177,7 +190,7 @@ export function EmergencyPage() {
   const handleActivate = () => {
     activateEmergency(customReason || 'Critical emergency active across network')
     setActivateModal(false)
-    toast.error('🚨 Emergency Mode Activated', {
+    toast.error('Emergency Mode Activated', {
       description: 'Priority: Medical → Food → Water. All safe corridors active.',
       duration: 8000,
     })
@@ -206,7 +219,7 @@ export function EmergencyPage() {
       ...prev
     ])
 
-    toast.success(`✅ ${category} Convoy Dispatched!`, {
+    toast.success(`${category} Convoy Dispatched!`, {
       description: `${count} vehicles routed via ${corridor} with priority clearance.`,
     })
   }
@@ -220,7 +233,7 @@ export function EmergencyPage() {
       { time: timeStr, msg: `[BROADCAST] ${newBroadcast.trim()}`, type: 'warning' },
       ...prev
     ])
-    toast.info('📡 Emergency broadcast transmitted to all fleet units')
+    toast.info('Emergency broadcast transmitted to all fleet units')
     setNewBroadcast('')
   }
 
@@ -426,43 +439,51 @@ export function EmergencyPage() {
                   <span className="text-2xs text-primary font-medium">Ranked by Protocol</span>
                 </div>
 
-                {PRIORITY_CONFIG.map((p) => (
-                  <div
-                    key={p.category}
-                    className={`app-card p-3 border transition-all duration-200 ${p.color}`}
-                  >
-                    <div className="flex items-start justify-between gap-2 mb-2">
-                      <div className="flex items-center gap-2.5">
-                        <span className="text-xl p-1 rounded-lg bg-surface-2">{p.icon}</span>
-                        <div>
-                          <div className="text-xs font-bold text-text">{p.label}</div>
-                          <div className="flex items-center gap-1.5 mt-0.5">
-                            <Badge variant={p.badge} className="text-2xs py-0 px-1.5 font-bold">
-                              Priority {p.order}
-                            </Badge>
-                            <span className="text-2xs text-text-dim">• {p.readyVehicles} Ready</span>
+                {PRIORITY_CONFIG.map((p) => {
+                  const PIcon = p.icon
+                  return (
+                    <div
+                      key={p.category}
+                      className={`app-card p-3 border transition-all duration-200 ${p.color}`}
+                    >
+                      <div className="flex items-start justify-between gap-2 mb-2">
+                        <div className="flex items-center gap-2.5">
+                          <div className="p-2 rounded-lg bg-surface-2 border border-white/5 flex items-center justify-center flex-shrink-0">
+                            <PIcon className="h-4 w-4 text-primary" />
+                          </div>
+                          <div>
+                            <div className="text-xs font-bold text-text">{p.label}</div>
+                            <div className="flex items-center gap-1.5 mt-0.5">
+                              <Badge variant={p.badge} className="text-2xs py-0 px-1.5 font-bold">
+                                Priority {p.order}
+                              </Badge>
+                              <span className="text-2xs text-text-dim">• {p.readyVehicles} Ready</span>
+                            </div>
                           </div>
                         </div>
+                        <Button
+                          size="sm"
+                          variant={p.order === 1 ? 'destructive' : p.order === 2 ? 'warning' : 'secondary'}
+                          className="text-xs h-7 px-2.5 font-semibold"
+                          onClick={() => setDispatchModal(p)}
+                        >
+                          <Send className="h-3 w-3" /> Dispatch
+                        </Button>
                       </div>
-                      <Button
-                        size="sm"
-                        variant={p.order === 1 ? 'destructive' : p.order === 2 ? 'warning' : 'secondary'}
-                        className="text-xs h-7 px-2.5 font-semibold"
-                        onClick={() => setDispatchModal(p)}
-                      >
-                        <Send className="h-3 w-3" /> Dispatch
-                      </Button>
-                    </div>
 
-                    <div className="text-2xs text-text-muted bg-surface-2/70 rounded-md p-2 border border-border/40">
-                      <div className="text-text font-medium truncate">🎯 {p.target}</div>
-                      <div className="text-text-subtle mt-0.5 flex items-center justify-between">
-                        <span>Safe Route: <strong className="text-success">{p.preferredCorridor}</strong></span>
-                        <span className="text-primary cursor-pointer hover:underline" onClick={() => setDispatchModal(p)}>Configure Convoy →</span>
+                      <div className="text-2xs text-text-muted bg-surface-2/70 rounded-md p-2 border border-border/40">
+                        <div className="text-text font-medium truncate flex items-center gap-1">
+                          <Target className="h-3 w-3 text-primary flex-shrink-0" />
+                          <span>{p.target}</span>
+                        </div>
+                        <div className="text-text-subtle mt-0.5 flex items-center justify-between">
+                          <span>Safe Route: <strong className="text-success">{p.preferredCorridor}</strong></span>
+                          <span className="text-primary cursor-pointer hover:underline" onClick={() => setDispatchModal(p)}>Configure Convoy →</span>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  )
+                })}
 
                 {/* Quick Notice */}
                 <div className="p-2.5 rounded-lg bg-primary/10 border border-primary/20 text-2xs text-text-muted space-y-1">
@@ -588,8 +609,10 @@ export function EmergencyPage() {
             <div className="absolute bottom-12 left-1/2 -translate-x-1/2 w-full max-w-sm px-3 z-20 animate-scale-in">
               <div className="surface-elevated rounded-xl p-3 border border-border shadow-modal flex items-center justify-between gap-3">
                 <div className="flex items-center gap-2.5 min-w-0">
-                  <div className="h-8 w-8 rounded-lg bg-surface-2 flex items-center justify-center text-lg flex-shrink-0">
-                    {selectedV.type === 'ambulance' ? '🚑' : selectedV.type === 'tanker' ? '⛽' : '🚛'}
+                  <div className="p-2 rounded-lg bg-surface-2 border border-white/5 text-primary flex items-center justify-center flex-shrink-0">
+                    {selectedV.type === 'ambulance' ? <HeartPulse className="h-4 w-4 text-danger" /> :
+                     selectedV.type === 'tanker' ? <Fuel className="h-4 w-4 text-warning" /> :
+                     <Truck className="h-4 w-4 text-primary" />}
                   </div>
                   <div className="min-w-0">
                     <div className="text-xs font-bold text-text font-mono truncate">{selectedV.registrationNo}</div>
@@ -600,7 +623,9 @@ export function EmergencyPage() {
                   <Badge variant={selectedV.status === 'stopped' ? 'critical' : selectedV.status === 'on_route' ? 'success' : 'warning'}>
                     {selectedV.status.toUpperCase()}
                   </Badge>
-                  <Button size="icon-sm" variant="ghost" onClick={() => setSelectedV(null)}>✕</Button>
+                  <Button size="icon-sm" variant="ghost" onClick={() => setSelectedV(null)}>
+                    <X className="h-3.5 w-3.5" />
+                  </Button>
                 </div>
               </div>
             </div>
@@ -666,10 +691,10 @@ export function EmergencyPage() {
                         </div>
                         <div className="text-2xs text-text-muted truncate">{c.route}</div>
                       </div>
-                      <span className={`text-2xs font-bold px-1.5 py-0.5 rounded-full ${
-                        c.status === 'active' ? 'bg-success/20 text-success' : 'bg-danger/20 text-danger'
+                      <span className={`text-2xs font-bold px-2 py-0.5 rounded-full border ${
+                        c.status === 'active' ? 'bg-success/15 text-success border-success/30' : 'bg-danger/15 text-danger border-danger/30'
                       }`}>
-                        {c.status === 'active' ? '✓ OPEN' : '✗ BLOCKED'}
+                        {c.status === 'active' ? 'OPEN' : 'BLOCKED'}
                       </span>
                     </div>
 
