@@ -1,0 +1,22 @@
+{
+  "features": [
+    "rainfall_24h",
+    "rainfall_72h",
+    "rainfall_7d",
+    "rainfall_anomaly",
+    "elevation",
+    "slope",
+    "terrain_ruggedness",
+    "distance_to_river",
+    "land_cover",
+    "water_occurrence",
+    "historical_landslide_count",
+    "highway_class_encoded",
+    "bridge",
+    "road_length_m",
+    "month",
+    "monsoon_indicator"
+  ],
+  "target": "disruption_next_24h",
+  "feature_count": 16
+}

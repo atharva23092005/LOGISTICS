@@ -1,0 +1,22 @@
+# ── Web service ───────────────────────────────────────────────────────────────
+fastapi==0.115.0
+uvicorn[standard]==0.30.6
+httpx==0.27.2
+pydantic==2.9.2
+python-dotenv==1.0.1
+
+# ── ML / data (disruption-risk model + feature pipeline) ──────────────────────
+xgboost==3.1.2
+scikit-learn==1.7.0
+pandas==2.3.1
+numpy==1.26.4
+scipy==1.15.3
+joblib==1.5.1
+pyarrow==17.0.0
+
+# ── Optimization (OR-Tools VRP + A* fallback) ─────────────────────────────────
+ortools==9.8.3296
+
+# NOTE: explainability uses XGBoost's built-in pred_contribs (no `shap` dependency).
+# NOTE: torch is intentionally NOT used — the model is XGBoost-only (CPU-only torch
+#       would risk a multi-hour training hang). LSTM/CNN are a future ensemble extension.

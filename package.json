@@ -1,0 +1,10 @@
+{
+  "name": "ner-logistics",
+  "private": true,
+  "scripts": {
+    "web":        "npm run dev --prefix web",
+    "backend":    "npm run dev --prefix backend",
+    "python":     "cd python-service && python -m uvicorn app.main:app --reload --port 8000",
+    "install:all": "npm install --prefix web && npm install --prefix backend && pip install -r python-service/requirements.txt"
+  }
+}

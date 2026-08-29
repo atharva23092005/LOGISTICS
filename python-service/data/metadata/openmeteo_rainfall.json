@@ -1,0 +1,35 @@
+{
+  "dataset_id": "openmeteo_rainfall",
+  "title": "Open-Meteo Historical Weather (ERA5 reanalysis) — NER daily rainfall",
+  "data_source_type": "REAL_OFFICIAL",
+  "source_org": "Open-Meteo (ERA5 data from ECMWF / Copernicus C3S)",
+  "source_url": "https://archive-api.open-meteo.com/v1/archive",
+  "license": "CC-BY 4.0 (Open-Meteo); Copernicus C3S licence (ERA5 data)",
+  "coverage_region": "NER (8 states)",
+  "ner_coverage": "full (grid covers NER bbox)",
+  "date_range": "2007–2016 (ERA5 available 1940–present)",
+  "spatial_resolution": "0.5° (~56 km)",
+  "file_format": "JSON (raw) → NetCDF (processed)",
+  "download_method": "REST API (no auth)",
+  "download_date": "2026-08-29T15:23:07.535428+00:00",
+  "raw_files": [],
+  "columns": [
+    "rainfall_mm",
+    "lat",
+    "lon",
+    "time"
+  ],
+  "ml_use": "Daily rainfall → per-segment antecedent 1/3/7-day rainfall windows; primary hydro-meteorological disruption trigger.",
+  "reliability": "High (ERA5 is ECMWF's flagship reanalysis; physically consistent). Used as fallback because imdpune.gov.in is unreachable from this environment.",
+  "limitations": "ERA5 reanalysis (not gauge truth); coarser than IMD's 0.25° gauge-interpolated product for convective extremes; model-based → may underestimate extreme events.",
+  "verified": true,
+  "verification_notes": "Open-Meteo API verified reachable; ERA5 data confirmed via response.",
+  "processing_version": "1.0.0",
+  "extra": {
+    "fallback_reason": "imdpune.gov.in unreachable (ConnectTimeout / geofencing)",
+    "primary_source": "IMD 0.25° daily gridded rainfall (imdlib)",
+    "processed_netcdf": "C:\\Users\\angad\\Desktop\\Sih2025\\ner-logistics\\python-service\\data\\processed\\ner_rainfall_daily.nc",
+    "grid_resolution_deg": 0.5,
+    "grid_points": 320
+  }
+}

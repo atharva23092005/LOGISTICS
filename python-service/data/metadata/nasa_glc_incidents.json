@@ -1,0 +1,100 @@
+{
+  "dataset_id": "nasa_glc_incidents",
+  "title": "NASA Global Landslide Catalog — NER landslide incidents (labels)",
+  "data_source_type": "REAL_ACADEMIC",
+  "source_org": "NASA Goddard Space Flight Center (GLC / COOLR)",
+  "source_url": "https://data.nasa.gov/docs/legacy/Global_Landslide_Catalog_Export/Global_Landslide_Catalog_Export_rows.csv",
+  "license": "Cite Kirschbaum et al. 2010 & 2015 (data.gov: license not specified)",
+  "coverage_region": "NER (8 states)",
+  "ner_coverage": "442 dated point incidents",
+  "date_range": "2007-04-11 .. 2016-10-15 (bulk 2007-2017; not updated past ~2017)",
+  "spatial_resolution": "point lat/lon with location_accuracy (exact..25 km)",
+  "file_format": "CSV (raw) -> Parquet + GeoPackage (processed)",
+  "download_method": "direct CSV download (no auth)",
+  "download_date": "2026-08-29T15:07:31.616571+00:00",
+  "raw_files": [
+    {
+      "path": "C:\\Users\\angad\\Desktop\\Sih2025\\ner-logistics\\python-service\\data\\raw\\incidents\\glc_export.csv",
+      "bytes": 8479717,
+      "sha256": "2c4898899dd4f373c4320e121c5b655ebb5394d431fa42e57ec4828d07d48b04"
+    }
+  ],
+  "columns": [
+    "event_id",
+    "event_date",
+    "event_time",
+    "event_title",
+    "event_description",
+    "location_description",
+    "location_accuracy",
+    "landslide_category",
+    "landslide_trigger",
+    "landslide_size",
+    "fatality_count",
+    "injury_count",
+    "source_name",
+    "source_link",
+    "admin_division_name",
+    "country_name",
+    "latitude",
+    "longitude",
+    "ner_state",
+    "road_impact_text",
+    "data_source_type",
+    "label_role",
+    "geometry",
+    "geometry_wkt"
+  ],
+  "ml_use": "POSITIVE labels for disruption_next_24h via spatial+temporal buffer join to road segments (distant supervision / weak labels).",
+  "reliability": "High as a hazard record; MEDIA-SOURCED so biased toward severe / road-blocking events. Not an official road-closure ledger.",
+  "limitations": "Bulk data ends ~2017 (drives the 2007-2017 modelling window); location_accuracy varies (0.5-25 km); 'road impact' is a DERIVED text flag, not a source field; reporting bias. Use as weak labels only.",
+  "verified": true,
+  "verification_notes": "Discovery agent downloaded & parsed full CSV (11,033 rows); re-materialised here — see coverage summary in extra.",
+  "processing_version": "1.0.0",
+  "extra": {
+    "coverage_summary": {
+      "ner_incidents": 442,
+      "with_state_name": 344,
+      "road_impact_text": 291,
+      "date_min": "2007-04-11",
+      "date_max": "2016-10-15",
+      "by_year": {
+        "2007": 38,
+        "2008": 16,
+        "2009": 31,
+        "2010": 87,
+        "2011": 43,
+        "2012": 27,
+        "2013": 51,
+        "2014": 27,
+        "2015": 82,
+        "2016": 40
+      },
+      "by_state": {
+        "Assam": 85,
+        "Manipur": 70,
+        "Nagaland": 54,
+        "Sikkim": 48,
+        "Arunachal Pradesh": 38,
+        "Mizoram": 25,
+        "Meghalaya": 21,
+        "Tripura": 3
+      },
+      "location_accuracy": {
+        "5km": 142,
+        "25km": 77,
+        "10km": 71,
+        "1km": 64,
+        "50km": 58,
+        "unknown": 21,
+        "exact": 8,
+        "100km": 1
+      }
+    },
+    "road_impact_regex": "\\b(?:road|highway|nh[-\\s]?\\d+|national\\s+highway|bridge|culvert|route|stranded|cut[-\\s]?off|cutoff|connectivity|traffic|vehicle|transport|blocked|landslip|debris)\\b",
+    "outputs": {
+      "parquet": "C:\\Users\\angad\\Desktop\\Sih2025\\ner-logistics\\python-service\\data\\processed\\ner_landslide_incidents.parquet",
+      "gpkg": "C:\\Users\\angad\\Desktop\\Sih2025\\ner-logistics\\python-service\\data\\processed\\ner_landslide_incidents.gpkg"
+    }
+  }
+}

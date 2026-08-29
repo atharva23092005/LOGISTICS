@@ -1,0 +1,68 @@
+{
+  "timestamp": "2026-08-29T16:16:52.967305Z",
+  "checks": [
+    {
+      "group": "rainfall",
+      "check_name": "missing_values",
+      "status": "PASS",
+      "metric_value": 37.5,
+      "threshold": "< 99%",
+      "message": "37.50% NaN values",
+      "timestamp": "2026-08-29T16:16:52.623286Z"
+    },
+    {
+      "group": "rainfall",
+      "check_name": "impossible_values",
+      "status": "PASS",
+      "metric_value": "neg:0, >1000:0",
+      "threshold": "0 negative",
+      "message": "Checked for < 0 or > 1000 mm/day",
+      "timestamp": "2026-08-29T16:16:52.630857Z"
+    },
+    {
+      "group": "rainfall",
+      "check_name": "temporal_gaps",
+      "status": "PASS",
+      "metric_value": 3653,
+      "threshold": "3653",
+      "message": "Expected 3653 daily steps, found 3653",
+      "timestamp": "2026-08-29T16:16:52.639966Z"
+    },
+    {
+      "group": "incidents",
+      "check_name": "duplicate_events",
+      "status": "PASS",
+      "metric_value": 0,
+      "threshold": "0",
+      "message": "Found 0 duplicate event_ids",
+      "timestamp": "2026-08-29T16:16:52.956197Z"
+    },
+    {
+      "group": "incidents",
+      "check_name": "valid_coordinates",
+      "status": "PASS",
+      "metric_value": "bbox=[88.11, 22.48, 96.93, 29.0]",
+      "threshold": "within {'min_lat': 21.9, 'max_lat': 29.5, 'min_lng': 87.9, 'max_lng': 97.5}",
+      "message": "Incidents within NER bbox",
+      "timestamp": "2026-08-29T16:16:52.957206Z"
+    },
+    {
+      "group": "incidents",
+      "check_name": "missing_dates",
+      "status": "PASS",
+      "metric_value": 0,
+      "threshold": "0",
+      "message": "0 missing dates",
+      "timestamp": "2026-08-29T16:16:52.958720Z"
+    },
+    {
+      "group": "incidents",
+      "check_name": "date_range",
+      "status": "PASS",
+      "metric_value": "2007-04-11 to 2016-10-15",
+      "threshold": "N/A",
+      "message": "Temporal coverage of incidents",
+      "timestamp": "2026-08-29T16:16:52.959733Z"
+    }
+  ]
+}
