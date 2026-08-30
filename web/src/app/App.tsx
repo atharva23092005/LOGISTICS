@@ -2,6 +2,7 @@ import { Routes, Route, Navigate } from 'react-router-dom'
 import { Toaster } from 'sonner'
 import { AppShell } from '@/layouts/AppShell'
 import { useAppStore } from '@/stores/appStore'
+import { useThemeStore } from '@/stores/themeStore'
 
 // Pages
 import { LandingPage }          from '@/pages/Landing/LandingPage'
@@ -24,17 +25,19 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
+  const theme = useThemeStore((s) => s.theme)
+
   return (
     <>
       <Toaster
         position="top-right"
-        theme="dark"
+        theme={theme}
         toastOptions={{
           style: {
-            background: '#0D1626',
-            border: '1px solid #1F3352',
-            color: '#E2E8F0',
-            boxShadow: '0 8px 32px rgba(0,0,0,0.5)',
+            background: 'var(--color-surface)',
+            border: '1px solid var(--color-border)',
+            color: 'var(--color-text)',
+            boxShadow: 'var(--shadow-dropdown)',
           },
         }}
       />

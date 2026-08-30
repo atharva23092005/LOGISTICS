@@ -2,10 +2,11 @@ import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import {
   Zap, ArrowRight, ShieldCheck, Activity, Menu, X, Compass,
-  Layers, Radio
+  Layers, Radio, Sun, Moon
 } from 'lucide-react'
 import { cn } from '@/utils/cn'
 import { Button } from '@/components/ui/button'
+import { useThemeStore } from '@/stores/themeStore'
 
 const NAV_LINKS = [
   { label: 'Platform', href: '#platform' },
@@ -19,6 +20,7 @@ export function LandingNavbar() {
   const navigate = useNavigate()
   const [scrolled, setScrolled] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const { theme, toggleTheme } = useThemeStore()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -28,12 +30,14 @@ export function LandingNavbar() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
+  const isDark = theme === 'dark'
+
   return (
     <header
       className={cn(
         'fixed top-0 inset-x-0 z-50 transition-all duration-300',
         scrolled
-          ? 'bg-[#080E1A]/90 backdrop-blur-md border-b border-white/10 shadow-2xl py-3'
+          ? 'bg-surface/90 backdrop-blur-md border-b border-border shadow-2xl py-3'
           : 'bg-transparent py-4 md:py-5 border-b border-transparent'
       )}
     >
@@ -45,7 +49,7 @@ export function LandingNavbar() {
           </div>
           <div className="flex flex-col">
             <div className="flex items-center gap-1.5">
-              <span className="text-base font-bold text-white tracking-wider">NERA</span>
+              <span className="text-base font-bold text-text tracking-wider">NERA</span>
               <span className="text-[9px] font-bold px-1.5 py-0.2 rounded bg-primary/20 text-primary border border-primary/30">
                 PROTOTYPE
               </span>
@@ -57,12 +61,12 @@ export function LandingNavbar() {
         </Link>
 
         {/* ── Center Links (Desktop) ── */}
-        <nav className="hidden md:flex items-center gap-1 bg-surface-2/60 border border-white/5 px-3 py-1 rounded-full backdrop-blur-md">
+        <nav className="hidden md:flex items-center gap-1 bg-surface-2/60 border border-border/50 px-3 py-1 rounded-full backdrop-blur-md">
           {NAV_LINKS.map((link) => (
             <a
               key={link.label}
               href={link.href}
-              className="text-xs font-medium text-text-muted hover:text-white px-3 py-1.5 rounded-full transition-colors"
+              className="text-xs font-medium text-text-muted hover:text-text px-3 py-1.5 rounded-full transition-colors"
             >
               {link.label}
             </a>
@@ -76,6 +80,24 @@ export function LandingNavbar() {
             <span>Grid Operational</span>
           </div>
 
+          {/* Theme Toggle Button */}
+          <button
+            onClick={toggleTheme}
+            className={cn(
+              'p-2 rounded-lg transition-all duration-200',
+              'text-text-muted hover:text-text',
+              'hover:bg-surface-2 border border-transparent hover:border-border',
+            )}
+            aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+            title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+          >
+            {isDark ? (
+              <Sun className="h-4 w-4 text-warning" />
+            ) : (
+              <Moon className="h-4 w-4" />
+            )}
+          </button>
+
           <Button
             size="sm"
             onClick={() => navigate('/dashboard')}
@@ -88,7 +110,7 @@ export function LandingNavbar() {
           {/* Mobile Menu Toggle */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-1.5 rounded-lg text-text-muted hover:text-white md:hidden border border-white/10"
+            className="p-1.5 rounded-lg text-text-muted hover:text-text md:hidden border border-border/50"
             aria-label="Toggle menu"
           >
             {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -98,14 +120,14 @@ export function LandingNavbar() {
 
       {/* ── Mobile Menu Dropdown ── */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-[#080E1A]/98 border-b border-white/10 px-4 py-4 space-y-3 animate-fade-in backdrop-blur-xl">
+        <div className="md:hidden bg-surface/98 border-b border-border px-4 py-4 space-y-3 animate-fade-in backdrop-blur-xl">
           <nav className="flex flex-col space-y-2">
             {NAV_LINKS.map((link) => (
               <a
                 key={link.label}
                 href={link.href}
                 onClick={() => setMobileMenuOpen(false)}
-                className="text-sm font-medium text-text-muted hover:text-white py-1.5 border-b border-white/5"
+                className="text-sm font-medium text-text-muted hover:text-text py-1.5 border-b border-border/50"
               >
                 {link.label}
               </a>
@@ -116,6 +138,14 @@ export function LandingNavbar() {
               <span className="status-dot status-dot-green" />
               <span>System Live: 24 Districts Monitored</span>
             </span>
+            {/* Mobile theme toggle */}
+            <button
+              onClick={toggleTheme}
+              className="flex items-center gap-1.5 text-xs text-text-muted hover:text-text transition-colors"
+            >
+              {isDark ? <Sun className="h-3.5 w-3.5 text-warning" /> : <Moon className="h-3.5 w-3.5" />}
+              <span>{isDark ? 'Light Mode' : 'Dark Mode'}</span>
+            </button>
           </div>
         </div>
       )}

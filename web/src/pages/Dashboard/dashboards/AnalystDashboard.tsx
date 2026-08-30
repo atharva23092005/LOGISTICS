@@ -34,12 +34,12 @@ const selSelectedRouteId = (s: ReturnType<typeof useRouteStore.getState>) => s.s
 const selSelectRoute = (s: ReturnType<typeof useRouteStore.getState>) => s.selectRoute
 
 const CHART_STYLE = {
-  backgroundColor: '#0D1626',
-  border: '1px solid rgba(255, 255, 255, 0.1)',
+  backgroundColor: 'var(--color-surface)',
+  border: '1px solid var(--color-border)',
   borderRadius: '8px',
-  color: '#E2E8F0',
+  color: 'var(--color-text)',
   fontSize: '11px',
-  boxShadow: '0 8px 24px rgba(0,0,0,0.5)'
+  boxShadow: 'var(--shadow-dropdown)',
 }
 
 const C = {

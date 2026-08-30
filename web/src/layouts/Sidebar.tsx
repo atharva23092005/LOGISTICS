@@ -95,7 +95,7 @@ export function Sidebar({ onMobileClose }: SidebarProps) {
           <Tooltip content="Collapse Sidebar (Ctrl+B)" side="right">
             <button
               onClick={() => setSidebarCollapsed(true)}
-              className="hidden lg:flex p-1.5 rounded-md text-text-muted hover:text-white hover:bg-surface-2 transition-colors ml-auto flex-shrink-0"
+              className="hidden lg:flex p-1.5 rounded-md text-text-muted hover:text-text hover:bg-surface-2 transition-colors ml-auto flex-shrink-0"
               title="Collapse sidebar"
             >
               <PanelLeftClose className="h-4 w-4" />
@@ -195,7 +195,7 @@ export function Sidebar({ onMobileClose }: SidebarProps) {
           <Tooltip content="Expand Sidebar (Ctrl+B)" side="right">
             <button
               onClick={() => setSidebarCollapsed(false)}
-              className="nav-item w-full hidden lg:flex items-center justify-center p-2 rounded-lg hover:bg-surface-2 text-text-muted hover:text-white transition-colors"
+              className="nav-item w-full hidden lg:flex items-center justify-center p-2 rounded-lg hover:bg-surface-2 text-text-muted hover:text-text transition-colors"
               title="Expand sidebar (Ctrl+B)"
             >
               <PanelLeftOpen className="h-4 w-4 text-primary" />
@@ -204,7 +204,7 @@ export function Sidebar({ onMobileClose }: SidebarProps) {
         ) : (
           <button
             onClick={() => setSidebarCollapsed(true)}
-            className="nav-item w-full hidden lg:flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-surface-2 text-text-muted hover:text-white transition-colors"
+            className="nav-item w-full hidden lg:flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-surface-2 text-text-muted hover:text-text transition-colors"
             title="Collapse sidebar (Ctrl+B)"
           >
             <PanelLeftClose className="h-4 w-4 text-text-muted flex-shrink-0" />

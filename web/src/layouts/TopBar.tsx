@@ -4,7 +4,8 @@ import {
   Bell, Wifi, WifiOff, User, ChevronDown,
   LogOut, Settings, AlertOctagon, Play,
   Cpu, Menu, X, Zap, PanelLeftClose, PanelLeftOpen, PanelLeft,
-  Navigation, Building2, BarChart3, Smartphone, Truck, Globe
+  Navigation, Building2, BarChart3, Smartphone, Truck, Globe,
+  Sun, Moon
 } from 'lucide-react'
 import { cn } from '@/utils/cn'
 import {
@@ -13,6 +14,7 @@ import {
 } from '@/components/ui'
 import { useAppStore }   from '@/stores/appStore'
 import { useAlertStore } from '@/stores/alertStore'
+import { useThemeStore } from '@/stores/themeStore'
 import { formatDateTime } from '@/utils/format'
 import { toast } from 'sonner'
 import { NotificationPanel } from './NotificationPanel'
@@ -50,6 +52,8 @@ export function TopBar({ onMenuToggle, mobileMenuOpen }: TopBarProps) {
   const sidebarCollapsed  = useAppStore(selSidebarCollapsed)
   const setSidebarCollapsed = useAppStore(selSetSidebarCollapsed)
   const alertActive       = useAlertStore(selAlertActiveCount)
+  const theme             = useThemeStore((s) => s.theme)
+  const toggleTheme       = useThemeStore((s) => s.toggleTheme)
 
   const [notifOpen,   setNotifOpen]   = useState(false)
   const [userMenuOpen,setUserMenuOpen]= useState(false)
@@ -137,6 +141,20 @@ export function TopBar({ onMenuToggle, mobileMenuOpen }: TopBarProps) {
               <Play className="h-2.5 w-2.5" /> DEMO
             </span>
           )}
+
+          {/* Theme Toggle */}
+          <Tooltip content={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'} side="bottom">
+            <button
+              onClick={toggleTheme}
+              className="p-1.5 rounded-lg text-text-muted hover:text-text hover:bg-surface-2 transition-colors flex-shrink-0"
+              aria-label="Toggle theme"
+            >
+              {theme === 'dark'
+                ? <Sun className="h-4 w-4" />
+                : <Moon className="h-4 w-4" />
+              }
+            </button>
+          </Tooltip>
 
           {/* AI Copilot */}
           <button
