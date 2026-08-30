@@ -151,7 +151,7 @@ export function DistrictAdminDashboard() {
   }, [activateEmergency, emit, selectedDistrict])
 
   return (
-    <div className="h-full flex flex-col overflow-hidden bg-background text-text">
+    <div className="h-full flex flex-col overflow-hidden bg-[#070B14] text-white">
       {/* ── Top District Admin Header ── */}
       <header className="px-4 py-3 bg-[#0B1120] border-b border-slate-800 flex items-center justify-between gap-3 flex-shrink-0">
         <div className="flex items-center gap-3">

@@ -30,7 +30,7 @@ export function Modal({ open, onClose, title, description, children, size = 'md'
       <div className={cn(
         'relative w-full rounded-2xl shadow-2xl animate-scale-in max-h-[90dvh] flex flex-col transition-all',
         glass
-          ? 'glass border border-border shadow-modal'
+          ? 'bg-[#0D1626]/85 backdrop-blur-2xl border border-white/15 shadow-black/80'
           : 'bg-surface border border-border shadow-modal',
         sizeMap[size], className
       )}>

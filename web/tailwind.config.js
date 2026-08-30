@@ -19,21 +19,21 @@ export default {
     container: { center: true, padding: '1rem', screens: { '2xl': '1400px' } },
     extend: {
       colors: {
-        // ── Core background layers (CSS variable driven) ─────────────────
-        background: 'var(--color-background)',
-        surface: 'var(--color-surface)',
-        'surface-2': 'var(--color-surface-2)',
-        'surface-3': 'var(--color-surface-3)',
-        'surface-4': 'var(--color-surface-4)',
-        border: 'var(--color-border)',
-        'border-subtle': 'var(--color-border-subtle)',
+        // ── Core background layers ──────────────────────────────────────────
+        background: '#080E1A',   // near-black navy
+        surface:    '#0D1626',   // card / sidebar
+        'surface-2':'#111E33',   // hover / secondary
+        'surface-3':'#16253F',   // tertiary / input
+        'surface-4':'#1C2D4A',   // borders, separators
+        border:     '#1F3352',
+        'border-subtle': '#152540',
 
-        // ── Brand / semantic ─────────────────────────────────────────────
+        // ── Brand / semantic (Clean & Minimal) ──────────────────────────────
         primary: {
-          DEFAULT: '#2563EB',
-          hover: '#1D4ED8',
+          DEFAULT:    '#3B82F6',
+          hover:      '#2563EB',
           foreground: '#FFFFFF',
-          50: '#EFF6FF',
+          50:  '#EFF6FF',
           100: '#DBEAFE',
           400: '#60A5FA',
           500: '#3B82F6',
@@ -41,104 +41,103 @@ export default {
           700: '#1D4ED8',
         },
         success: {
-          DEFAULT: '#059669',
-          hover: '#047857',
+          DEFAULT:    '#10B981',
+          hover:      '#059669',
           foreground: '#FFFFFF',
-          muted: 'var(--color-success-muted)',
+          muted:      'rgba(16,185,129,0.12)',
         },
         warning: {
-          DEFAULT: '#D97706',
-          hover: '#B45309',
-          foreground: '#FFFFFF',
-          muted: 'var(--color-warning-muted)',
+          DEFAULT:    '#F59E0B',
+          hover:      '#D97706',
+          foreground: '#000000',
+          muted:      'rgba(245,158,11,0.12)',
         },
         danger: {
-          DEFAULT: '#DC2626',
-          hover: '#B91C1C',
+          DEFAULT:    '#EF4444',
+          hover:      '#DC2626',
           foreground: '#FFFFFF',
-          muted: 'var(--color-danger-muted)',
+          muted:      'rgba(239,68,68,0.12)',
         },
         info: {
-          DEFAULT: '#0891B2',
-          hover: '#0E7490',
+          DEFAULT:    '#06B6D4',
+          hover:      '#0891B2',
           foreground: '#FFFFFF',
-          muted: 'var(--color-info-muted)',
+          muted:      'rgba(6,182,212,0.12)',
         },
         accent: {
-          DEFAULT: '#7C3AED',
+          DEFAULT:    '#8B5CF6',
           foreground: '#FFFFFF',
         },
 
-        // ── Text ─────────────────────────────────────────────────────────
+        // ── Text ────────────────────────────────────────────────────────────
         text: {
-          DEFAULT: 'var(--color-text)',
-          bright: 'var(--color-text-bright)',
-          muted: 'var(--color-text-muted)',
-          subtle: 'var(--color-text-subtle)',
-          dim: 'var(--color-text-dim)',
+          DEFAULT: '#E2E8F0',
+          bright:  '#F8FAFC',
+          muted:   '#94A3B8',
+          subtle:  '#64748B',
+          dim:     '#475569',
         },
 
-        // ── shadcn compat aliases ────────────────────────────────────────
-        foreground: 'var(--color-text)',
-        card: { DEFAULT: 'var(--color-surface)', foreground: 'var(--color-text)' },
-        popover: { DEFAULT: 'var(--color-surface)', foreground: 'var(--color-text)' },
-        secondary: { DEFAULT: 'var(--color-surface-2)', foreground: 'var(--color-text-muted)' },
-        muted: { DEFAULT: 'var(--color-surface)', foreground: 'var(--color-text-muted)' },
-        destructive: { DEFAULT: '#DC2626', foreground: '#FFFFFF' },
-        input: 'var(--color-border)',
-        ring: '#2563EB',
-
-        // ── Landing page theme-aware surfaces ───────────────────────────
-        landing: {
-          bg: 'var(--landing-bg)',
-          'bg-alt': 'var(--landing-bg-alt)',
-          surface: 'var(--landing-surface)',
-          'surface-deep': 'var(--landing-surface-deep)',
-          border: 'var(--landing-border)',
-          'border-subtle': 'var(--landing-border-subtle)',
-          heading: 'var(--landing-text-heading)',
-          footer: 'var(--landing-footer-bg)',
-        },
+        // ── shadcn compat aliases ────────────────────────────────────────────
+        foreground:  '#E2E8F0',
+        card:        { DEFAULT: '#0D1626', foreground: '#E2E8F0' },
+        popover:     { DEFAULT: '#0D1626', foreground: '#E2E8F0' },
+        secondary:   { DEFAULT: '#111E33', foreground: '#94A3B8' },
+        muted:       { DEFAULT: '#0D1626', foreground: '#94A3B8' },
+        destructive: { DEFAULT: '#EF4444', foreground: '#FFFFFF' },
+        input:       '#1F3352',
+        ring:        '#3B82F6',
       },
 
       borderRadius: {
         none: '0',
-        sm: '0.25rem',
-        DEFAULT: '0.5rem',
-        md: '0.5rem',
-        lg: '0.75rem',
-        xl: '1rem',
-        '2xl': '1.25rem',
-        '3xl': '1.5rem',
+        sm:   '0.25rem',
+        DEFAULT:'0.5rem',
+        md:   '0.5rem',
+        lg:   '0.75rem',
+        xl:   '1rem',
+        '2xl':'1.25rem',
+        '3xl':'1.5rem',
         full: '9999px',
       },
 
       fontFamily: {
-        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        sans: ['Inter', 'system-ui', 'sans-serif'],
         mono: ['"JetBrains Mono"', '"Fira Code"', 'monospace'],
       },
 
       fontSize: {
         '2xs': ['0.625rem', { lineHeight: '0.875rem' }],
-        xs: ['0.75rem', { lineHeight: '1rem' }],
-        sm: ['0.8125rem', { lineHeight: '1.25rem' }],
-        base: ['0.875rem', { lineHeight: '1.375rem' }],
-        lg: ['1rem', { lineHeight: '1.5rem' }],
-        xl: ['1.125rem', { lineHeight: '1.75rem' }],
-        '2xl': ['1.25rem', { lineHeight: '1.875rem' }],
-        '3xl': ['1.5rem', { lineHeight: '2rem' }],
+        xs:    ['0.75rem',  { lineHeight: '1rem'     }],
+        sm:    ['0.8125rem',{ lineHeight: '1.25rem'  }],
+        base:  ['0.875rem', { lineHeight: '1.375rem' }],
+        lg:    ['1rem',     { lineHeight: '1.5rem'   }],
+        xl:    ['1.125rem', { lineHeight: '1.75rem'  }],
+        '2xl': ['1.25rem',  { lineHeight: '1.875rem' }],
+        '3xl': ['1.5rem',   { lineHeight: '2rem'     }],
       },
 
       boxShadow: {
-        'glow-primary': 'var(--shadow-glow)',
-        'glow-success': 'var(--shadow-glow)',
-        'glow-danger': 'var(--shadow-glow)',
-        'glow-warning': 'var(--shadow-glow)',
-        'card': 'var(--shadow-card)',
-        'card-hover': 'var(--shadow-card-hover)',
-        'modal': 'var(--shadow-modal)',
-        'dropdown': 'var(--shadow-dropdown)',
-        'inner-top': 'var(--shadow-inner-top)',
+        // Minimal, subtle shadows (removed all eye-catching neon glows)
+        'glow-primary': '0 1px 3px rgba(0,0,0,0.3)',
+        'glow-success': '0 1px 3px rgba(0,0,0,0.3)',
+        'glow-danger':  '0 1px 3px rgba(0,0,0,0.3)',
+        'glow-warning': '0 1px 3px rgba(0,0,0,0.3)',
+        'card':         '0 1px 3px rgba(0,0,0,0.3), 0 2px 8px rgba(0,0,0,0.15)',
+        'card-hover':   '0 2px 8px rgba(0,0,0,0.4), 0 4px 12px rgba(0,0,0,0.2)',
+        'modal':        '0 8px 32px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.06)',
+        'dropdown':     '0 4px 20px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.06)',
+        'inner-top':    'inset 0 1px 0 rgba(255,255,255,0.06)',
+      },
+
+      backgroundImage: {
+        'active-item':  'rgba(59,130,246,0.12)',
+        'page-header':  '#0D1626',
+        'kpi-primary':  '#0D1626',
+        'kpi-success':  '#0D1626',
+        'kpi-warning':  '#0D1626',
+        'kpi-danger':   '#0D1626',
+        'kpi-info':     '#0D1626',
       },
 
       spacing: {
@@ -151,22 +150,22 @@ export default {
       },
 
       keyframes: {
-        'accordion-down': { from: { height: '0' }, to: { height: 'var(--radix-accordion-content-height)' } },
-        'accordion-up': { from: { height: 'var(--radix-accordion-content-height)' }, to: { height: '0' } },
-        'slide-up': { from: { transform: 'translateY(8px)', opacity: '0' }, to: { transform: 'translateY(0)', opacity: '1' } },
-        'slide-in-right': { from: { transform: 'translateX(100%)' }, to: { transform: 'translateX(0)' } },
-        'slide-in-left': { from: { transform: 'translateX(-100%)' }, to: { transform: 'translateX(0)' } },
-        'fade-in': { from: { opacity: '0' }, to: { opacity: '1' } },
-        'scale-in': { from: { transform: 'scale(0.97)', opacity: '0' }, to: { transform: 'scale(1)', opacity: '1' } },
+        'accordion-down':  { from: { height: '0' }, to: { height: 'var(--radix-accordion-content-height)' } },
+        'accordion-up':    { from: { height: 'var(--radix-accordion-content-height)' }, to: { height: '0' } },
+        'slide-up':        { from: { transform: 'translateY(8px)', opacity: '0' }, to: { transform: 'translateY(0)', opacity: '1' } },
+        'slide-in-right':  { from: { transform: 'translateX(100%)' }, to: { transform: 'translateX(0)' } },
+        'slide-in-left':   { from: { transform: 'translateX(-100%)' }, to: { transform: 'translateX(0)' } },
+        'fade-in':         { from: { opacity: '0' }, to: { opacity: '1' } },
+        'scale-in':        { from: { transform: 'scale(0.97)', opacity: '0' }, to: { transform: 'scale(1)', opacity: '1' } },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
-        'accordion-up': 'accordion-up 0.2s ease-out',
-        'slide-up': 'slide-up 0.2s ease-out',
+        'accordion-up':   'accordion-up 0.2s ease-out',
+        'slide-up':       'slide-up 0.2s ease-out',
         'slide-in-right': 'slide-in-right 0.25s ease-out',
-        'slide-in-left': 'slide-in-left 0.25s ease-out',
-        'fade-in': 'fade-in 0.15s ease-out',
-        'scale-in': 'scale-in 0.15s ease-out',
+        'slide-in-left':  'slide-in-left 0.25s ease-out',
+        'fade-in':        'fade-in 0.15s ease-out',
+        'scale-in':       'scale-in 0.15s ease-out',
       },
     },
   },

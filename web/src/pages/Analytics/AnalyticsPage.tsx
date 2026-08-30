@@ -33,12 +33,12 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { cn } from '@/utils/cn'
 
 const CHART_STYLE = {
-  backgroundColor: 'var(--color-surface)',
-  border: '1px solid var(--color-border)',
+  backgroundColor: '#0D1626',
+  border: '1px solid rgba(255, 255, 255, 0.1)',
   borderRadius: '8px',
-  color: 'var(--color-text)',
+  color: '#E2E8F0',
   fontSize: '11px',
-  boxShadow: 'var(--shadow-dropdown)',
+  boxShadow: '0 8px 24px rgba(0,0,0,0.5)',
 }
 
 const C = {

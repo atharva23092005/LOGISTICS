@@ -19,7 +19,7 @@ import { LandingFooter } from './components/LandingFooter'
 
 export function LandingPage() {
   return (
-    <div className="min-h-screen bg-background text-text selection:bg-primary/30 selection:text-white font-sans antialiased overflow-x-hidden">
+    <div className="min-h-screen bg-[#060A14] text-text selection:bg-primary/30 selection:text-white font-sans antialiased overflow-x-hidden">
       {/* ── Sticky Top Navigation ── */}
       <LandingNavbar />
 

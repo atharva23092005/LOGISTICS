@@ -17,7 +17,7 @@ export function AppShell({ children }: AppShellProps) {
 
   // For Mobile Apps (Field Officer & Driver HUD), bypass desktop TopBar & Sidebar
   if (user?.role === 'field_officer' || user?.role === 'driver') {
-    return <div className="h-dvh w-full overflow-hidden bg-background">{children}</div>
+    return <div className="h-dvh w-full overflow-hidden bg-[#070B14]">{children}</div>
   }
 
   // Mobile: drawer open/close
