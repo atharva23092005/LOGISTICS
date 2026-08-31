@@ -34,12 +34,12 @@ const selSelectedRouteId = (s: ReturnType<typeof useRouteStore.getState>) => s.s
 const selSelectRoute = (s: ReturnType<typeof useRouteStore.getState>) => s.selectRoute
 
 const CHART_STYLE = {
-  backgroundColor: '#0D1626',
-  border: '1px solid rgba(255, 255, 255, 0.1)',
+  backgroundColor: 'rgb(var(--surface))',
+  border: '1px solid rgb(var(--border))',
   borderRadius: '8px',
-  color: '#E2E8F0',
+  color: 'rgb(var(--text))',
   fontSize: '11px',
-  boxShadow: '0 8px 24px rgba(0,0,0,0.5)'
+  boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
 }
 
 const C = {
@@ -48,8 +48,8 @@ const C = {
   warning:  '#F59E0B',
   danger:   '#EF4444',
   info:     '#06B6D4',
-  muted:    '#1F3352',
-  text:     '#94A3B8',
+  muted:    'rgb(var(--border))',
+  text:     'rgb(var(--text-muted))',
 }
 
 const LIVE_TABS = [
@@ -505,7 +505,7 @@ export function AnalystDashboard() {
                         return (
                           <tr key={d.district} className="hover:bg-white/5 transition-colors group">
                             <td className="py-3 px-3">
-                              <div className="font-bold text-white text-xs">{d.district}</div>
+                              <div className="font-bold text-text text-xs">{d.district}</div>
                               <div className="text-[10px] text-text-muted">{d.state}</div>
                             </td>
 
@@ -808,7 +808,7 @@ export function AnalystDashboard() {
 
                       return (
                         <tr key={seg.segment} className="hover:bg-white/5 transition-colors">
-                          <td className="py-2.5 px-3 font-semibold text-white">{seg.segment}</td>
+                          <td className="py-2.5 px-3 font-semibold text-text">{seg.segment}</td>
                           <td className="py-2.5 px-3 text-text-muted">{seg.dist}</td>
                           <td className="py-2.5 px-3 text-text">{seg.surface}</td>
                           <td className="py-2.5 px-3 text-info font-medium">{seg.bridge}</td>

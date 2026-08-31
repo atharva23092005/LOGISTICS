@@ -90,15 +90,15 @@ export function AlertCard({
       className={cn(
         'app-card p-3 transition-all space-y-2',
         sc.border,
-        onSelect && 'cursor-pointer hover:border-white/20',
-        selected ? 'border-primary/60 bg-primary/[0.08] ring-1 ring-primary/40 shadow-md' : 'hover:border-white/20',
+        onSelect && 'cursor-pointer hover:border-primary/40 hover:shadow-sm',
+        selected ? 'border-primary bg-primary/[0.08] ring-1 ring-primary/40 shadow-md' : 'hover:border-primary/40',
         isResolved && 'opacity-60 saturate-50 bg-surface'
       )}
     >
       {/* ── ROW 1: Header (Icon + Title + Subtitle vs Badge + Live Status Dot) ── */}
       <div className="flex items-start justify-between gap-2">
         <div className="flex items-start gap-2 min-w-0">
-          <div className={cn('p-1 rounded-md bg-surface-2 border border-white/5 flex-shrink-0 mt-0.5', sc.text)}>
+          <div className={cn('p-1 rounded-md bg-surface-2 border border-border flex-shrink-0 mt-0.5', sc.text)}>
             <Icon className="h-3.5 w-3.5" />
           </div>
           <div className="min-w-0">

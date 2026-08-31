@@ -19,13 +19,23 @@ import { LandingFooter } from './components/LandingFooter'
 
 export function LandingPage() {
   return (
-    <div className="min-h-screen bg-[#060A14] text-text selection:bg-primary/30 selection:text-white font-sans antialiased overflow-x-hidden">
-      {/* ── Sticky Top Navigation ── */}
+    <div className="min-h-screen bg-white dark:bg-[#060A14] text-slate-900 dark:text-text selection:bg-blue-500/20 selection:text-blue-900 dark:selection:text-white font-sans antialiased overflow-x-hidden relative transition-colors duration-200">
+      {/* ── Global Minimal Background Grid & Soft Mesh Layer ── */}
+      <div className="fixed inset-0 pointer-events-none z-0">
+        {/* Subtle Minimal Grid */}
+        <div className="absolute inset-0 bg-tactical-grid opacity-70 dark:opacity-35" />
+        {/* Soft Radial Ambient Lighting */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[450px] bg-blue-500/5 dark:bg-primary/10 rounded-full blur-[140px]" />
+        <div className="absolute top-[35%] right-0 w-[500px] h-[400px] bg-sky-500/5 dark:bg-cyan-500/5 rounded-full blur-[130px]" />
+        <div className="absolute top-[65%] left-0 w-[600px] h-[450px] bg-indigo-500/5 dark:bg-emerald-500/5 rounded-full blur-[140px]" />
+      </div>
+
+      {/* ── Sticky Top Navigation with Theme Toggle ── */}
       <LandingNavbar />
 
       {/* ── Main Landing Page Flow ── */}
-      <main>
-        {/* Hero Section & Live NER Map & Floating Copilot */}
+      <main className="relative z-10">
+        {/* Hero Section & Minimal HUD */}
         <HeroSection />
 
         {/* Live Network Impact & Metrics Strip */}
@@ -70,7 +80,7 @@ export function LandingPage() {
         {/* Mission-Critical Security & Trust */}
         <SecurityTrustSection />
 
-        {/* Cinematic Closing CTA */}
+        {/* Minimal Closing CTA */}
         <FinalCTA />
       </main>
 
@@ -79,3 +89,4 @@ export function LandingPage() {
     </div>
   )
 }
+

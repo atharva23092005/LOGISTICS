@@ -30,14 +30,14 @@ export function Modal({ open, onClose, title, description, children, size = 'md'
       <div className={cn(
         'relative w-full rounded-2xl shadow-2xl animate-scale-in max-h-[90dvh] flex flex-col transition-all',
         glass
-          ? 'bg-[#0D1626]/85 backdrop-blur-2xl border border-white/15 shadow-black/80'
+          ? 'bg-surface/90 backdrop-blur-2xl border border-border shadow-2xl'
           : 'bg-surface border border-border shadow-modal',
         sizeMap[size], className
       )}>
         {title && (
           <div className={cn(
             'flex items-start justify-between p-4 sm:p-5 flex-shrink-0',
-            glass ? 'border-b border-white/10 bg-white/5' : 'border-b border-border'
+            glass ? 'border-b border-border bg-surface-2/50' : 'border-b border-border'
           )}>
             <div>
               <h2 className="text-sm md:text-base font-bold text-text">{title}</h2>

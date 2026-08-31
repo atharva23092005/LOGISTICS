@@ -19,6 +19,7 @@ import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Modal } from '@/components/ui/modal'
+import { ThemeToggle } from '@/components/ui/ThemeToggle'
 import { MapEngine } from '@/modules/map/MapEngine'
 import { useAppStore } from '@/stores/appStore'
 import { useAlertStore } from '@/stores/alertStore'
@@ -666,7 +667,7 @@ export function FieldOfficerDashboard() {
 
   // Proportioned, compact mobile app width (max-w-[420px]) perfectly centered in the web view
   return (
-    <div className="min-h-dvh w-full bg-[#03060E] flex flex-col items-center justify-center p-0 sm:p-4 overflow-x-hidden">
+    <div className="min-h-dvh w-full bg-background flex flex-col items-center justify-center p-0 sm:p-4 overflow-x-hidden">
       
       {/* Centered mobile-app proportion container */}
       <div className="w-full max-w-[420px] h-dvh sm:h-[840px] sm:max-h-[92vh] bg-background text-text font-sans flex flex-col sm:rounded-2xl sm:border border-border/80 shadow-2xl overflow-hidden relative select-none">
@@ -675,9 +676,9 @@ export function FieldOfficerDashboard() {
         {/* VIEW A: ANDROID OFFICER AUTHENTICATION SCREEN (WHEN NOT LOGGED IN)     */}
         {/* ══════════════════════════════════════════════════════════════════════ */}
         {!isAuthenticated ? (
-          <div className="flex-1 flex flex-col justify-between overflow-hidden bg-[#070C16]">
+          <div className="flex-1 flex flex-col justify-between overflow-hidden bg-background">
             {/* Status Bar */}
-            <div className="h-7 bg-[#04070D] px-4 flex items-center justify-between text-[11px] font-mono text-text-muted border-b border-border/40 flex-shrink-0 z-40">
+            <div className="h-7 bg-surface-2 px-4 flex items-center justify-between text-[11px] font-mono text-text-muted border-b border-border/40 flex-shrink-0 z-40">
               <div className="flex items-center gap-2">
                 <span className="font-semibold text-text">09:41</span>
                 <span className="text-text-dim">•</span>
@@ -704,18 +705,21 @@ export function FieldOfficerDashboard() {
                 <span className="font-bold text-xs text-text">NER Field Operations</span>
               </div>
 
-              <select
-                value={lang}
-                onChange={e => setLang(e.target.value as AndroidLang)}
-                className="bg-surface-2 border border-border text-[11px] text-text rounded-lg px-2 py-1 focus:ring-1 focus:ring-primary font-medium"
-              >
-                <option value="en">English</option>
-                <option value="as">অসমীয়া</option>
-                <option value="bn">বাংলা</option>
-                <option value="bodo">बड़ो</option>
-                <option value="mni">ꯃꯩꯇꯩ</option>
-                <option value="hi">हिंदी</option>
-              </select>
+              <div className="flex items-center gap-2">
+                <ThemeToggle />
+                <select
+                  value={lang}
+                  onChange={e => setLang(e.target.value as AndroidLang)}
+                  className="bg-surface-2 border border-border text-[11px] text-text rounded-lg px-2 py-1 focus:ring-1 focus:ring-primary font-medium"
+                >
+                  <option value="en">English</option>
+                  <option value="as">অসমীয়া</option>
+                  <option value="bn">বাংলা</option>
+                  <option value="bodo">बड़ो</option>
+                  <option value="mni">ꯃꯩꯇꯩ</option>
+                  <option value="hi">हिंदी</option>
+                </select>
+              </div>
             </div>
 
             {/* Centered Login Card */}
@@ -827,9 +831,9 @@ export function FieldOfficerDashboard() {
           /* ══════════════════════════════════════════════════════════════════════ */
           /* VIEW B: MAIN ANDROID FIELD OFFICER APP (WHEN AUTHENTICATED)           */
           /* ══════════════════════════════════════════════════════════════════════ */
-          <div className="flex-1 flex flex-col justify-between overflow-hidden relative">
+          <div className="flex-1 flex flex-col justify-between overflow-hidden relative bg-background">
             {/* ── Status Bar ── */}
-            <div className="h-7 bg-[#04070D] px-3.5 flex items-center justify-between text-[11px] font-mono text-text-muted border-b border-border/40 flex-shrink-0 z-40">
+            <div className="h-7 bg-surface-2 px-3.5 flex items-center justify-between text-[11px] font-mono text-text-muted border-b border-border/40 flex-shrink-0 z-40">
               <div className="flex items-center gap-2">
                 <span className="font-semibold text-text">09:41</span>
                 <span className="text-text-dim">•</span>
@@ -906,7 +910,7 @@ export function FieldOfficerDashboard() {
             </header>
 
             {/* ── Sub-header: Live GPS Fix & SQLite Storage Status ── */}
-            <div className="bg-[#050912] px-3.5 py-1.5 border-b border-border/60 flex items-center justify-between text-[10px] text-text-muted flex-shrink-0">
+            <div className="bg-surface-2 px-3.5 py-1.5 border-b border-border/60 flex items-center justify-between text-[10px] text-text-muted flex-shrink-0">
               <div className="flex items-center gap-1.5 font-mono">
                 <Database className="h-3 w-3 text-primary" />
                 <span>Local DB: <strong>{queue.length} recs</strong> ({pendingCount} pending)</span>
@@ -1555,15 +1559,15 @@ export function FieldOfficerDashboard() {
         size="sm"
       >
         <div className="space-y-3">
-          <div className="relative h-52 bg-slate-950 rounded-2xl overflow-hidden border border-border flex items-center justify-center">
+          <div className="relative h-52 bg-surface-3 rounded-2xl overflow-hidden border border-border flex items-center justify-center">
             {/* Viewfinder crosshairs */}
-            <div className="absolute inset-4 border border-dashed border-white/20 rounded-xl pointer-events-none" />
+            <div className="absolute inset-4 border border-dashed border-border rounded-xl pointer-events-none" />
             <div className="h-8 w-8 rounded-full border border-primary/60 flex items-center justify-center">
               <div className="h-2 w-2 rounded-full bg-primary animate-ping" />
             </div>
 
             {/* GPS EXIF Stamp Overlay */}
-            <div className="absolute bottom-2 inset-x-2 p-2 rounded-lg bg-black/70 backdrop-blur text-[10px] font-mono text-emerald-400 border border-white/10 space-y-0.5">
+            <div className="absolute bottom-2 inset-x-2 p-2 rounded-lg bg-surface/90 backdrop-blur text-[10px] font-mono text-emerald-600 dark:text-emerald-400 border border-border space-y-0.5">
               <div>GPS: {deviceGps.lat.toFixed(4)}°N, {deviceGps.lng.toFixed(4)}°E (Alt {deviceGps.alt}m)</div>
               <div>STAMP: {new Date().toISOString()} • {form.highway} {form.chainageKm}</div>
             </div>
@@ -1592,12 +1596,12 @@ export function FieldOfficerDashboard() {
           {!scannedConvoy ? (
             <div className="space-y-3">
               {/* Animated Laser Viewfinder */}
-              <div className="relative h-44 bg-slate-950 rounded-2xl overflow-hidden border border-border flex items-center justify-center">
+              <div className="relative h-44 bg-surface-3 rounded-2xl overflow-hidden border border-border flex items-center justify-center">
                 <div className="h-28 w-28 border-2 border-primary rounded-xl relative flex items-center justify-center shadow-lg shadow-primary/20">
                   <div className="absolute inset-x-0 top-0 h-0.5 bg-primary shadow-lg shadow-primary animate-bounce" />
                   <QrCode className="h-14 w-14 text-text-muted animate-pulse" />
                 </div>
-                <div className="absolute bottom-2 text-[10px] font-mono text-emerald-400 bg-black/60 px-2 py-0.5 rounded">
+                <div className="absolute bottom-2 text-[10px] font-mono text-emerald-600 dark:text-emerald-400 bg-surface/80 px-2 py-0.5 rounded border border-border">
                   Awaiting Driver QR Code...
                 </div>
               </div>

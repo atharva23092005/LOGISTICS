@@ -34,27 +34,27 @@ export function ElevationProfile({ route, className, onClose }: ElevationProfile
   return (
     <div
       className={cn(
-        'glass-panel rounded-2xl p-4 border border-white/10 shadow-2xl bg-[#0D1626]/95 backdrop-blur-xl text-text space-y-3.5',
+        'rounded-2xl p-4 border border-slate-200/90 dark:border-border shadow-2xl bg-white/95 dark:bg-surface/95 backdrop-blur-xl text-text space-y-3.5 ring-1 ring-black/5 dark:ring-white/10',
         className
       )}
     >
       {/* ── Header ────────────────────────────────────────────────────────── */}
-      <div className="flex items-center justify-between border-b border-white/10 pb-2.5">
-        <div className="flex items-center gap-2">
-          <div className="p-1.5 rounded-lg bg-primary/10 border border-primary/30 text-primary">
+      <div className="flex items-center justify-between border-b border-slate-200 dark:border-border pb-3">
+        <div className="flex items-center gap-2.5">
+          <div className="p-1.5 rounded-xl bg-blue-50 dark:bg-primary/10 border border-blue-200 dark:border-primary/30 text-primary shadow-2xs">
             <Mountain className="h-4 w-4" />
           </div>
           <div>
-            <div className="text-xs font-bold text-white flex items-center gap-2">
+            <div className="text-xs font-bold text-text flex items-center gap-2">
               <span>Elevation Profile & Terrain Gradient</span>
               <span className={cn(
                 'text-[9px] font-semibold px-2 py-0.5 rounded-full border',
-                route.isAIRecommended ? 'text-success bg-success/10 border-success/30' : 'text-warning bg-warning/10 border-warning/30'
+                route.isAIRecommended ? 'text-emerald-600 dark:text-success bg-emerald-50 dark:bg-success/10 border-emerald-200 dark:border-success/30' : 'text-amber-700 dark:text-warning bg-amber-50 dark:bg-warning/10 border-amber-200 dark:border-warning/30'
               )}>
                 {route.label.split('—')[0].trim()}
               </span>
             </div>
-            <div className="text-[10px] text-text-muted">
+            <div className="text-2xs text-text-muted mt-0.5">
               Corridor altitude variance & slope failure trigger analysis
             </div>
           </div>
@@ -63,7 +63,8 @@ export function ElevationProfile({ route, className, onClose }: ElevationProfile
         {onClose && (
           <button
             onClick={onClose}
-            className="p-1 rounded-lg text-text-muted hover:text-white hover:bg-white/10 transition-colors"
+            className="p-1.5 rounded-lg text-text-muted hover:text-text hover:bg-slate-100 dark:hover:bg-surface-2 transition-colors"
+            title="Close Profile"
           >
             <X className="h-4 w-4" />
           </button>
@@ -72,38 +73,38 @@ export function ElevationProfile({ route, className, onClose }: ElevationProfile
 
       {/* ── Key Terrain Metric Chips ──────────────────────────────────────── */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-        <div className="bg-white/5 border border-white/5 p-2 rounded-xl">
-          <div className="text-[10px] text-text-muted flex items-center gap-1">
-            <Mountain className="h-3 w-3 text-primary" /> Peak Altitude
+        <div className="bg-slate-50 dark:bg-surface-2 border border-slate-200/90 dark:border-border/80 p-2.5 rounded-xl shadow-2xs">
+          <div className="text-[11px] font-medium text-text-muted flex items-center gap-1.5">
+            <Mountain className="h-3.5 w-3.5 text-primary flex-shrink-0" /> Peak Altitude
           </div>
-          <div className="text-sm font-bold text-white mt-0.5">
+          <div className="text-sm font-bold text-text mt-1">
             {maxElev} <span className="text-2xs font-normal text-text-dim">meters</span>
           </div>
         </div>
 
-        <div className="bg-white/5 border border-white/5 p-2 rounded-xl">
-          <div className="text-[10px] text-text-muted flex items-center gap-1">
-            <TrendingUp className="h-3 w-3 text-success" /> Total Ascent
+        <div className="bg-slate-50 dark:bg-surface-2 border border-slate-200/90 dark:border-border/80 p-2.5 rounded-xl shadow-2xs">
+          <div className="text-[11px] font-medium text-text-muted flex items-center gap-1.5">
+            <TrendingUp className="h-3.5 w-3.5 text-success flex-shrink-0" /> Total Ascent
           </div>
-          <div className="text-sm font-bold text-white mt-0.5">
+          <div className="text-sm font-bold text-text mt-1">
             +{totalAscent} <span className="text-2xs font-normal text-text-dim">m</span>
           </div>
         </div>
 
-        <div className="bg-white/5 border border-white/5 p-2 rounded-xl">
-          <div className="text-[10px] text-text-muted flex items-center gap-1">
-            <AlertTriangle className={cn('h-3 w-3', isHighRiskSlope ? 'text-danger' : 'text-warning')} /> Max Gradient
+        <div className="bg-slate-50 dark:bg-surface-2 border border-slate-200/90 dark:border-border/80 p-2.5 rounded-xl shadow-2xs">
+          <div className="text-[11px] font-medium text-text-muted flex items-center gap-1.5">
+            <AlertTriangle className={cn('h-3.5 w-3.5 flex-shrink-0', isHighRiskSlope ? 'text-danger' : 'text-warning')} /> Max Gradient
           </div>
-          <div className={cn('text-sm font-bold mt-0.5', isHighRiskSlope ? 'text-danger' : 'text-white')}>
+          <div className={cn('text-sm font-bold mt-1', isHighRiskSlope ? 'text-danger' : 'text-text')}>
             {maxSlope}° <span className="text-2xs font-normal text-text-dim">{isHighRiskSlope ? '(Hazard)' : '(Safe)'}</span>
           </div>
         </div>
 
-        <div className="bg-white/5 border border-white/5 p-2 rounded-xl">
-          <div className="text-[10px] text-text-muted flex items-center gap-1">
-            <ShieldCheck className="h-3 w-3 text-info" /> Avg Slope
+        <div className="bg-slate-50 dark:bg-surface-2 border border-slate-200/90 dark:border-border/80 p-2.5 rounded-xl shadow-2xs">
+          <div className="text-[11px] font-medium text-text-muted flex items-center gap-1.5">
+            <ShieldCheck className="h-3.5 w-3.5 text-info flex-shrink-0" /> Avg Slope
           </div>
-          <div className="text-sm font-bold text-white mt-0.5">
+          <div className="text-sm font-bold text-text mt-1">
             {avgSlope}° <span className="text-2xs font-normal text-text-dim">gradient</span>
           </div>
         </div>
@@ -125,7 +126,7 @@ export function ElevationProfile({ route, className, onClose }: ElevationProfile
               stroke="#64748B"
               fontSize={10}
               tickLine={false}
-              axisLine={{ stroke: '#1F3352' }}
+              axisLine={{ stroke: 'rgb(var(--border))' }}
             />
             <YAxis
               unit="m"
@@ -133,7 +134,7 @@ export function ElevationProfile({ route, className, onClose }: ElevationProfile
               fontSize={10}
               domain={[0, Math.ceil(maxElev * 1.15)]}
               tickLine={false}
-              axisLine={{ stroke: '#1F3352' }}
+              axisLine={{ stroke: 'rgb(var(--border))' }}
             />
             <Tooltip content={<CustomElevationTooltip />} />
             <Area
@@ -164,18 +165,21 @@ export function ElevationProfile({ route, className, onClose }: ElevationProfile
         </ResponsiveContainer>
       </div>
 
-      {/* ── Legend & Summary Note ─────────────────────────────────────────── */}
-      <div className="flex flex-wrap items-center justify-between gap-2 text-2xs text-text-muted pt-1 border-t border-white/5">
+      {/* ── Legend / Explanatory Footer ───────────────────────────────────── */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between text-2xs text-text-muted pt-2 border-t border-slate-200 dark:border-border gap-2">
         <div className="flex items-center gap-3">
-          <span className="flex items-center gap-1.5">
-            <span className="h-2 w-2 rounded-full bg-primary" /> Elevation Curve (meters)
-          </span>
-          <span className="flex items-center gap-1.5">
-            <span className="h-2 w-2 rounded-full bg-danger" /> Landslide Hazard Point
-          </span>
+          <div className="flex items-center gap-1.5">
+            <span className="h-2.5 w-2.5 rounded-full bg-primary inline-block" />
+            <span>Elevation Curve (meters)</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <span className="h-2.5 w-2.5 rounded-full bg-danger inline-block" />
+            <span>Landslide Hazard Point</span>
+          </div>
         </div>
-        <div className="flex items-center gap-1 text-text-dim">
-          <Info className="h-3 w-3 text-primary" />
+
+        <div className="text-[11px] text-text-dim flex items-center gap-1">
+          <Info className="h-3.5 w-3.5 text-primary flex-shrink-0" />
           <span>Slopes &gt; 15° significantly elevate landslide trigger risks during monsoon.</span>
         </div>
       </div>
@@ -190,24 +194,24 @@ function CustomElevationTooltip({ active, payload }: any) {
   const isHazard = Boolean(data.hazardWarning)
 
   return (
-    <div className="glass-panel p-2.5 rounded-xl border border-white/10 shadow-xl bg-[#0D1626]/95 backdrop-blur-md text-text text-xs space-y-1 max-w-xs">
-      <div className="font-bold text-white text-2xs border-b border-white/10 pb-1 flex items-center gap-1">
-        <MapPin className="h-3 w-3 text-primary flex-shrink-0" />
+    <div className="p-3 rounded-xl border border-slate-200 dark:border-border shadow-xl bg-white/95 dark:bg-surface/95 backdrop-blur-md text-text text-xs space-y-1.5 max-w-xs">
+      <div className="font-bold text-text text-2xs border-b border-slate-200 dark:border-border pb-1 flex items-center gap-1.5">
+        <MapPin className="h-3.5 w-3.5 text-primary flex-shrink-0" />
         <span>{data.locationName}</span>
       </div>
-      <div className="grid grid-cols-2 gap-x-3 gap-y-0.5 text-[11px]">
+      <div className="grid grid-cols-2 gap-x-3 gap-y-1 text-[11px]">
         <div className="text-text-muted">Distance:</div>
-        <div className="font-semibold text-white text-right">{data.distanceKm} km</div>
+        <div className="font-semibold text-text text-right">{data.distanceKm} km</div>
         <div className="text-text-muted">Altitude:</div>
         <div className="font-semibold text-primary text-right">{data.elevationMeters} m</div>
         <div className="text-text-muted">Slope Gradient:</div>
-        <div className={cn('font-semibold text-right', data.slope > 15 ? 'text-danger' : 'text-success')}>
+        <div className={cn('font-semibold text-right', data.slope > 15 ? 'text-danger' : 'text-emerald-600 dark:text-success')}>
           {data.slope}°
         </div>
       </div>
       {isHazard && (
-        <div className="mt-1 pt-1 border-t border-danger/20 text-[10px] text-danger font-medium leading-tight flex items-start gap-1">
-          <AlertTriangle className="h-3 w-3 text-danger flex-shrink-0 mt-0.5" />
+        <div className="mt-1 pt-1 border-t border-rose-200 dark:border-danger/20 text-[10px] text-rose-700 dark:text-danger font-medium leading-tight flex items-start gap-1">
+          <AlertTriangle className="h-3.5 w-3.5 text-danger flex-shrink-0 mt-0.5" />
           <span>{data.hazardWarning}</span>
         </div>
       )}

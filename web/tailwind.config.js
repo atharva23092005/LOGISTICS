@@ -19,14 +19,14 @@ export default {
     container: { center: true, padding: '1rem', screens: { '2xl': '1400px' } },
     extend: {
       colors: {
-        // ── Core background layers ──────────────────────────────────────────
-        background: '#080E1A',   // near-black navy
-        surface:    '#0D1626',   // card / sidebar
-        'surface-2':'#111E33',   // hover / secondary
-        'surface-3':'#16253F',   // tertiary / input
-        'surface-4':'#1C2D4A',   // borders, separators
-        border:     '#1F3352',
-        'border-subtle': '#152540',
+        // ── Core background layers (CSS Variable RGB token driven) ─────────
+        background: 'rgb(var(--background) / <alpha-value>)',
+        surface:    'rgb(var(--surface) / <alpha-value>)',
+        'surface-2':'rgb(var(--surface-2) / <alpha-value>)',
+        'surface-3':'rgb(var(--surface-3) / <alpha-value>)',
+        'surface-4':'rgb(var(--surface-4) / <alpha-value>)',
+        border:     'rgb(var(--border) / <alpha-value>)',
+        'border-subtle': 'rgb(var(--border-subtle) / <alpha-value>)',
 
         // ── Brand / semantic (Clean & Minimal) ──────────────────────────────
         primary: {
@@ -69,23 +69,32 @@ export default {
           foreground: '#FFFFFF',
         },
 
+        // ── Landing page specific tokens ────────────────────────────────────
+        'landing-bg': 'rgb(var(--background) / <alpha-value>)',
+        'landing-bg-alt': 'rgb(var(--surface-2) / <alpha-value>)',
+        'landing-surface': 'rgb(var(--surface) / <alpha-value>)',
+        'landing-surface-deep': 'rgb(var(--background) / <alpha-value>)',
+        'landing-border': 'rgb(var(--border) / <alpha-value>)',
+        'landing-border-subtle': 'rgb(var(--border-subtle) / <alpha-value>)',
+        'landing-heading': 'rgb(var(--text-bright) / <alpha-value>)',
+
         // ── Text ────────────────────────────────────────────────────────────
         text: {
-          DEFAULT: '#E2E8F0',
-          bright:  '#F8FAFC',
-          muted:   '#94A3B8',
-          subtle:  '#64748B',
-          dim:     '#475569',
+          DEFAULT: 'rgb(var(--text) / <alpha-value>)',
+          bright:  'rgb(var(--text-bright) / <alpha-value>)',
+          muted:   'rgb(var(--text-muted) / <alpha-value>)',
+          subtle:  'rgb(var(--text-subtle) / <alpha-value>)',
+          dim:     'rgb(var(--text-dim) / <alpha-value>)',
         },
 
         // ── shadcn compat aliases ────────────────────────────────────────────
-        foreground:  '#E2E8F0',
-        card:        { DEFAULT: '#0D1626', foreground: '#E2E8F0' },
-        popover:     { DEFAULT: '#0D1626', foreground: '#E2E8F0' },
-        secondary:   { DEFAULT: '#111E33', foreground: '#94A3B8' },
-        muted:       { DEFAULT: '#0D1626', foreground: '#94A3B8' },
+        foreground:  'rgb(var(--text) / <alpha-value>)',
+        card:        { DEFAULT: 'rgb(var(--surface) / <alpha-value>)', foreground: 'rgb(var(--text) / <alpha-value>)' },
+        popover:     { DEFAULT: 'rgb(var(--surface) / <alpha-value>)', foreground: 'rgb(var(--text) / <alpha-value>)' },
+        secondary:   { DEFAULT: 'rgb(var(--surface-2) / <alpha-value>)', foreground: 'rgb(var(--text-muted) / <alpha-value>)' },
+        muted:       { DEFAULT: 'rgb(var(--surface-2) / <alpha-value>)', foreground: 'rgb(var(--text-muted) / <alpha-value>)' },
         destructive: { DEFAULT: '#EF4444', foreground: '#FFFFFF' },
-        input:       '#1F3352',
+        input:       'rgb(var(--border) / <alpha-value>)',
         ring:        '#3B82F6',
       },
 

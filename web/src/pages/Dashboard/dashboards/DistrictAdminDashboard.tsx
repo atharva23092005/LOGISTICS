@@ -151,22 +151,22 @@ export function DistrictAdminDashboard() {
   }, [activateEmergency, emit, selectedDistrict])
 
   return (
-    <div className="h-full flex flex-col overflow-hidden bg-[#070B14] text-white">
+    <div className="h-full flex flex-col overflow-hidden bg-background text-text">
       {/* ── Top District Admin Header ── */}
-      <header className="px-4 py-3 bg-[#0B1120] border-b border-slate-800 flex items-center justify-between gap-3 flex-shrink-0">
+      <header className="px-4 py-3 bg-surface border-b border-border flex items-center justify-between gap-3 flex-shrink-0">
         <div className="flex items-center gap-3">
           <div className="h-9 w-9 rounded-xl bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-blue-400">
             <Building2 className="h-5 w-5" />
           </div>
           <div>
-            <div className="font-bold text-sm text-white flex items-center gap-2">
+            <div className="font-bold text-sm text-text flex items-center gap-2">
               District Administration Portal
               <span className="text-[10px] px-2 py-0.5 rounded bg-blue-500/15 text-blue-400 border border-blue-500/30 font-semibold uppercase">
                 {selectedDistrict} Sector
               </span>
             </div>
-            <div className="text-[11px] text-slate-400">
-              Admin: <span className="text-slate-200">{user?.name ?? 'Tsering Norbu (District Magistrate/Supervisor)'}</span>
+            <div className="text-[11px] text-text-muted">
+              Admin: <span className="text-text font-medium">{user?.name ?? 'Tsering Norbu (District Magistrate/Supervisor)'}</span>
             </div>
           </div>
         </div>
@@ -176,7 +176,7 @@ export function DistrictAdminDashboard() {
           <select
             value={selectedDistrict}
             onChange={e => setSelectedDistrict(e.target.value)}
-            className="bg-slate-900 border border-slate-700 text-xs text-white rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="bg-surface-2 border border-border text-xs text-text rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-primary"
           >
             {mockDistricts.map(d => (
               <option key={d.id} value={d.name}>{d.name} ({d.state})</option>
@@ -188,7 +188,7 @@ export function DistrictAdminDashboard() {
             size="sm"
             variant="destructive"
             onClick={() => setEscalateModal(true)}
-            className="gap-1.5 text-xs font-bold shadow-lg shadow-rose-950/40"
+            className="gap-1.5 text-xs font-bold shadow-md"
           >
             <Flame className="h-3.5 w-3.5" />
             <span className="hidden sm:inline">Escalate to State HQ</span>
@@ -197,56 +197,56 @@ export function DistrictAdminDashboard() {
       </header>
 
       {/* ── District Overview Strip ── */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 p-3 bg-slate-950/60 border-b border-slate-800/80 flex-shrink-0">
-        <div className="p-2.5 rounded-xl bg-slate-900/80 border border-slate-800">
-          <div className="text-[11px] text-slate-400 font-medium">Pending Verifications</div>
-          <div className="text-xl font-bold text-amber-400 mt-0.5 font-mono flex items-center gap-2">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 p-3 bg-surface-2/60 border-b border-border flex-shrink-0">
+        <div className="p-2.5 rounded-xl bg-surface border border-border">
+          <div className="text-[11px] text-text-muted font-medium">Pending Verifications</div>
+          <div className="text-xl font-bold text-amber-500 mt-0.5 font-mono flex items-center gap-2">
             {pendingReports.length}
-            {pendingReports.length > 0 && <span className="h-2 w-2 rounded-full bg-amber-400 animate-ping" />}
+            {pendingReports.length > 0 && <span className="h-2 w-2 rounded-full bg-amber-500 animate-ping" />}
           </div>
-          <div className="text-[10px] text-slate-500">Requires local admin action</div>
+          <div className="text-[10px] text-text-dim">Requires local admin action</div>
         </div>
 
-        <div className="p-2.5 rounded-xl bg-slate-900/80 border border-slate-800">
-          <div className="text-[11px] text-slate-400 font-medium">Verified Active Blockages</div>
-          <div className="text-xl font-bold text-rose-400 mt-0.5 font-mono">
+        <div className="p-2.5 rounded-xl bg-surface border border-border">
+          <div className="text-[11px] text-text-muted font-medium">Verified Active Blockages</div>
+          <div className="text-xl font-bold text-rose-500 mt-0.5 font-mono">
             {verifiedReports.length}
           </div>
-          <div className="text-[10px] text-slate-500">NH-415 Km 42 Landslide</div>
+          <div className="text-[10px] text-text-dim">NH-415 Km 42 Landslide</div>
         </div>
 
-        <div className="p-2.5 rounded-xl bg-slate-900/80 border border-slate-800">
-          <div className="text-[11px] text-slate-400 font-medium">District Rainfall Gauge</div>
-          <div className="text-xl font-bold text-blue-400 mt-0.5 font-mono flex items-center gap-1.5">
-            <CloudRain className="h-4 w-4 text-blue-400" />
+        <div className="p-2.5 rounded-xl bg-surface border border-border">
+          <div className="text-[11px] text-text-muted font-medium">District Rainfall Gauge</div>
+          <div className="text-xl font-bold text-blue-500 mt-0.5 font-mono flex items-center gap-1.5">
+            <CloudRain className="h-4 w-4 text-blue-500" />
             {districtWeather.rainfall} mm/h
           </div>
-          <div className="text-[10px] text-rose-400">Landslide Risk: {districtWeather.landslideRisk}%</div>
+          <div className="text-[10px] text-rose-500 font-semibold">Landslide Risk: {districtWeather.landslideRisk}%</div>
         </div>
 
-        <div className="p-2.5 rounded-xl bg-slate-900/80 border border-slate-800">
-          <div className="text-[11px] text-slate-400 font-medium">Active Patrol Units</div>
-          <div className="text-xl font-bold text-emerald-400 mt-0.5 font-mono flex items-center gap-1.5">
+        <div className="p-2.5 rounded-xl bg-surface border border-border">
+          <div className="text-[11px] text-text-muted font-medium">Active Patrol Units</div>
+          <div className="text-xl font-bold text-emerald-500 mt-0.5 font-mono flex items-center gap-1.5">
             <ShieldCheck className="h-4 w-4" />
             4 Officers
           </div>
-          <div className="text-[10px] text-slate-500">8 checkpoints inspected</div>
+          <div className="text-[10px] text-text-dim">8 checkpoints inspected</div>
         </div>
       </div>
 
       {/* ── Main Work Area (Split Pane: Queue + Map) ── */}
       <div className="flex-1 grid grid-cols-1 lg:grid-cols-12 overflow-hidden">
         {/* Left Column: Role-Specific Task Panels (5 Cols) */}
-        <div className="lg:col-span-5 border-r border-slate-800 flex flex-col overflow-hidden bg-[#0A0F1D]">
+        <div className="lg:col-span-5 border-r border-border flex flex-col overflow-hidden bg-surface">
           {/* Sub Navigation Tabs */}
-          <div className="p-2 border-b border-slate-800 bg-slate-950/40 flex items-center gap-1">
+          <div className="p-2 border-b border-border bg-surface-2/40 flex items-center gap-1">
             <button
               onClick={() => setActiveTab('queue')}
               className={cn(
                 'px-3 py-1.5 rounded-lg text-xs font-semibold transition-all',
                 activeTab === 'queue'
                   ? 'bg-blue-600 text-white shadow-sm'
-                  : 'text-slate-400 hover:text-white hover:bg-slate-900'
+                  : 'text-text-muted hover:text-text hover:bg-surface-2'
               )}
             >
               Incident Queue ({pendingReports.length})
@@ -258,7 +258,7 @@ export function DistrictAdminDashboard() {
                 'px-3 py-1.5 rounded-lg text-xs font-semibold transition-all',
                 activeTab === 'patrols'
                   ? 'bg-blue-600 text-white shadow-sm'
-                  : 'text-slate-400 hover:text-white hover:bg-slate-900'
+                  : 'text-text-muted hover:text-text hover:bg-surface-2'
               )}
             >
               Patrols & Checkpoints
@@ -270,7 +270,7 @@ export function DistrictAdminDashboard() {
                 'px-3 py-1.5 rounded-lg text-xs font-semibold transition-all',
                 activeTab === 'weather'
                   ? 'bg-blue-600 text-white shadow-sm'
-                  : 'text-slate-400 hover:text-white hover:bg-slate-900'
+                  : 'text-text-muted hover:text-text hover:bg-surface-2'
               )}
             >
               Soil & Weather
@@ -280,28 +280,28 @@ export function DistrictAdminDashboard() {
           {/* Tab Content 1: Ground Verification Queue */}
           {activeTab === 'queue' && (
             <div className="flex-1 overflow-y-auto p-3 space-y-3">
-              <div className="text-xs font-semibold text-slate-400 flex items-center justify-between">
+              <div className="text-xs font-semibold text-text-muted flex items-center justify-between">
                 <span>Field Reports Awaiting District Admin Action</span>
-                <span className="text-[11px] text-amber-400 font-mono">{pendingReports.length} Pending</span>
+                <span className="text-[11px] text-amber-500 font-mono font-bold">{pendingReports.length} Pending</span>
               </div>
 
               {reports.map(report => (
                 <div
                   key={report.id}
                   className={cn(
-                    'p-3.5 rounded-xl border transition-all space-y-2.5 bg-slate-900/60',
+                    'p-3.5 rounded-xl border transition-all space-y-2.5 bg-surface shadow-2xs',
                     report.status === 'pending'
-                      ? 'border-amber-500/40 hover:border-amber-500/70 bg-amber-950/10'
+                      ? 'border-amber-400/60 hover:border-amber-500 bg-amber-50/30 dark:bg-amber-950/10'
                       : report.status === 'verified'
-                      ? 'border-rose-500/40 bg-rose-950/10'
-                      : 'border-slate-800 opacity-75'
+                      ? 'border-rose-400/60 bg-rose-50/30 dark:bg-rose-950/10'
+                      : 'border-border opacity-85'
                   )}
                 >
                   <div className="flex items-start justify-between gap-2">
                     <div>
-                      <div className="font-bold text-xs sm:text-sm text-white">{report.title}</div>
-                      <div className="text-[11px] text-slate-400 flex items-center gap-1 mt-0.5">
-                        <MapPin className="h-3 w-3 text-slate-500" />
+                      <div className="font-bold text-xs sm:text-sm text-text">{report.title}</div>
+                      <div className="text-[11px] text-text-muted flex items-center gap-1 mt-0.5">
+                        <MapPin className="h-3 w-3 text-text-dim" />
                         {report.location}
                       </div>
                     </div>
@@ -314,12 +314,12 @@ export function DistrictAdminDashboard() {
                     </Badge>
                   </div>
 
-                  <p className="text-xs text-slate-300 line-clamp-2">
+                  <p className="text-xs text-text-muted line-clamp-2">
                     {report.description}
                   </p>
 
-                  <div className="flex items-center justify-between text-[11px] text-slate-400 pt-2 border-t border-slate-800/60">
-                    <span>By: <strong className="text-slate-200">{report.reportedBy}</strong></span>
+                  <div className="flex items-center justify-between text-[11px] text-text-dim pt-2 border-t border-border/60">
+                    <span>By: <strong className="text-text">{report.reportedBy}</strong></span>
                     <span>{timeAgo(report.reportedAt)}</span>
                   </div>
 
@@ -339,7 +339,7 @@ export function DistrictAdminDashboard() {
                       <Button
                         size="sm"
                         onClick={() => handleVerifyReport(report)}
-                        className="bg-emerald-600 hover:bg-emerald-500 text-white text-xs gap-1 h-8"
+                        className="bg-emerald-600 hover:bg-emerald-500 text-white text-xs gap-1 h-8 font-semibold"
                       >
                         <Check className="h-3.5 w-3.5" />
                         Verify
@@ -354,7 +354,7 @@ export function DistrictAdminDashboard() {
           {/* Tab Content 2: Patrols & Checkpoints */}
           {activeTab === 'patrols' && (
             <div className="flex-1 overflow-y-auto p-3 space-y-3">
-              <div className="text-xs font-semibold text-slate-400">
+              <div className="text-xs font-semibold text-text-muted">
                 Active District Checkpoints & Patrol Units
               </div>
 
@@ -364,17 +364,17 @@ export function DistrictAdminDashboard() {
                 { name: 'SH-15 North Bank Approach Span', highway: 'SH-15', status: 'Caution (Joint Crack)', inspector: 'Officer Rani Borah', last: '1 hour ago' },
                 { name: 'Ruksin Border Sector Post #2', highway: 'NH-415', status: 'Operational', inspector: 'Officer Sunil Pegu', last: '2 hours ago' },
               ].map(cp => (
-                <div key={cp.name} className="p-3 rounded-xl bg-slate-900/60 border border-slate-800 space-y-1.5">
+                <div key={cp.name} className="p-3 rounded-xl bg-surface border border-border space-y-1.5 shadow-2xs">
                   <div className="flex items-center justify-between text-xs">
-                    <strong className="text-white">{cp.name}</strong>
+                    <strong className="text-text">{cp.name}</strong>
                     <span className={cn(
                       'text-[10px] font-bold px-2 py-0.5 rounded',
-                      cp.status.includes('Blocked') ? 'bg-rose-500/20 text-rose-400' : cp.status.includes('Caution') ? 'bg-amber-500/20 text-amber-400' : 'bg-emerald-500/20 text-emerald-400'
+                      cp.status.includes('Blocked') ? 'bg-rose-100 dark:bg-rose-500/20 text-rose-700 dark:text-rose-400' : cp.status.includes('Caution') ? 'bg-amber-100 dark:bg-amber-500/20 text-amber-800 dark:text-amber-400' : 'bg-emerald-100 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400'
                     )}>
                       {cp.status}
                     </span>
                   </div>
-                  <div className="text-[11px] text-slate-400 flex items-center justify-between">
+                  <div className="text-[11px] text-text-muted flex items-center justify-between">
                     <span>Highway: {cp.highway}</span>
                     <span>Inspector: {cp.inspector}</span>
                   </div>
@@ -386,19 +386,19 @@ export function DistrictAdminDashboard() {
           {/* Tab Content 3: Soil & Weather Gauges */}
           {activeTab === 'weather' && (
             <div className="flex-1 overflow-y-auto p-3 space-y-3 text-xs">
-              <div className="p-4 rounded-xl bg-blue-950/20 border border-blue-800/40 space-y-3">
-                <div className="font-bold text-sm text-blue-300 flex items-center gap-2">
-                  <CloudRain className="h-4 w-4" />
+              <div className="p-4 rounded-xl bg-blue-50/70 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800/40 space-y-3">
+                <div className="font-bold text-sm text-blue-900 dark:text-blue-300 flex items-center gap-2">
+                  <CloudRain className="h-4 w-4 text-blue-600 dark:text-blue-400" />
                   {selectedDistrict} Meteorological Radar
                 </div>
-                <div className="grid grid-cols-2 gap-2 text-slate-300">
+                <div className="grid grid-cols-2 gap-2 text-slate-700 dark:text-slate-300">
                   <div>Rainfall: <strong>{districtWeather.rainfall} mm/h</strong></div>
                   <div>Humidity: <strong>{districtWeather.humidity}%</strong></div>
                   <div>Temperature: <strong>{districtWeather.temperature}°C</strong></div>
-                  <div>Soil Saturation: <strong className="text-rose-400">88% (Critical)</strong></div>
+                  <div>Soil Saturation: <strong className="text-rose-600 dark:text-rose-400">88% (Critical)</strong></div>
                 </div>
-                <div className="p-2.5 rounded-lg bg-rose-950/40 border border-rose-800/40 text-rose-300 text-[11px] flex items-start gap-2">
-                  <AlertTriangle className="h-4 w-4 text-warning flex-shrink-0 mt-0.5" />
+                <div className="p-2.5 rounded-lg bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800/40 text-rose-800 dark:text-rose-300 text-[11px] flex items-start gap-2">
+                  <AlertTriangle className="h-4 w-4 text-amber-500 flex-shrink-0 mt-0.5" />
                   <div>
                     <strong>Threshold Warning:</strong> Precipitation exceeding 50mm/hr combined with steep slope gradient (24.5°) triggers automated landslide risk score of 0.87.
                   </div>
@@ -424,35 +424,35 @@ export function DistrictAdminDashboard() {
           size="lg"
         >
           <div className="space-y-4 text-xs">
-            <div className="p-3 rounded-xl bg-slate-900 border border-slate-800 space-y-2">
+            <div className="p-3 rounded-xl bg-surface-2 border border-border space-y-2">
               <div className="flex items-center justify-between">
-                <span className="text-slate-400">Highway: <strong className="text-white">{selectedReport.highway}</strong></span>
-                <span className="text-slate-400">Clearance ETA: <strong className="text-amber-400">{selectedReport.clearanceEta}</strong></span>
+                <span className="text-text-muted">Highway: <strong className="text-text">{selectedReport.highway}</strong></span>
+                <span className="text-text-muted">Clearance ETA: <strong className="text-amber-500">{selectedReport.clearanceEta}</strong></span>
               </div>
-              <div className="text-slate-400">Location: <span className="text-white">{selectedReport.location}</span></div>
-              <div className="text-slate-400">GPS: <span className="font-mono text-blue-400">{selectedReport.coords.lat}°N, {selectedReport.coords.lng}°E</span></div>
+              <div className="text-text-muted">Location: <span className="text-text">{selectedReport.location}</span></div>
+              <div className="text-text-muted">GPS: <span className="font-mono text-blue-600 dark:text-blue-400">{selectedReport.coords.lat}°N, {selectedReport.coords.lng}°E</span></div>
             </div>
 
             <div>
-              <label className="font-semibold text-slate-300 block mb-1.5">Damage & Survey Description:</label>
-              <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 text-slate-200">
+              <label className="font-semibold text-text block mb-1.5">Damage & Survey Description:</label>
+              <div className="p-3 rounded-xl bg-surface border border-border text-text">
                 {selectedReport.description}
               </div>
             </div>
 
             <div>
-              <label className="font-semibold text-slate-300 block mb-1.5">Attached Ground Damage Photos ({selectedReport.photos.length}):</label>
+              <label className="font-semibold text-text block mb-1.5">Attached Ground Damage Photos ({selectedReport.photos.length}):</label>
               <div className="grid grid-cols-2 gap-2">
                 {selectedReport.photos.map(p => (
-                  <div key={p} className="p-3 rounded-xl bg-slate-900 border border-slate-800 flex items-center gap-2 text-slate-300">
-                    <Camera className="h-4 w-4 text-blue-400" />
+                  <div key={p} className="p-3 rounded-xl bg-surface-2 border border-border flex items-center gap-2 text-text">
+                    <Camera className="h-4 w-4 text-blue-600 dark:text-blue-400" />
                     <span className="truncate text-xs">{p}</span>
                   </div>
                 ))}
               </div>
             </div>
 
-            <div className="flex items-center gap-2 pt-2 border-t border-slate-800">
+            <div className="flex items-center gap-2 pt-2 border-t border-border">
               <Button
                 onClick={() => handleVerifyReport(selectedReport)}
                 className="flex-1 bg-rose-600 hover:bg-rose-500 text-white font-bold"
@@ -483,9 +483,9 @@ export function DistrictAdminDashboard() {
           size="md"
         >
           <div className="space-y-4 text-xs">
-            <div className="p-3.5 rounded-xl bg-rose-950/30 border border-rose-500/40 text-rose-200 space-y-1.5">
+            <div className="p-3.5 rounded-xl bg-rose-50 dark:bg-rose-950/30 border border-rose-300 dark:border-rose-500/40 text-rose-900 dark:text-rose-200 space-y-1.5">
               <div className="font-bold flex items-center gap-1.5">
-                <Flame className="h-4 w-4 text-rose-400" />
+                <Flame className="h-4 w-4 text-rose-600 dark:text-rose-400" />
                 State Level Emergency Protocol Activation
               </div>
               <p className="text-[11px] leading-relaxed">
@@ -494,10 +494,10 @@ export function DistrictAdminDashboard() {
             </div>
 
             <div className="space-y-2">
-              <label className="font-semibold text-slate-300">Reason for Escalation:</label>
+              <label className="font-semibold text-text">Reason for Escalation:</label>
               <textarea
                 defaultValue={`Multiple critical slope failures and heavy debris along NH-415 connecting to Pasighat. 3 freight relief convoys stranded.`}
-                className="w-full h-20 p-2.5 bg-slate-900 border border-slate-700 rounded-xl text-white text-xs focus:outline-none focus:ring-1 focus:ring-rose-500"
+                className="w-full h-20 p-2.5 bg-surface-2 border border-border rounded-xl text-text text-xs focus:outline-none focus:ring-1 focus:ring-rose-500"
               />
             </div>
 

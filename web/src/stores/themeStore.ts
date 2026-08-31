@@ -1,44 +1,68 @@
 import { create } from 'zustand'
 
-type Theme = 'light' | 'dark'
+export type Theme = 'light' | 'dark' | 'system'
 
 interface ThemeState {
   theme: Theme
+  resolvedTheme: 'light' | 'dark'
   setTheme: (t: Theme) => void
-  toggleTheme: () => void
+  cycleTheme: () => void
+}
+
+function getSystemTheme(): 'light' | 'dark' {
+  if (typeof window === 'undefined') return 'light'
+  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
 }
 
 function getInitialTheme(): Theme {
   if (typeof window === 'undefined') return 'light'
-  const stored = localStorage.getItem('ner-theme') as Theme | null
-  if (stored === 'light' || stored === 'dark') return stored
-  return 'light' // default to light
+  const stored = localStorage.getItem('ner-theme-v3') as Theme | null
+  if (stored === 'light' || stored === 'dark' || stored === 'system') return stored
+  return 'light' // Clean default to light mode
 }
 
-function applyTheme(theme: Theme) {
+function applyTheme(theme: Theme): 'light' | 'dark' {
+  if (typeof document === 'undefined') return 'light'
+  const effective = theme === 'system' ? getSystemTheme() : theme
   const root = document.documentElement
-  if (theme === 'dark') {
+  if (effective === 'dark') {
     root.classList.add('dark')
   } else {
     root.classList.remove('dark')
   }
-  localStorage.setItem('ner-theme', theme)
+  localStorage.setItem('ner-theme-v3', theme)
+  return effective
 }
 
-// Apply immediately on load (before React mounts)
+// Apply immediately on module load
 const initialTheme = getInitialTheme()
-applyTheme(initialTheme)
+let initialResolved = applyTheme(initialTheme)
+
+// Listen for system theme changes
+if (typeof window !== 'undefined') {
+  const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+  mediaQuery.addEventListener('change', () => {
+    const currentTheme = useThemeStore.getState().theme
+    if (currentTheme === 'system') {
+      const resolved = applyTheme('system')
+      useThemeStore.setState({ resolvedTheme: resolved })
+    }
+  })
+}
 
 export const useThemeStore = create<ThemeState>((set) => ({
   theme: initialTheme,
-  setTheme: (t) => {
-    applyTheme(t)
-    set({ theme: t })
+  resolvedTheme: initialResolved,
+  setTheme: (t: Theme) => {
+    const resolved = applyTheme(t)
+    set({ theme: t, resolvedTheme: resolved })
   },
-  toggleTheme: () =>
+  cycleTheme: () =>
     set((s) => {
-      const next = s.theme === 'dark' ? 'light' : 'dark'
-      applyTheme(next)
-      return { theme: next }
+      const order: Theme[] = ['light', 'dark', 'system']
+      const nextIndex = (order.indexOf(s.theme) + 1) % order.length
+      const next = order[nextIndex]
+      const resolved = applyTheme(next)
+      return { theme: next, resolvedTheme: resolved }
     }),
 }))

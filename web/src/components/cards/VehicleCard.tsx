@@ -68,14 +68,14 @@ export function VehicleCard({
       onClick={() => onSelect?.(v)}
       className={cn(
         'app-card p-3 transition-all space-y-2',
-        onSelect && 'cursor-pointer hover:border-white/20',
+        onSelect && 'cursor-pointer hover:border-primary/40 hover:shadow-sm',
         selected
-          ? 'border-primary/60 bg-primary/[0.08] ring-1 ring-primary/40 shadow-md'
+          ? 'border-primary bg-primary/[0.08] ring-1 ring-primary/40 shadow-md'
           : isStopped
           ? 'border-danger/35 bg-danger/[0.04]'
           : isDelayed
           ? 'border-warning/30 bg-warning/[0.04]'
-          : 'border-border/60 bg-surface'
+          : 'border-border bg-surface'
       )}
     >
       {/* ── ROW 1: Header (Icon + Reg No + Cargo vs Priority Badge + Status Dot) ── */}
@@ -85,7 +85,7 @@ export function VehicleCard({
             'p-1.5 rounded-md border flex-shrink-0',
             isStopped ? 'bg-danger/15 border-danger/30 text-danger' :
             isDelayed ? 'bg-warning/15 border-warning/30 text-warning' :
-            'bg-surface-2 border-white/5 text-primary'
+            'bg-surface-2 border-border text-primary'
           )}>
             <Icon className="h-3.5 w-3.5" />
           </div>

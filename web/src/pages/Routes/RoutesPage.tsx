@@ -361,8 +361,8 @@ export function RoutesPage() {
                     className={cn(
                       'flex items-center gap-2 p-2.5 rounded-xl border cursor-pointer transition-all',
                       overrideReason === r
-                        ? 'bg-primary/15 border-primary text-white font-semibold'
-                        : 'bg-surface-2 border-border text-text-muted hover:text-white'
+                        ? 'bg-primary/15 border-primary text-primary font-semibold'
+                        : 'bg-surface-2 border-border text-text-muted hover:text-text'
                     )}
                   >
                     <input
@@ -388,7 +388,7 @@ export function RoutesPage() {
                   value={customReason}
                   onChange={(e) => setCustomReason(e.target.value)}
                   placeholder="Enter details, field officer badge ID, or authority order..."
-                  className="w-full bg-surface-2 border border-border rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-primary resize-none h-20"
+                  className="w-full bg-surface-2 border border-border rounded-xl p-2.5 text-xs text-text focus:outline-none focus:border-primary resize-none h-20"
                 />
               </div>
             )}

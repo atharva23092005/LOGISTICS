@@ -6,6 +6,7 @@ import { useAppStore } from '@/stores/appStore'
 // Pages
 import { LandingPage }          from '@/pages/Landing/LandingPage'
 import { LoginPage }            from '@/pages/Login/LoginPage'
+import { RegisterPage }         from '@/pages/Register/RegisterPage'
 import { PublicCitizenPortal }  from '@/pages/Public/PublicCitizenPortal'
 import { DriverPage }           from '@/pages/Driver/DriverPage'
 import { FieldOfficerDashboard } from '@/pages/Dashboard/dashboards/FieldOfficerDashboard'
@@ -28,15 +29,9 @@ export default function App() {
     <>
       <Toaster
         position="top-right"
-        theme="dark"
-        toastOptions={{
-          style: {
-            background: '#0D1626',
-            border: '1px solid #1F3352',
-            color: '#E2E8F0',
-            boxShadow: '0 8px 32px rgba(0,0,0,0.5)',
-          },
-        }}
+        theme="system"
+        richColors
+        closeButton
       />
       <Routes>
         {/* Surface 4: Public Citizen Portal (Anonymous, Read-Only, No Login Required) */}
@@ -49,10 +44,11 @@ export default function App() {
         {/* Surface 3: Driver / Transporter Mobile HUD */}
         <Route path="/driver" element={<DriverPage />} />
 
-        {/* Public Landing & Login Pages */}
+        {/* Public Landing, Login & Register Pages */}
         <Route path="/" element={<LandingPage />} />
         <Route path="/landing" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
 
         {/* Authenticated Command Center Application */}
         <Route

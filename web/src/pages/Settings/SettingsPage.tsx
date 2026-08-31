@@ -5,7 +5,9 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Button } from '@/components/ui/button'
 import { Input }  from '@/components/ui/input'
 import { Badge }  from '@/components/ui/badge'
+import { ThemeToggle } from '@/components/ui/ThemeToggle'
 import { useAppStore } from '@/stores/appStore'
+import { useThemeStore } from '@/stores/themeStore'
 
 const selUser     = (s: ReturnType<typeof useAppStore.getState>) => s.user
 const selLogin    = (s: ReturnType<typeof useAppStore.getState>) => s.login
@@ -35,6 +37,8 @@ export function SettingsPage() {
   const login    = useAppStore(selLogin)
   const demoMode = useAppStore(selDemoMode)
   const setDemo  = useAppStore(selSetDemo)
+  const theme    = useThemeStore((s) => s.theme)
+  const setTheme = useThemeStore((s) => s.setTheme)
 
   const [tab, setTab]     = useState('profile')
   const [name, setName]   = useState(user?.name ?? '')
@@ -133,6 +137,22 @@ export function SettingsPage() {
                     <Button onClick={handleSaveProfile} className="h-8 text-xs font-semibold shadow-sm">
                       <Save className="h-3.5 w-3.5" /> Save Changes
                     </Button>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-sm font-bold">Interface & Visual Theme</CardTitle>
+                    <CardDescription className="text-xs">Select your preferred color scheme (Light, Dark, or Match System)</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between py-2 gap-3">
+                      <div>
+                        <div className="text-xs font-semibold text-text">Global Color Theme</div>
+                        <div className="text-2xs text-text-muted">Choose high-contrast Light, Tactical Dark, or automatic OS System match</div>
+                      </div>
+                      <ThemeToggle variant="segmented" />
+                    </div>
                   </CardContent>
                 </Card>
 

@@ -637,12 +637,15 @@ export function MapEngine({
   }, [flyToTarget, flyToZoom])
 
   return (
-    <div className={cn('w-full h-full relative overflow-hidden bg-[#0F172A]', className)}>
+    <div className={cn('w-full h-full relative overflow-hidden bg-background', className)}>
       <div ref={containerRef} className="w-full h-full" />
 
       {/* ── Single Unified Floating Glass Inspector Drawer (Zero Overlap) ── */}
       {!hideInspector && selectedEntity && (
-        <div className="absolute top-3 right-3 z-30 w-72 sm:w-80 max-w-[calc(100vw-1.5rem)] animate-scale-in">
+        <div className={cn(
+          "absolute top-3 right-3 z-30 max-w-[calc(100vw-1.5rem)] animate-scale-in transition-all duration-200",
+          showReplay ? "w-80 sm:w-[380px]" : "w-72 sm:w-80"
+        )}>
           {/* ── VEHICLE CARD OR REPLAY SCRUBBER ── */}
           {selectedEntity.type === 'vehicle' && activeSelectedVehicle && (
             showReplay ? (
@@ -651,31 +654,31 @@ export function MapEngine({
                 onClose={() => setShowReplay(false)}
               />
             ) : (
-              <div className="glass-panel rounded-2xl p-3.5 border border-white/10 shadow-2xl space-y-3 bg-[#0D1626]/90 backdrop-blur-xl text-text">
+              <div className="rounded-2xl p-4 border border-slate-200/90 dark:border-border shadow-2xl space-y-3.5 bg-white/95 dark:bg-surface/95 backdrop-blur-xl text-text ring-1 ring-black/5 dark:ring-white/10">
                 {/* Card Header */}
-                <div className="flex items-center justify-between border-b border-white/10 pb-2.5">
-                  <div className="flex items-center gap-2">
-                    <div className="p-1.5 rounded-lg bg-surface-2 border border-white/5 text-primary flex items-center justify-center flex-shrink-0">
+                <div className="flex items-center justify-between border-b border-slate-200 dark:border-border pb-3">
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <div className="p-2 rounded-xl bg-blue-50 dark:bg-primary/15 border border-blue-200 dark:border-primary/30 text-primary flex items-center justify-center flex-shrink-0 shadow-2xs">
                       {activeSelectedVehicle.type === 'ambulance' ? <HeartPulse className="h-4 w-4 text-danger" /> :
                        activeSelectedVehicle.type === 'tanker' ? <Fuel className="h-4 w-4 text-warning" /> :
                        <Truck className="h-4 w-4 text-primary" />}
                     </div>
-                    <div>
-                      <div className="font-mono font-bold text-xs text-white">
+                    <div className="min-w-0">
+                      <div className="font-mono font-bold text-sm text-text leading-tight truncate">
                         {activeSelectedVehicle.registrationNo}
                       </div>
-                      <div className="text-[10px] text-text-muted">
+                      <div className="text-2xs text-text-muted truncate mt-0.5">
                         {activeSelectedVehicle.origin} → {activeSelectedVehicle.destination}
                       </div>
                     </div>
                   </div>
-                  <div className="flex items-center gap-1.5">
+                  <div className="flex items-center gap-1.5 flex-shrink-0">
                     <span
                       className="text-[9px] font-bold px-2 py-0.5 rounded-md uppercase"
                       style={{
-                        background: `${VEHICLE_COLOR[activeSelectedVehicle.status]}20`,
+                        background: `${VEHICLE_COLOR[activeSelectedVehicle.status]}15`,
                         color: VEHICLE_COLOR[activeSelectedVehicle.status],
-                        border: `1px solid ${VEHICLE_COLOR[activeSelectedVehicle.status]}40`,
+                        border: `1px solid ${VEHICLE_COLOR[activeSelectedVehicle.status]}35`,
                       }}
                     >
                       {activeSelectedVehicle.status.replace('_', ' ')}
@@ -687,7 +690,8 @@ export function MapEngine({
                         setIsFollowingVehicle(false)
                         setShowReplay(false)
                       }}
-                      className="p-1 rounded-lg text-text-muted hover:text-white hover:bg-white/10"
+                      className="p-1.5 rounded-lg text-text-muted hover:text-text hover:bg-slate-100 dark:hover:bg-surface-2 transition-colors"
+                      title="Close Inspector"
                     >
                       <X className="h-4 w-4" />
                     </button>
@@ -696,47 +700,50 @@ export function MapEngine({
 
                 {/* Real-time Telemetry Grid */}
                 <div className="grid grid-cols-2 gap-2 text-xs">
-                  <div className="bg-white/5 p-2 rounded-xl border border-white/5">
-                    <div className="text-[10px] text-text-muted flex items-center gap-1">
-                      <Gauge className="h-3 w-3 text-primary" /> Live Speed
+                  <div className="bg-slate-50 dark:bg-surface-2/80 p-2.5 rounded-xl border border-slate-200/90 dark:border-border/80 shadow-2xs">
+                    <div className="text-[11px] font-medium text-text-muted flex items-center gap-1.5">
+                      <Gauge className="h-3.5 w-3.5 text-primary flex-shrink-0" /> Live Speed
                     </div>
-                    <div className="font-mono font-bold text-sm text-white mt-0.5">
+                    <div className="font-mono font-bold text-sm text-text mt-1">
                       {activeSelectedVehicle.speed} <span className="text-2xs font-normal text-text-dim">km/h</span>
                     </div>
                   </div>
-                  <div className="bg-white/5 p-2 rounded-xl border border-white/5">
-                    <div className="text-[10px] text-text-muted flex items-center gap-1">
-                      <Fuel className="h-3 w-3 text-warning" /> Fuel Level
+
+                  <div className="bg-slate-50 dark:bg-surface-2/80 p-2.5 rounded-xl border border-slate-200/90 dark:border-border/80 shadow-2xs">
+                    <div className="text-[11px] font-medium text-text-muted flex items-center gap-1.5">
+                      <Fuel className="h-3.5 w-3.5 text-warning flex-shrink-0" /> Fuel Level
                     </div>
-                    <div className="font-mono font-bold text-sm text-white mt-0.5">
+                    <div className="font-mono font-bold text-sm text-text mt-1">
                       {activeSelectedVehicle.fuelLevel}%
                     </div>
                   </div>
-                  <div className="bg-white/5 p-2 rounded-xl border border-white/5">
-                    <div className="text-[10px] text-text-muted flex items-center gap-1">
-                      <Clock className="h-3 w-3 text-success" /> Remaining ETA
+
+                  <div className="bg-slate-50 dark:bg-surface-2/80 p-2.5 rounded-xl border border-slate-200/90 dark:border-border/80 shadow-2xs">
+                    <div className="text-[11px] font-medium text-text-muted flex items-center gap-1.5">
+                      <Clock className="h-3.5 w-3.5 text-success flex-shrink-0" /> Remaining ETA
                     </div>
-                    <div className="font-semibold text-xs text-white mt-0.5">
+                    <div className="font-semibold text-xs text-text mt-1">
                       {formatDuration(Math.max(0, Math.floor((new Date(activeSelectedVehicle.eta).getTime() - Date.now()) / 60000)))}
                     </div>
                   </div>
-                  <div className="bg-white/5 p-2 rounded-xl border border-white/5">
-                    <div className="text-[10px] text-text-muted flex items-center gap-1">
-                      <Navigation className="h-3 w-3 text-info" /> Distance
+
+                  <div className="bg-slate-50 dark:bg-surface-2/80 p-2.5 rounded-xl border border-slate-200/90 dark:border-border/80 shadow-2xs">
+                    <div className="text-[11px] font-medium text-text-muted flex items-center gap-1.5">
+                      <Navigation className="h-3.5 w-3.5 text-info flex-shrink-0" /> Distance
                     </div>
-                    <div className="font-semibold text-xs text-white mt-0.5">
+                    <div className="font-semibold text-xs text-text mt-1">
                       {formatDistance(activeSelectedVehicle.distanceRemaining)}
                     </div>
                   </div>
                 </div>
 
                 {/* Route Progress Bar */}
-                <div className="space-y-1 bg-white/5 p-2 rounded-xl border border-white/5">
-                  <div className="flex justify-between text-2xs text-text-muted">
+                <div className="space-y-1.5 bg-slate-50 dark:bg-surface-2/80 p-2.5 rounded-xl border border-slate-200/90 dark:border-border/80 shadow-2xs">
+                  <div className="flex justify-between text-2xs font-medium text-text-muted">
                     <span>Route Progress</span>
-                    <span className="font-semibold text-white">{activeSelectedVehicle.progress}%</span>
+                    <span className="font-bold text-text">{activeSelectedVehicle.progress}%</span>
                   </div>
-                  <div className="w-full bg-white/10 rounded-full h-1.5 overflow-hidden">
+                  <div className="w-full bg-slate-200 dark:bg-surface-3 rounded-full h-1.5 overflow-hidden">
                     <div
                       className="bg-primary h-full rounded-full transition-all duration-300"
                       style={{ width: `${activeSelectedVehicle.progress}%` }}
@@ -745,21 +752,21 @@ export function MapEngine({
                 </div>
 
                 {/* Driver & Cargo info */}
-                <div className="text-2xs space-y-1 bg-white/5 p-2.5 rounded-xl border border-white/5">
+                <div className="text-2xs space-y-1.5 bg-slate-50 dark:bg-surface-2/80 p-3 rounded-xl border border-slate-200/90 dark:border-border/80 shadow-2xs">
                   <div className="flex justify-between items-center">
                     <span className="text-text-muted">Driver:</span>
                     <div className="flex items-center gap-1.5">
-                      <strong className="text-white">{activeSelectedVehicle.driver}</strong>
+                      <strong className="text-text font-semibold">{activeSelectedVehicle.driver}</strong>
                       <span className="text-text-dim text-[10px]">({activeSelectedVehicle.driverPhone})</span>
                     </div>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-text-muted">Cargo:</span>
-                    <strong className="text-white">{activeSelectedVehicle.cargo}</strong>
+                    <strong className="text-text font-semibold">{activeSelectedVehicle.cargo}</strong>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-text-muted">District:</span>
-                    <strong className="text-white">{activeSelectedVehicle.district}</strong>
+                    <strong className="text-text font-semibold">{activeSelectedVehicle.district}</strong>
                   </div>
                 </div>
 
@@ -767,7 +774,7 @@ export function MapEngine({
                 <div className="flex items-center gap-1.5 pt-1">
                   <button
                     onClick={() => setShowReplay(true)}
-                    className="flex items-center justify-center gap-1 py-1.5 px-2 rounded-xl text-2xs font-semibold bg-white/10 hover:bg-white/15 text-text hover:text-white border border-white/10 transition-all"
+                    className="flex items-center justify-center gap-1 py-1.5 px-2.5 rounded-xl text-2xs font-semibold bg-slate-100 hover:bg-slate-200 dark:bg-surface-2 dark:hover:bg-surface-3 text-text border border-slate-200 dark:border-border transition-all shadow-2xs"
                     title="Replay Trip & Telemetry"
                   >
                     <Clock className="h-3.5 w-3.5 text-primary" />
@@ -777,10 +784,10 @@ export function MapEngine({
                   <button
                     onClick={() => setIsFollowingVehicle(!isFollowingVehicle)}
                     className={cn(
-                      'flex-1 flex items-center justify-center gap-1 py-1.5 rounded-xl text-2xs font-semibold transition-all',
+                      'flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-xl text-2xs font-semibold transition-all shadow-2xs',
                       isFollowingVehicle
-                        ? 'bg-primary text-white shadow-md'
-                        : 'bg-white/10 hover:bg-white/15 text-text hover:text-white border border-white/10'
+                        ? 'bg-primary text-white shadow-sm'
+                        : 'bg-slate-100 hover:bg-slate-200 dark:bg-surface-2 dark:hover:bg-surface-3 text-text border border-slate-200 dark:border-border'
                     )}
                     title={isFollowingVehicle ? "Stop following vehicle" : "Follow vehicle camera"}
                   >
@@ -790,7 +797,7 @@ export function MapEngine({
 
                   <button
                     onClick={() => setRerouteModalVehicle(activeSelectedVehicle)}
-                    className="flex items-center justify-center gap-1 py-1.5 px-2 rounded-xl text-2xs font-semibold bg-warning/15 hover:bg-warning/25 text-warning border border-warning/30 transition-all"
+                    className="flex items-center justify-center gap-1.5 py-1.5 px-2.5 rounded-xl text-2xs font-semibold bg-amber-50 hover:bg-amber-100 dark:bg-warning/15 dark:hover:bg-warning/25 text-amber-800 dark:text-warning border border-amber-200 dark:border-warning/30 transition-all shadow-2xs"
                     title="AI Safe Reroute"
                   >
                     <RotateCcw className="h-3.5 w-3.5" />
@@ -804,7 +811,7 @@ export function MapEngine({
                         description: `Phone number ${activeSelectedVehicle.driverPhone} copied to clipboard.`
                       })
                     }}
-                    className="flex items-center justify-center p-2 rounded-xl bg-white/10 hover:bg-white/15 text-text hover:text-white border border-white/10"
+                    className="flex items-center justify-center p-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-surface-2 dark:hover:bg-surface-3 text-text border border-slate-200 dark:border-border shadow-2xs"
                     title={`Call Driver: ${activeSelectedVehicle.driverPhone}`}
                   >
                     <Phone className="h-3.5 w-3.5 text-success" />
@@ -821,38 +828,38 @@ export function MapEngine({
 
           {/* ── ROAD CARD ── */}
           {selectedEntity.type === 'road' && (
-            <div className="glass-panel rounded-2xl p-3.5 border border-white/10 shadow-2xl space-y-3 bg-[#0D1626]/90 backdrop-blur-xl text-text">
-              <div className="flex items-center justify-between border-b border-white/10 pb-2">
+            <div className="rounded-2xl p-4 border border-slate-200/90 dark:border-border shadow-2xl space-y-3.5 bg-white/95 dark:bg-surface/95 backdrop-blur-xl text-text ring-1 ring-black/5 dark:ring-white/10">
+              <div className="flex items-center justify-between border-b border-slate-200 dark:border-border pb-3">
                 <div>
-                  <div className="font-bold text-xs text-white">{selectedEntity.data.name}</div>
-                  <div className="text-[10px] text-text-muted">District: {selectedEntity.data.district}</div>
+                  <div className="font-bold text-sm text-text">{selectedEntity.data.name}</div>
+                  <div className="text-2xs text-text-muted mt-0.5">District: {selectedEntity.data.district}</div>
                 </div>
                 <button
                   onClick={() => setSelectedEntity(null)}
-                  className="p-1 rounded-lg text-text-muted hover:text-white hover:bg-white/10"
+                  className="p-1.5 rounded-lg text-text-muted hover:text-text hover:bg-slate-100 dark:hover:bg-surface-2 transition-colors"
                 >
                   <X className="h-4 w-4" />
                 </button>
               </div>
               <div className="grid grid-cols-2 gap-2 text-xs">
-                <div className="bg-white/5 p-2 rounded-xl border border-white/5">
-                  <div className="text-[10px] text-text-muted">Status</div>
+                <div className="bg-slate-50 dark:bg-surface-2 p-2.5 rounded-xl border border-slate-200/90 dark:border-border/80 shadow-2xs">
+                  <div className="text-[11px] font-medium text-text-muted">Status</div>
                   <div
-                    className="font-bold uppercase text-xs mt-0.5"
+                    className="font-bold uppercase text-xs mt-1"
                     style={{ color: ROAD_COLOR[selectedEntity.data.status] }}
                   >
                     {selectedEntity.data.status}
                   </div>
                 </div>
-                <div className="bg-white/5 p-2 rounded-xl border border-white/5">
-                  <div className="text-[10px] text-text-muted">Risk Score</div>
-                  <div className="font-bold text-xs text-white mt-0.5">
+                <div className="bg-slate-50 dark:bg-surface-2 p-2.5 rounded-xl border border-slate-200/90 dark:border-border/80 shadow-2xs">
+                  <div className="text-[11px] font-medium text-text-muted">Risk Score</div>
+                  <div className="font-bold text-xs text-text mt-1">
                     {selectedEntity.data.riskScore}%
                   </div>
                 </div>
               </div>
               {selectedEntity.data.reason && (
-                <div className="bg-danger/10 border border-danger/20 p-2.5 rounded-xl text-2xs text-danger leading-relaxed flex items-start gap-1.5">
+                <div className="bg-rose-50 dark:bg-danger/10 border border-rose-200 dark:border-danger/30 p-3 rounded-xl text-2xs text-rose-700 dark:text-danger leading-relaxed flex items-start gap-2 shadow-2xs">
                   <AlertTriangle className="h-3.5 w-3.5 text-danger flex-shrink-0 mt-0.5" />
                   <span>{selectedEntity.data.reason}</span>
                 </div>
@@ -863,24 +870,24 @@ export function MapEngine({
           {/* ── ALERT CARD ── */}
           {selectedEntity.type === 'alert' && activeSelectedAlert && (
             <div className={cn(
-              "glass-panel rounded-xl p-3 border shadow-2xl space-y-2 bg-[#0D1626]/95 backdrop-blur-xl text-text",
-              activeSelectedAlert.severity === 'critical' ? 'border-danger/35 bg-danger/[0.04]' :
-              activeSelectedAlert.severity === 'warning' ? 'border-warning/30 bg-warning/[0.04]' :
-              'border-info/25 bg-info/[0.03]'
+              "rounded-2xl p-4 border shadow-2xl space-y-3 bg-white/95 dark:bg-surface/95 backdrop-blur-xl text-text ring-1 ring-black/5 dark:ring-white/10",
+              activeSelectedAlert.severity === 'critical' ? 'border-rose-300 dark:border-danger/40' :
+              activeSelectedAlert.severity === 'warning' ? 'border-amber-300 dark:border-warning/40' :
+              'border-sky-300 dark:border-info/40'
             )}>
               {/* Header */}
-              <div className="flex items-start justify-between border-b border-white/10 pb-1.5 gap-2">
-                <div className="flex items-start gap-1.5 min-w-0">
+              <div className="flex items-start justify-between border-b border-slate-200 dark:border-border pb-3 gap-2">
+                <div className="flex items-start gap-2 min-w-0">
                   <div className={cn(
-                    'p-1 rounded-md border flex-shrink-0 mt-0.5',
-                    activeSelectedAlert.severity === 'critical' ? 'bg-danger/20 border-danger/40 text-danger' :
-                    activeSelectedAlert.severity === 'warning' ? 'bg-warning/20 border-warning/40 text-warning' :
-                    'bg-info/20 border-info/40 text-info'
+                    'p-1.5 rounded-lg border flex-shrink-0 mt-0.5',
+                    activeSelectedAlert.severity === 'critical' ? 'bg-rose-50 dark:bg-danger/20 border-rose-200 dark:border-danger/40 text-danger' :
+                    activeSelectedAlert.severity === 'warning' ? 'bg-amber-50 dark:bg-warning/20 border-amber-200 dark:border-warning/40 text-warning' :
+                    'bg-sky-50 dark:bg-info/20 border-sky-200 dark:border-info/40 text-info'
                   )}>
-                    <AlertTriangle className="h-3.5 w-3.5" />
+                    <AlertTriangle className="h-4 w-4" />
                   </div>
                   <div className="min-w-0">
-                    <div className="font-bold text-xs text-white leading-tight truncate">
+                    <div className="font-bold text-xs text-text leading-tight truncate">
                       {activeSelectedAlert.title}
                     </div>
                     <div className="text-2xs text-text-muted mt-0.5 flex items-center gap-1.5 truncate">
@@ -893,46 +900,48 @@ export function MapEngine({
 
                 <div className="flex items-center gap-1 flex-shrink-0">
                   <span className={cn(
-                    'text-[9px] font-bold uppercase px-1.5 py-0.5 rounded border',
-                    activeSelectedAlert.severity === 'critical' ? 'bg-danger/20 text-danger border-danger/30' :
-                    activeSelectedAlert.severity === 'warning' ? 'bg-warning/20 text-warning border-warning/30' :
-                    'bg-info/20 text-info border-info/30'
+                    'text-[9px] font-bold uppercase px-2 py-0.5 rounded-md border',
+                    activeSelectedAlert.severity === 'critical' ? 'bg-rose-50 dark:bg-danger/20 text-danger border-rose-200 dark:border-danger/30' :
+                    activeSelectedAlert.severity === 'warning' ? 'bg-amber-50 dark:bg-warning/20 text-warning border-amber-200 dark:border-warning/30' :
+                    'bg-sky-50 dark:bg-info/20 text-info border-sky-200 dark:border-info/30'
                   )}>
                     {activeSelectedAlert.severity}
                   </span>
                   <button
                     onClick={() => setSelectedEntity(null)}
-                    className="p-0.5 rounded text-text-muted hover:text-white hover:bg-white/10"
+                    className="p-1 rounded-lg text-text-muted hover:text-text hover:bg-slate-100 dark:hover:bg-surface-2 transition-colors"
                   >
-                    <X className="h-3.5 w-3.5" />
+                    <X className="h-4 w-4" />
                   </button>
                 </div>
               </div>
 
               {/* Description Body */}
-              <p className="text-2xs text-text-muted leading-relaxed line-clamp-2">
-                {activeSelectedAlert.description}
-              </p>
+              {activeSelectedAlert.description && (
+                <div className="text-xs text-text-muted bg-slate-50 dark:bg-surface-2 p-2.5 rounded-xl border border-slate-200/90 dark:border-border/80 shadow-2xs leading-relaxed">
+                  {activeSelectedAlert.description}
+                </div>
+              )}
 
               {/* 3-Tile Compact Metric Readout Grid */}
-              <div className="grid grid-cols-3 gap-1 text-2xs text-center py-1 px-1.5 rounded-lg bg-surface-2 border border-white/5">
+              <div className="grid grid-cols-3 gap-1.5 text-2xs text-center p-2 rounded-xl bg-slate-50 dark:bg-surface-2 border border-slate-200/90 dark:border-border/80 shadow-2xs">
                 <div>
-                  <div className="text-text-dim text-[9px]">Hazard Risk</div>
-                  <div className={cn('font-bold text-2xs mt-0.5', activeSelectedAlert.severity === 'critical' ? 'text-danger' : 'text-warning')}>
+                  <div className="text-text-dim text-[10px]">Hazard Risk</div>
+                  <div className={cn('font-bold text-xs mt-0.5', activeSelectedAlert.severity === 'critical' ? 'text-danger' : 'text-warning')}>
                     {activeSelectedAlert.aiRiskScore != null ? `${activeSelectedAlert.aiRiskScore}%` : 'High'}
                   </div>
                 </div>
                 <div>
-                  <div className="text-text-dim text-[9px]">Impact</div>
-                  <div className="font-bold text-2xs text-text mt-0.5">
+                  <div className="text-text-dim text-[10px]">Impact</div>
+                  <div className="font-bold text-xs text-text mt-0.5">
                     {activeSelectedAlert.affectedVehicles && activeSelectedAlert.affectedVehicles.length > 0
                       ? `${activeSelectedAlert.affectedVehicles.length} Units`
                       : 'Corridor'}
                   </div>
                 </div>
                 <div>
-                  <div className="text-text-dim text-[9px]">Source</div>
-                  <div className="font-bold text-2xs text-text mt-0.5 truncate">
+                  <div className="text-text-dim text-[10px]">Source</div>
+                  <div className="font-bold text-xs text-text mt-0.5 truncate">
                     {activeSelectedAlert.source}
                   </div>
                 </div>
@@ -940,16 +949,16 @@ export function MapEngine({
 
               {/* Compact GPS Coordinates Strip */}
               {activeSelectedAlert.location && (
-                <div className="text-2xs text-text-muted px-2 py-0.5 rounded bg-surface-2 border border-white/5 flex items-center justify-between">
-                  <span className="text-[10px]">GPS:</span>
-                  <span className="text-text font-semibold text-2xs">
+                <div className="text-2xs text-text-muted px-2.5 py-1 rounded-xl bg-slate-50 dark:bg-surface-2 border border-slate-200/90 dark:border-border/80 flex items-center justify-between">
+                  <span className="text-[10px] font-medium">GPS Telemetry:</span>
+                  <span className="text-text font-mono font-semibold text-2xs">
                     {activeSelectedAlert.location.lat.toFixed(3)}°N, {activeSelectedAlert.location.lng.toFixed(3)}°E
                   </span>
                 </div>
               )}
 
               {/* Compact Action Buttons */}
-              <div className="flex items-center gap-1.5 pt-0.5">
+              <div className="flex items-center gap-1.5 pt-1">
                 {activeSelectedAlert.status === 'active' && (
                   <>
                     <button
@@ -957,7 +966,7 @@ export function MapEngine({
                         acknowledgeAlert(activeSelectedAlert.id)
                         toast.success('Incident Acknowledged')
                       }}
-                      className="flex-1 h-6 px-2 rounded-lg text-2xs font-semibold bg-surface-2 hover:bg-surface-3 text-text hover:text-white border border-white/10 transition-all"
+                      className="flex-1 h-7 px-2.5 rounded-xl text-2xs font-semibold bg-slate-100 hover:bg-slate-200 dark:bg-surface-2 dark:hover:bg-surface-3 text-text border border-slate-200 dark:border-border transition-all shadow-2xs"
                     >
                       Acknowledge
                     </button>

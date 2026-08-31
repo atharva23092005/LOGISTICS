@@ -20,6 +20,7 @@ import { Progress } from '@/components/ui/progress'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Modal } from '@/components/ui/modal'
 import { Input } from '@/components/ui/input'
+import { ThemeToggle } from '@/components/ui/ThemeToggle'
 import { MapEngine } from '@/modules/map/MapEngine'
 import { useVehicleStore } from '@/stores/vehicleStore'
 import { useAppStore } from '@/stores/appStore'
@@ -230,7 +231,7 @@ export function DriverPage() {
 
   // Proportioned, compact mobile app width (max-w-[420px]) perfectly centered in the web view
   return (
-    <div className="min-h-dvh w-full bg-[#03060E] flex flex-col items-center justify-center p-0 sm:p-4 overflow-x-hidden">
+    <div className="min-h-dvh w-full bg-slate-100 dark:bg-[#03060E] flex flex-col items-center justify-center p-0 sm:p-4 overflow-x-hidden transition-colors duration-200">
       
       {/* Centered mobile-app proportion container */}
       <div className="w-full max-w-[420px] h-dvh sm:h-[840px] sm:max-h-[92vh] bg-background text-text font-sans flex flex-col sm:rounded-2xl sm:border border-border/80 shadow-2xl overflow-hidden relative select-none">
@@ -239,9 +240,9 @@ export function DriverPage() {
         {/* VIEW A: IN-CAB TRANSPORTER SIGN-IN & PRE-TRIP CHECKLIST (NOT AUTHENTICATED) */}
         {/* ══════════════════════════════════════════════════════════════════════ */}
         {!isAuthenticated ? (
-          <div className="flex-1 flex flex-col justify-between overflow-hidden bg-[#070C16]">
+          <div className="flex-1 flex flex-col justify-between overflow-hidden bg-background">
             {/* Cockpit Status Bar */}
-            <div className="h-7 bg-[#04070D] px-4 flex items-center justify-between text-[11px] font-mono text-text-muted border-b border-border/40 flex-shrink-0 z-40">
+            <div className="h-7 bg-surface-2 px-4 flex items-center justify-between text-[11px] font-mono text-text-muted border-b border-border/40 flex-shrink-0 z-40">
               <div className="flex items-center gap-2">
                 <span className="font-semibold text-text">09:41</span>
                 <span className="text-text-dim">•</span>
@@ -267,9 +268,12 @@ export function DriverPage() {
                 </Link>
                 <span className="font-bold text-xs text-text">NER Convoy Dispatch</span>
               </div>
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-primary/15 text-primary border border-primary/30 font-bold">
-                IN-CAB HUD
-              </span>
+              <div className="flex items-center gap-2">
+                <ThemeToggle />
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-primary/15 text-primary border border-primary/30 font-bold">
+                  IN-CAB HUD
+                </span>
+              </div>
             </div>
 
             {/* Centered In-Cab Sign-In Card */}
@@ -390,9 +394,9 @@ export function DriverPage() {
           /* ══════════════════════════════════════════════════════════════════════ */
           /* VIEW B: MAIN IN-CAB DRIVER COCKPIT HUD APP (WHEN AUTHENTICATED)       */
           /* ══════════════════════════════════════════════════════════════════════ */
-          <div className="flex-1 flex flex-col justify-between overflow-hidden relative">
+          <div className="flex-1 flex flex-col justify-between overflow-hidden relative bg-background">
             {/* ── Status Bar ── */}
-            <div className="h-7 bg-[#04070D] px-3.5 flex items-center justify-between text-[11px] font-mono text-text-muted border-b border-border/40 flex-shrink-0 z-40">
+            <div className="h-7 bg-surface-2 px-3.5 flex items-center justify-between text-[11px] font-mono text-text-muted border-b border-border/40 flex-shrink-0 z-40">
               <div className="flex items-center gap-2">
                 <span className="font-semibold text-text">09:41</span>
                 <span className="text-text-dim">•</span>
@@ -511,7 +515,7 @@ export function DriverPage() {
                         </div>
                       </div>
 
-                      <div className="bg-[#050912] px-3 py-1 border-t border-border/60 flex items-center justify-between text-[10px] text-text-muted font-mono">
+                      <div className="bg-surface-2 px-3 py-1 border-t border-border/60 flex items-center justify-between text-[10px] text-text-muted font-mono">
                         <span className="flex items-center gap-1.5">
                           <span className="status-dot status-dot-green" />
                           SH-15 Bypass
@@ -720,7 +724,7 @@ export function DriverPage() {
                     <div className="bg-white p-3 rounded-2xl flex flex-col items-center justify-center shadow-inner cursor-pointer hover:opacity-95 transition-opacity" onClick={() => setQrModal(true)}>
                       <div className="relative p-2 bg-white rounded-xl border border-slate-200">
                         {/* 2D QR Pattern simulation */}
-                        <div className="w-36 h-36 bg-[#0B0F19] p-2 rounded-lg grid grid-cols-6 gap-1 relative overflow-hidden">
+                        <div className="w-36 h-36 bg-slate-900 p-2 rounded-lg grid grid-cols-6 gap-1 relative overflow-hidden">
                           {/* Corner Markers */}
                           <div className="absolute top-2 left-2 w-7 h-7 border-2 border-white rounded-sm flex items-center justify-center">
                             <div className="w-3 h-3 bg-white" />
@@ -948,7 +952,7 @@ export function DriverPage() {
       >
         <div className="space-y-3.5 text-center">
           <div className="bg-white p-4 rounded-2xl flex flex-col items-center justify-center shadow-lg">
-            <div className="w-48 h-48 bg-[#0B0F19] p-3 rounded-xl relative flex items-center justify-center">
+            <div className="w-48 h-48 bg-slate-900 p-3 rounded-xl relative flex items-center justify-center">
               {/* Corner Markers */}
               <div className="absolute top-3 left-3 w-9 h-9 border-2 border-white rounded-sm flex items-center justify-center">
                 <div className="w-4 h-4 bg-white" />

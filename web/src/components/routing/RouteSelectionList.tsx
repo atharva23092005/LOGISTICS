@@ -74,7 +74,7 @@ export function RouteSelectionList({
 
                   <div className="min-w-0">
                     <div className="flex items-center gap-1.5">
-                      <span className="text-xs font-bold text-white truncate">
+                      <span className="text-xs font-bold text-text truncate">
                         {r.label.split('—')[0].trim()}
                       </span>
                     </div>
@@ -105,13 +105,13 @@ export function RouteSelectionList({
               <div className="grid grid-cols-3 gap-1 mt-2 pt-2 border-t border-border/50 text-center text-2xs">
                 <div>
                   <span className="text-[9px] text-text-dim block">Time</span>
-                  <span className="font-semibold text-white font-mono">
+                  <span className="font-semibold text-text font-mono">
                     {Math.floor(r.duration / 60)}h {r.duration % 60}m
                   </span>
                 </div>
                 <div>
                   <span className="text-[9px] text-text-dim block">Distance</span>
-                  <span className="font-semibold text-white font-mono">{r.distance} km</span>
+                  <span className="font-semibold text-text font-mono">{r.distance} km</span>
                 </div>
                 <div>
                   <span className="text-[9px] text-text-dim block">Risk</span>

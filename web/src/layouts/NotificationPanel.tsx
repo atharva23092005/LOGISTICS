@@ -22,8 +22,8 @@ export function NotificationPanel({ onClose }: NotificationPanelProps) {
   const handleViewAll = useCallback(() => { navigate('/alerts'); onClose() }, [navigate, onClose])
 
   return (
-    <div className="absolute right-0 top-full mt-2 w-80 sm:w-96 max-w-[calc(100vw-24px)] surface-elevated border border-border rounded-2xl z-50 animate-scale-in overflow-hidden shadow-modal">
-      <div className="flex items-center justify-between p-4 border-b border-border">
+    <div className="absolute right-0 top-full mt-2 w-80 sm:w-96 max-w-[calc(100vw-24px)] bg-white dark:bg-surface border border-slate-200 dark:border-border rounded-2xl z-50 animate-scale-in overflow-hidden shadow-2xl">
+      <div className="flex items-center justify-between p-4 border-b border-slate-200 dark:border-border bg-white dark:bg-surface">
         <div className="flex items-center gap-2">
           <Bell className="h-4 w-4 text-primary" />
           <span className="text-sm font-semibold text-text">Notifications</span>
@@ -45,7 +45,7 @@ export function NotificationPanel({ onClose }: NotificationPanelProps) {
           </Button>
         </div>
       </div>
-      <div className="max-h-96 overflow-y-auto p-3 space-y-2 hide-scrollbar">
+      <div className="max-h-96 overflow-y-auto p-3 space-y-2 hide-scrollbar bg-slate-50/50 dark:bg-surface-2/30">
         {activeAlerts.length === 0 ? (
           <div className="text-center py-10 px-4 space-y-2">
             <div className="h-10 w-10 rounded-full bg-surface-2 border border-border flex items-center justify-center mx-auto text-text-muted">
@@ -62,7 +62,7 @@ export function NotificationPanel({ onClose }: NotificationPanelProps) {
           ))
         )}
       </div>
-      <div className="p-2.5 border-t border-border bg-surface-2/30">
+      <div className="p-2.5 border-t border-slate-200 dark:border-border bg-white dark:bg-surface">
         <Button variant="outline" size="sm" className="w-full text-xs font-semibold" onClick={handleViewAll}>
           View Incident Management Queue
         </Button>

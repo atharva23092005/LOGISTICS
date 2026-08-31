@@ -226,8 +226,8 @@ export function CopilotPanel({ className }: Props) {
             const isAccepted = accepted.has(rec.id)
             return (
               <div key={rec.id}
-                className={cn('border rounded-lg p-2.5 transition-all', cfg.border, isAccepted && 'opacity-60')}>
-                <div className="flex items-start gap-2">
+                className={cn('border rounded-xl p-3 transition-all shadow-2xs hover:shadow-xs bg-surface', cfg.border, isAccepted && 'opacity-60')}>
+                <div className="flex items-start gap-2.5">
                   {/* Status dot */}
                   <span className={cn('h-2 w-2 rounded-full flex-shrink-0 mt-1', cfg.dot)} />
                   <div className="flex-1 min-w-0">

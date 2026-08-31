@@ -79,7 +79,7 @@ export function RouteDetailsPanel({
 
             <div className="min-w-0">
               <div className="flex items-center gap-1.5">
-                <h2 className="text-xs font-bold text-white truncate">
+                <h2 className="text-xs font-bold text-text truncate">
                   {selectedRoute.label.split('—')[0].trim()}
                 </h2>
                 <Badge
@@ -99,7 +99,7 @@ export function RouteDetailsPanel({
             <span
               className={cn(
                 'text-sm font-black font-mono tabular-nums',
-                isRecommended ? 'text-emerald-400' : isHighRisk ? 'text-rose-400' : 'text-amber-400'
+                isRecommended ? 'text-emerald-500 dark:text-emerald-400' : isHighRisk ? 'text-rose-500 dark:text-rose-400' : 'text-amber-500 dark:text-amber-400'
               )}
             >
               {selectedRoute.riskScore}%
@@ -126,12 +126,12 @@ export function RouteDetailsPanel({
           <div className="space-y-3.5">
             {/* 1. Scoreboard (4 Metric Tiles) */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-              <div className="bg-surface-2 p-2.5 rounded-xl border border-white/5 text-center space-y-0.5">
+              <div className="bg-surface-2 p-2.5 rounded-xl border border-border/60 text-center space-y-0.5">
                 <div className="text-[9px] font-bold text-text-muted uppercase tracking-wider">Safety Index</div>
                 <div
                   className={cn(
                     'text-base font-black font-mono tabular-nums',
-                    isRecommended ? 'text-emerald-400' : isHighRisk ? 'text-rose-400' : 'text-amber-400'
+                    isRecommended ? 'text-emerald-600 dark:text-emerald-400' : isHighRisk ? 'text-rose-600 dark:text-rose-400' : 'text-amber-600 dark:text-amber-400'
                   )}
                 >
                   {100 - selectedRoute.riskScore}/100
@@ -141,9 +141,9 @@ export function RouteDetailsPanel({
                 </div>
               </div>
 
-              <div className="bg-surface-2 p-2.5 rounded-xl border border-white/5 text-center space-y-0.5">
+              <div className="bg-surface-2 p-2.5 rounded-xl border border-border/60 text-center space-y-0.5">
                 <div className="text-[9px] font-bold text-text-muted uppercase tracking-wider">Transit Time</div>
-                <div className="text-base font-black text-white font-mono tabular-nums">
+                <div className="text-base font-black text-text font-mono tabular-nums">
                   {Math.floor(selectedRoute.duration / 60)}h {selectedRoute.duration % 60}m
                 </div>
                 <div className="text-[9px] text-text-dim">
@@ -151,20 +151,20 @@ export function RouteDetailsPanel({
                 </div>
               </div>
 
-              <div className="bg-surface-2 p-2.5 rounded-xl border border-white/5 text-center space-y-0.5">
+              <div className="bg-surface-2 p-2.5 rounded-xl border border-border/60 text-center space-y-0.5">
                 <div className="text-[9px] font-bold text-text-muted uppercase tracking-wider">Distance</div>
-                <div className="text-base font-black text-white font-mono tabular-nums">
+                <div className="text-base font-black text-text font-mono tabular-nums">
                   {selectedRoute.distance} km
                 </div>
                 <div className="text-[9px] text-text-dim">Total Route</div>
               </div>
 
-              <div className="bg-surface-2 p-2.5 rounded-xl border border-white/5 text-center space-y-0.5">
+              <div className="bg-surface-2 p-2.5 rounded-xl border border-border/60 text-center space-y-0.5">
                 <div className="text-[9px] font-bold text-text-muted uppercase tracking-wider">Max Slope</div>
                 <div
                   className={cn(
                     'text-base font-black font-mono tabular-nums',
-                    maxSlope > 15 ? 'text-rose-400' : 'text-emerald-400'
+                    maxSlope > 15 ? 'text-rose-600 dark:text-rose-400' : 'text-emerald-600 dark:text-emerald-400'
                   )}
                 >
                   {maxSlope}°
@@ -196,12 +196,12 @@ export function RouteDetailsPanel({
                       className={cn(
                         'flex items-center gap-1 px-2 py-1 rounded-lg text-2xs font-mono transition-all flex-shrink-0 cursor-pointer border',
                         isHovered
-                          ? 'bg-primary/20 text-white border-primary/50 scale-105'
+                          ? 'bg-primary/20 text-primary border-primary/50 scale-105'
                           : isFirst
-                          ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30'
+                          ? 'bg-emerald-50 dark:bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-500/30'
                           : isLast
                           ? 'bg-primary/15 text-primary border-primary/30'
-                          : 'bg-surface text-text-muted border-border/40 hover:text-white'
+                          : 'bg-surface text-text-muted border-border/40 hover:text-text'
                       )}
                     >
                       <span className="h-1.5 w-1.5 rounded-full bg-current" />
@@ -217,7 +217,7 @@ export function RouteDetailsPanel({
             <div className="space-y-1.5">
               <div className="text-[10px] font-bold text-text-muted uppercase tracking-wider flex items-center justify-between">
                 <span>{isRecommended ? 'Why AI Selected This Route' : 'Diagnostic Failure Analysis'}</span>
-                <span className={isRecommended ? 'text-emerald-400 font-semibold' : 'text-rose-400 font-semibold'}>
+                <span className={isRecommended ? 'text-emerald-600 dark:text-emerald-400 font-semibold' : 'text-rose-600 dark:text-rose-400 font-semibold'}>
                   {selectedRoute.whyReasons.length} Key Factors
                 </span>
               </div>
@@ -226,22 +226,22 @@ export function RouteDetailsPanel({
                 className={cn(
                   'space-y-2 rounded-xl p-3 border',
                   isRecommended
-                    ? 'bg-emerald-950/20 border-emerald-500/30'
+                    ? 'bg-emerald-50/50 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-500/30'
                     : isHighRisk
-                    ? 'bg-rose-950/20 border-rose-500/30'
-                    : 'bg-amber-950/20 border-amber-500/30'
+                    ? 'bg-rose-50/50 dark:bg-rose-950/20 border-rose-200 dark:border-rose-500/30'
+                    : 'bg-amber-50/50 dark:bg-amber-950/20 border-amber-200 dark:border-amber-500/30'
                 )}
               >
                 {selectedRoute.whyReasons.map((reason, i) => (
                   <div key={i} className="flex items-start gap-2 text-xs leading-relaxed">
                     {isRecommended ? (
-                      <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400 flex-shrink-0 mt-0.5" />
+                      <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400 flex-shrink-0 mt-0.5" />
                     ) : isHighRisk ? (
-                      <AlertOctagon className="h-3.5 w-3.5 text-rose-400 flex-shrink-0 mt-0.5" />
+                      <AlertOctagon className="h-3.5 w-3.5 text-rose-600 dark:text-rose-400 flex-shrink-0 mt-0.5" />
                     ) : (
-                      <AlertTriangle className="h-3.5 w-3.5 text-amber-400 flex-shrink-0 mt-0.5" />
+                      <AlertTriangle className="h-3.5 w-3.5 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" />
                     )}
-                    <span className="text-slate-200">{reason}</span>
+                    <span className="text-slate-800 dark:text-slate-200">{reason}</span>
                   </div>
                 ))}
               </div>

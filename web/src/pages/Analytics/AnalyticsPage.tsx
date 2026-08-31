@@ -33,12 +33,12 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { cn } from '@/utils/cn'
 
 const CHART_STYLE = {
-  backgroundColor: '#0D1626',
-  border: '1px solid rgba(255, 255, 255, 0.1)',
+  backgroundColor: 'rgb(var(--surface))',
+  border: '1px solid rgb(var(--border))',
   borderRadius: '8px',
-  color: '#E2E8F0',
+  color: 'rgb(var(--text))',
   fontSize: '11px',
-  boxShadow: '0 8px 24px rgba(0,0,0,0.5)',
+  boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
 }
 
 const C = {
@@ -52,8 +52,8 @@ const C = {
   purple:      '#8B5CF6',
   success:     '#10B981',
   danger:      '#EF4444',
-  muted:       '#1F3352',
-  text:        '#94A3B8',
+  muted:       'rgb(var(--border))',
+  text:        'rgb(var(--text-muted))',
 }
 
 const STUDIO_TABS = [
@@ -293,7 +293,7 @@ export function AnalyticsPage() {
               size="sm"
               variant="outline"
               onClick={() => setPdfDialogOpen(true)}
-              className="h-8 text-xs font-semibold bg-white/5 hover:bg-white/10 border-white/10 text-white"
+              className="h-8 text-xs font-semibold bg-surface-2 hover:bg-surface-3 border-border text-text"
             >
               <Printer className="h-3.5 w-3.5 mr-1 text-primary" />
               <span>Export PDF</span>
@@ -332,39 +332,39 @@ export function AnalyticsPage() {
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
               
               {/* Card 1: Disruptions This Month */}
-              <div className="app-card p-4 bg-surface border border-white/10 rounded-xl space-y-1 relative overflow-hidden">
+              <div className="app-card p-4 bg-surface border border-slate-200 dark:border-border rounded-xl space-y-1 relative overflow-hidden shadow-xs">
                 <div className="flex items-center justify-between text-2xs text-text-muted">
                   <span className="font-semibold uppercase tracking-wider">Disruptions</span>
-                  <span className="text-2xs text-emerald-400 font-bold">-14% vs Last Month</span>
+                  <span className="text-2xs text-emerald-600 dark:text-emerald-400 font-bold">-14% vs Last Month</span>
                 </div>
                 <div className="flex items-baseline gap-2">
-                  <span className="text-3xl font-black text-white">24</span>
+                  <span className="text-3xl font-black text-text">24</span>
                   <span className="text-xs text-text-muted font-medium">This Month</span>
                 </div>
                 <div className="text-[11px] text-text-dim pt-1 flex items-center gap-2">
-                  <span className="text-amber-500 font-semibold">12 Landslides</span> • 
+                  <span className="text-amber-600 dark:text-amber-500 font-semibold">12 Landslides</span> • 
                   <span className="text-primary font-semibold">8 Floods</span> • 
                   <span className="text-text-muted font-semibold">4 Road Damage</span>
                 </div>
               </div>
 
               {/* Card 2: On-Time Rate */}
-              <div className="app-card p-4 bg-surface border border-white/10 rounded-xl space-y-1 relative overflow-hidden">
+              <div className="app-card p-4 bg-surface border border-slate-200 dark:border-border rounded-xl space-y-1 relative overflow-hidden shadow-xs">
                 <div className="flex items-center justify-between text-2xs text-text-muted">
                   <span className="font-semibold uppercase tracking-wider">On-Time Rate</span>
-                  <span className="text-2xs text-emerald-400 font-bold">+4.2% AI Uplift</span>
+                  <span className="text-2xs text-emerald-600 dark:text-emerald-400 font-bold">+4.2% AI Uplift</span>
                 </div>
                 <div className="flex items-baseline gap-2">
-                  <span className="text-3xl font-black text-emerald-400">82%</span>
+                  <span className="text-3xl font-black text-emerald-600 dark:text-emerald-400">82%</span>
                   <span className="text-xs text-text-muted font-medium">This Month</span>
                 </div>
                 <div className="text-[11px] text-text-dim pt-1">
-                  Baseline Target ≥80% • <strong className="text-white">19 Convoys</strong> Saved via Route C
+                  Baseline Target ≥80% • <strong className="text-text">19 Convoys</strong> Saved via Route C
                 </div>
               </div>
 
               {/* Card 3: Logistics Cost Saved */}
-              <div className="app-card p-4 bg-surface border border-white/10 rounded-xl space-y-1 relative overflow-hidden">
+              <div className="app-card p-4 bg-surface border border-slate-200 dark:border-border rounded-xl space-y-1 relative overflow-hidden shadow-xs">
                 <div className="flex items-center justify-between text-2xs text-text-muted">
                   <span className="font-semibold uppercase tracking-wider">Cost Saved</span>
                   <span className="text-2xs text-primary font-bold">From AI Routing</span>
@@ -381,26 +381,26 @@ export function AnalyticsPage() {
             </div>
 
             {/* ── 2. DISRUPTION TRENDS (12-MONTH LINE CHART) ─────────────── */}
-            <div className="app-card p-4 bg-surface border border-white/10 rounded-xl space-y-3">
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 pb-2 border-b border-white/5">
+            <div className="app-card p-4 bg-surface border border-slate-200 dark:border-border rounded-xl space-y-3 shadow-xs">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 pb-2 border-b border-slate-200 dark:border-border">
                 <div className="flex items-center gap-2">
                   <TrendingUp className="h-4 w-4 text-primary" />
                   <div>
-                    <span className="text-sm font-bold text-white">Disruption Trends (12 Months)</span>
-                    <span className="text-2xs text-amber-400 ml-2 font-medium inline-flex items-center gap-1">
+                    <span className="text-sm font-bold text-text">Disruption Trends (12 Months)</span>
+                    <span className="text-2xs text-amber-600 dark:text-amber-400 ml-2 font-medium inline-flex items-center gap-1">
                       <AlertTriangle className="h-3 w-3 inline" />
                       Monsoonal Peak in June–July
                     </span>
                   </div>
                 </div>
                 <div className="flex items-center gap-4 text-2xs text-text-muted">
-                  <span className="flex items-center gap-1.5 font-semibold text-amber-500">
+                  <span className="flex items-center gap-1.5 font-semibold text-amber-600 dark:text-amber-500">
                     <span className="h-2.5 w-2.5 rounded-full bg-amber-500 inline-block" /> Landslides (Brown)
                   </span>
-                  <span className="flex items-center gap-1.5 font-semibold text-blue-400">
+                  <span className="flex items-center gap-1.5 font-semibold text-blue-600 dark:text-blue-400">
                     <span className="h-2.5 w-2.5 rounded-full bg-blue-500 inline-block" /> Floods (Blue)
                   </span>
-                  <span className="flex items-center gap-1.5 font-semibold text-slate-400">
+                  <span className="flex items-center gap-1.5 font-semibold text-slate-600 dark:text-slate-400">
                     <span className="h-2.5 w-2.5 rounded-full bg-slate-400 inline-block" /> Road Damage (Gray)
                   </span>
                 </div>
@@ -420,9 +420,9 @@ export function AnalyticsPage() {
                 </ResponsiveContainer>
               </div>
 
-              <div className="flex items-center justify-between text-[11px] text-text-dim pt-1 border-t border-white/5">
+              <div className="flex items-center justify-between text-[11px] text-text-dim pt-1 border-t border-slate-200 dark:border-border">
                 <span>* Seasonal monsoonal rainfall surge accelerates slope saturation in June–July, driving 64 total monthly incidents.</span>
-                <span className="text-amber-400 font-semibold">Validates Proactive AI Detour Focus</span>
+                <span className="text-amber-600 dark:text-amber-400 font-semibold">Validates Proactive AI Detour Focus</span>
               </div>
             </div>
 
@@ -430,13 +430,13 @@ export function AnalyticsPage() {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
               
               {/* Left (Col 5): Disruption Causes Donut Chart */}
-              <div className="lg:col-span-5 app-card p-4 bg-surface border border-white/10 rounded-xl space-y-3 flex flex-col justify-between">
-                <div className="flex items-center justify-between pb-2 border-b border-white/5">
+              <div className="lg:col-span-5 app-card p-4 bg-surface border border-slate-200 dark:border-border rounded-xl space-y-3 flex flex-col justify-between shadow-xs">
+                <div className="flex items-center justify-between pb-2 border-b border-slate-200 dark:border-border">
                   <div className="flex items-center gap-2">
                     <PieIcon className="h-4 w-4 text-primary" />
-                    <span className="text-sm font-bold text-white">Disruption Causes</span>
+                    <span className="text-sm font-bold text-text">Disruption Causes</span>
                   </div>
-                  <Badge variant="outline" className="text-2xs text-amber-400 border-amber-500/30">
+                  <Badge variant="outline" className="text-2xs text-amber-600 dark:text-amber-400 border-amber-500/30">
                     #1 Landslides (45%)
                   </Badge>
                 </div>
@@ -461,22 +461,22 @@ export function AnalyticsPage() {
 
                   {/* Center Donut Readout */}
                   <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                    <span className="text-xl font-black text-white">24</span>
-                    <span className="text-[10px] text-text-dim">Total Events</span>
+                    <span className="text-xl font-black text-text">24</span>
+                    <span className="text-[10px] text-text-dim font-medium">Total Events</span>
                   </div>
                 </div>
 
                 {/* Causes Breakdown List */}
-                <div className="space-y-1.5 pt-2 border-t border-white/5 text-xs">
+                <div className="space-y-1.5 pt-2 border-t border-slate-200 dark:border-border text-xs">
                   {CAUSES_DATA.map(c => (
                     <div key={c.name} className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: c.color }} />
-                        <span className="text-text-muted">{c.name}</span>
+                        <span className="text-text font-medium">{c.name}</span>
                       </div>
                       <div className="flex items-center gap-2">
                         <span className="text-text-dim text-2xs">({c.count} events)</span>
-                        <strong className="text-white font-mono">{c.value}%</strong>
+                        <strong className="text-text font-mono font-bold">{c.value}%</strong>
                       </div>
                     </div>
                   ))}
@@ -484,28 +484,28 @@ export function AnalyticsPage() {
               </div>
 
               {/* Right (Col 7): Sortable District Impact Scorecard Table */}
-              <div className="lg:col-span-7 app-card p-4 bg-surface border border-white/10 rounded-xl space-y-3">
-                <div className="flex items-center justify-between pb-2 border-b border-white/5">
+              <div className="lg:col-span-7 app-card p-4 bg-surface border border-slate-200 dark:border-border rounded-xl space-y-3 shadow-xs">
+                <div className="flex items-center justify-between pb-2 border-b border-slate-200 dark:border-border">
                   <div className="flex items-center gap-2">
                     <MapPin className="h-4 w-4 text-primary" />
                     <div>
-                      <span className="text-sm font-bold text-white">District Impact Table</span>
+                      <span className="text-sm font-bold text-text">District Impact Table</span>
                       <span className="text-2xs text-text-dim ml-2 hidden sm:inline">(Click header to sort)</span>
                     </div>
                   </div>
                   <span className="text-2xs text-text-muted">7 Sectors Monitored</span>
                 </div>
 
-                <div className="overflow-x-auto">
+                <div className="overflow-x-auto rounded-lg border border-slate-200 dark:border-border">
                   <table className="w-full text-left text-xs">
                     <thead>
-                      <tr className="border-b border-white/5 text-[11px] text-text-dim uppercase tracking-wider font-semibold">
-                        <th className="py-2 px-2">District</th>
+                      <tr className="border-b border-slate-200 dark:border-border bg-slate-50 dark:bg-surface-2 text-[11px] text-text-muted uppercase tracking-wider font-semibold">
+                        <th className="py-2.5 px-3">District</th>
                         
                         {/* Sortable Events Header */}
                         <th
                           onClick={() => handleSort('events')}
-                          className="py-2 px-2 text-center cursor-pointer hover:text-white transition-colors select-none"
+                          className="py-2.5 px-2 text-center cursor-pointer hover:text-text transition-colors select-none"
                         >
                           <div className="flex items-center justify-center gap-1">
                             <span>Events</span>
@@ -516,7 +516,7 @@ export function AnalyticsPage() {
                         {/* Sortable Avg Delay Header */}
                         <th
                           onClick={() => handleSort('avgDelay')}
-                          className="py-2 px-2 text-center cursor-pointer hover:text-white transition-colors select-none"
+                          className="py-2.5 px-2 text-center cursor-pointer hover:text-text transition-colors select-none"
                         >
                           <div className="flex items-center justify-center gap-1">
                             <span>Avg Delay</span>
@@ -527,7 +527,7 @@ export function AnalyticsPage() {
                         {/* Sortable Cost Impact Header */}
                         <th
                           onClick={() => handleSort('costVal')}
-                          className="py-2 px-2 text-right cursor-pointer hover:text-white transition-colors select-none"
+                          className="py-2.5 px-3 text-right cursor-pointer hover:text-text transition-colors select-none"
                         >
                           <div className="flex items-center justify-end gap-1">
                             <span>Cost Impact</span>
@@ -535,39 +535,39 @@ export function AnalyticsPage() {
                           </div>
                         </th>
 
-                        <th className="py-2 px-2 text-right">Risk Level</th>
+                        <th className="py-2.5 px-3 text-right">Risk Level</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-white/5">
+                    <tbody className="divide-y divide-slate-200 dark:divide-border/60 bg-white dark:bg-surface">
                       {sortedDistricts.map(d => {
                         const isSelected = selectedHeatDistrict === d.district
                         // Red for high impact, Green for low impact
                         const impactColor = d.riskTier === 'Critical' ? 'text-danger bg-danger/10 border-danger/30' :
-                                            d.riskTier === 'High'     ? 'text-amber-400 bg-amber-500/10 border-amber-500/30' :
-                                            d.riskTier === 'Moderate' ? 'text-info bg-info/10 border-info/30' :
-                                            'text-success bg-success/10 border-success/30'
+                                            d.riskTier === 'High'     ? 'text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-500/10 border-amber-200 dark:border-amber-500/30' :
+                                            d.riskTier === 'Moderate' ? 'text-sky-700 dark:text-info bg-sky-50 dark:bg-info/10 border-sky-200 dark:border-info/30' :
+                                            'text-emerald-700 dark:text-success bg-emerald-50 dark:bg-success/10 border-emerald-200 dark:border-success/30'
                         return (
                           <tr
                             key={d.id}
                             onClick={() => setSelectedHeatDistrict(isSelected ? null : d.district)}
                             className={cn(
-                              'hover:bg-surface-2/60 transition-colors cursor-pointer',
-                              isSelected && 'bg-primary/15'
+                              'hover:bg-slate-50 dark:hover:bg-surface-2/60 transition-colors cursor-pointer',
+                              isSelected && 'bg-blue-50/80 dark:bg-primary/15'
                             )}
                           >
-                            <td className="py-2 px-2 font-semibold text-white">
+                            <td className="py-2.5 px-3 font-semibold text-text">
                               <div className="flex items-center gap-1.5">
                                 <span>{d.district}</span>
                                 {isSelected && (
                                   <span className="text-[10px] text-primary font-bold">(Filtered)</span>
                                 )}
                               </div>
-                              <span className="text-[10px] text-text-dim block font-normal">{d.highway}</span>
+                              <span className="text-[10px] text-text-dim block font-normal mt-0.5">{d.highway}</span>
                             </td>
-                            <td className="py-2 px-2 text-center font-mono font-bold text-white">{d.events}</td>
-                            <td className="py-2 px-2 text-center font-mono text-text-muted">{d.avgDelayStr}</td>
-                            <td className="py-2 px-2 text-right font-mono text-text-muted">{d.costImpact}</td>
-                            <td className="py-2 px-2 text-right">
+                            <td className="py-2.5 px-2 text-center font-mono font-bold text-text">{d.events}</td>
+                            <td className="py-2.5 px-2 text-center font-mono text-text-muted">{d.avgDelayStr}</td>
+                            <td className="py-2.5 px-3 text-right font-mono font-semibold text-text">{d.costImpact}</td>
+                            <td className="py-2.5 px-3 text-right">
                               <span className={cn('text-2xs font-bold px-2 py-0.5 rounded border', impactColor)}>
                                 {d.riskTier}
                               </span>
@@ -595,12 +595,12 @@ export function AnalyticsPage() {
             </div>
 
             {/* ── 4. REGIONAL DISRUPTION HEAT MAP (CHOROPLETH) ────────────── */}
-            <div className="app-card p-4 bg-surface border border-white/10 rounded-xl space-y-3">
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 pb-2 border-b border-white/5">
+            <div className="app-card p-4 bg-surface border border-slate-200 dark:border-border rounded-xl space-y-3 shadow-xs">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 pb-2 border-b border-slate-200 dark:border-border">
                 <div className="flex items-center gap-2">
                   <Layers className="h-4 w-4 text-primary" />
                   <div>
-                    <span className="text-sm font-bold text-white">Regional Disruption Heat Map (Choropleth Intensity)</span>
+                    <span className="text-sm font-bold text-text">Regional Disruption Heat Map (Choropleth Intensity)</span>
                     <span className="text-2xs text-text-muted ml-2 hidden sm:inline">Darker red = higher disruption frequency</span>
                   </div>
                 </div>
@@ -615,20 +615,20 @@ export function AnalyticsPage() {
               <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2.5 pt-2">
                 {DISTRICT_IMPACTS_DATA.map(d => {
                   const isSelected = selectedHeatDistrict === d.district
-                  const heatColor = d.heatScore >= 80 ? 'border-danger/60 bg-danger/[0.12] text-danger' :
-                                    d.heatScore >= 50 ? 'border-amber-500/50 bg-amber-500/[0.08] text-amber-400' :
-                                    'border-success/40 bg-success/[0.06] text-success'
+                  const heatColor = d.heatScore >= 80 ? 'border-rose-300 dark:border-danger/60 bg-rose-50 dark:bg-danger/[0.12] text-rose-700 dark:text-danger' :
+                                    d.heatScore >= 50 ? 'border-amber-300 dark:border-amber-500/50 bg-amber-50 dark:bg-amber-500/[0.08] text-amber-800 dark:text-amber-400' :
+                                    'border-emerald-300 dark:border-success/40 bg-emerald-50 dark:bg-success/[0.06] text-emerald-800 dark:text-success'
                   return (
                     <div
                       key={d.id}
                       onClick={() => setSelectedHeatDistrict(isSelected ? null : d.district)}
                       className={cn(
-                        'p-3 rounded-xl border text-center transition-all cursor-pointer space-y-1',
+                        'p-3 rounded-xl border text-center transition-all cursor-pointer space-y-1 shadow-2xs',
                         heatColor,
-                        isSelected ? 'ring-2 ring-primary shadow-lg scale-105' : 'hover:scale-102'
+                        isSelected ? 'ring-2 ring-primary shadow-md scale-105' : 'hover:scale-102'
                       )}
                     >
-                      <div className="text-xs font-bold text-white truncate">{d.district}</div>
+                      <div className="text-xs font-bold truncate">{d.district}</div>
                       <div className="text-lg font-black">{d.heatScore}%</div>
                       <div className="text-[10px] text-text-dim uppercase font-semibold">
                         {d.events} Incidents
@@ -644,13 +644,13 @@ export function AnalyticsPage() {
             </div>
 
             {/* ── 5. DETAILED INCIDENT LOG TABLE ─────────────────────────── */}
-            <div className="app-card p-4 bg-surface border border-white/10 rounded-xl space-y-3">
+            <div className="app-card p-4 bg-surface border border-slate-200 dark:border-border rounded-xl space-y-3 shadow-xs">
               
               {/* Header with Search & Filter Chips */}
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pb-3 border-b border-white/5">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pb-3 border-b border-slate-200 dark:border-border">
                 <div className="flex items-center gap-2">
                   <CheckCheck className="h-4 w-4 text-primary" />
-                  <span className="text-sm font-bold text-white">Detailed Incident Log</span>
+                  <span className="text-sm font-bold text-text">Detailed Incident Log</span>
                   <Badge variant="muted" className="text-2xs font-mono">{filteredLogs.length} Records</Badge>
                 </div>
 
@@ -668,14 +668,14 @@ export function AnalyticsPage() {
                   </div>
 
                   {/* Type Filter Buttons */}
-                  <div className="flex items-center gap-1 bg-surface-2 p-0.5 rounded-lg border border-white/5 text-2xs">
+                  <div className="flex items-center gap-1 bg-surface-2 p-0.5 rounded-lg border border-slate-200 dark:border-border text-2xs">
                     {['all', 'landslide', 'flood', 'road damage', 'accident'].map(type => (
                       <button
                         key={type}
                         onClick={() => setFilterType(type)}
                         className={cn(
                           'px-2 py-1 rounded-md font-semibold capitalize transition-colors',
-                          filterType === type ? 'bg-primary text-white' : 'text-text-muted hover:text-white'
+                          filterType === type ? 'bg-primary text-white' : 'text-text-muted hover:text-text'
                         )}
                       >
                         {type === 'all' ? 'All Types' : type}
@@ -686,10 +686,10 @@ export function AnalyticsPage() {
               </div>
 
               {/* Table Records */}
-              <div className="overflow-x-auto">
+              <div className="overflow-x-auto rounded-lg border border-slate-200 dark:border-border">
                 <table className="w-full text-left text-xs">
                   <thead>
-                    <tr className="border-b border-white/5 text-[11px] text-text-dim uppercase tracking-wider font-semibold">
+                    <tr className="border-b border-slate-200 dark:border-border bg-slate-50 dark:bg-surface-2 text-[11px] text-text-muted uppercase tracking-wider font-semibold">
                       <th className="py-2.5 px-3">Date</th>
                       <th className="py-2.5 px-3">Type</th>
                       <th className="py-2.5 px-3">Location / Highway</th>
@@ -699,9 +699,9 @@ export function AnalyticsPage() {
                       <th className="py-2.5 px-3 text-right">Status</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-white/5">
+                  <tbody className="divide-y divide-slate-200 dark:divide-border/60 bg-white dark:bg-surface">
                     {filteredLogs.map(item => (
-                      <tr key={item.id} className="hover:bg-surface-2/60 transition-colors">
+                      <tr key={item.id} className="hover:bg-slate-50 dark:hover:bg-surface-2/60 transition-colors">
                         <td className="py-2.5 px-3 font-mono text-text-muted whitespace-nowrap">{item.date}</td>
                         <td className="py-2.5 px-3 whitespace-nowrap">
                           <Badge
@@ -715,12 +715,12 @@ export function AnalyticsPage() {
                             {item.type}
                           </Badge>
                         </td>
-                        <td className="py-2.5 px-3 font-medium text-white">{item.location}</td>
+                        <td className="py-2.5 px-3 font-medium text-text">{item.location}</td>
                         <td className="py-2.5 px-3 text-center font-mono text-text-muted">{item.duration}</td>
                         <td className="py-2.5 px-3 text-text-muted">{item.impact}</td>
-                        <td className="py-2.5 px-3 text-primary text-xs font-medium">{item.action}</td>
+                        <td className="py-2.5 px-3 text-primary text-xs font-semibold">{item.action}</td>
                         <td className="py-2.5 px-3 text-right">
-                          <span className="inline-flex items-center gap-1 text-2xs font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-2 py-0.5 rounded">
+                          <span className="inline-flex items-center gap-1 text-2xs font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/30 px-2 py-0.5 rounded">
                             <CheckCircle2 className="h-3 w-3" />
                             {item.status}
                           </span>
@@ -744,36 +744,36 @@ export function AnalyticsPage() {
             
             {/* Top Cost Savings Summary Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
-              <div className="app-card p-4 bg-surface border border-white/10 rounded-xl space-y-1">
+              <div className="app-card p-4 bg-surface border border-slate-200 dark:border-border rounded-xl space-y-1 shadow-xs">
                 <span className="text-2xs text-text-muted uppercase font-semibold">Total Savings (12 Months)</span>
-                <div className="text-3xl font-black text-emerald-400">₹42.5 Lakhs</div>
+                <div className="text-3xl font-black text-emerald-600 dark:text-emerald-400">₹42.5 Lakhs</div>
                 <span className="text-[10px] text-text-dim">From fuel optimization & recovery</span>
               </div>
-              <div className="app-card p-4 bg-surface border border-white/10 rounded-xl space-y-1">
+              <div className="app-card p-4 bg-surface border border-slate-200 dark:border-border rounded-xl space-y-1 shadow-xs">
                 <span className="text-2xs text-text-muted uppercase font-semibold">Peak Monthly Savings (July)</span>
                 <div className="text-3xl font-black text-primary">₹7.4 Lakhs</div>
                 <span className="text-[10px] text-text-dim">Monsoonal AI detour activation</span>
               </div>
-              <div className="app-card p-4 bg-surface border border-white/10 rounded-xl space-y-1">
+              <div className="app-card p-4 bg-surface border border-slate-200 dark:border-border rounded-xl space-y-1 shadow-xs">
                 <span className="text-2xs text-text-muted uppercase font-semibold">Average Fleet ROI</span>
-                <div className="text-3xl font-black text-white">4.8x</div>
-                <span className="text-[10px] text-emerald-400 font-semibold">Positive operational payback</span>
+                <div className="text-3xl font-black text-text">4.8x</div>
+                <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold">Positive operational payback</span>
               </div>
             </div>
 
             {/* Composed Bar + Line Chart */}
-            <div className="app-card p-4 bg-surface border border-white/10 rounded-xl space-y-3">
-              <div className="flex items-center justify-between pb-2 border-b border-white/5">
+            <div className="app-card p-4 bg-surface border border-slate-200 dark:border-border rounded-xl space-y-3 shadow-xs">
+              <div className="flex items-center justify-between pb-2 border-b border-slate-200 dark:border-border">
                 <div className="flex items-center gap-2">
-                  <IndianRupee className="h-4 w-4 text-emerald-400" />
-                  <span className="text-sm font-bold text-white">Monthly Savings vs Cumulative Total (₹ Lakhs)</span>
+                  <IndianRupee className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+                  <span className="text-sm font-bold text-text">Monthly Savings vs Cumulative Total (₹ Lakhs)</span>
                 </div>
                 <div className="flex items-center gap-4 text-2xs text-text-muted">
                   <span className="flex items-center gap-1 text-primary font-semibold">
                     <span className="h-2.5 w-2.5 rounded-sm bg-primary inline-block" /> Monthly Savings (Bar)
                   </span>
-                  <span className="flex items-center gap-1 text-emerald-400 font-semibold">
-                    <span className="h-2.5 w-2.5 rounded-full bg-emerald-400 inline-block" /> Cumulative Total (Line)
+                  <span className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-semibold">
+                    <span className="h-2.5 w-2.5 rounded-full bg-emerald-500 inline-block" /> Cumulative Total (Line)
                   </span>
                 </div>
               </div>
@@ -804,11 +804,11 @@ export function AnalyticsPage() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
               
               {/* Simulation Controls Sidebar */}
-              <div className="app-card p-4 space-y-4 bg-surface border border-white/10 rounded-xl">
-                <div className="flex items-center justify-between border-b border-white/10 pb-2">
+              <div className="app-card p-4 space-y-4 bg-surface border border-slate-200 dark:border-border rounded-xl shadow-xs">
+                <div className="flex items-center justify-between border-b border-slate-200 dark:border-border pb-2">
                   <div className="flex items-center gap-2">
                     <Sliders className="h-4 w-4 text-primary" />
-                    <span className="text-sm font-bold text-white">Scenario Parameters</span>
+                    <span className="text-sm font-bold text-text">Scenario Parameters</span>
                   </div>
                   <button
                     onClick={() => {
@@ -818,7 +818,7 @@ export function AnalyticsPage() {
                       setSimReroute(true)
                       toast.info('Simulation reset to baseline defaults')
                     }}
-                    className="text-text-muted hover:text-white p-1"
+                    className="text-text-muted hover:text-text p-1 transition-colors"
                     title="Reset parameters"
                   >
                     <RotateCcw className="h-3.5 w-3.5" />
@@ -851,7 +851,7 @@ export function AnalyticsPage() {
                     step={1}
                     value={simDuration}
                     onChange={e => setSimDuration(Number(e.target.value))}
-                    className="w-full accent-primary h-1.5 bg-surface-3 rounded-lg"
+                    className="w-full accent-primary h-1.5 bg-slate-200 dark:bg-surface-3 rounded-lg"
                   />
                   <div className="flex justify-between text-[10px] text-text-muted">
                     <span>2 hrs (Minor)</span>
@@ -872,7 +872,7 @@ export function AnalyticsPage() {
                     step={5}
                     value={simRain}
                     onChange={e => setSimRain(Number(e.target.value))}
-                    className="w-full accent-info h-1.5 bg-surface-3 rounded-lg"
+                    className="w-full accent-info h-1.5 bg-slate-200 dark:bg-surface-3 rounded-lg"
                   />
                   <div className="flex justify-between text-[10px] text-text-muted">
                     <span>10 mm/h (Light)</span>
@@ -881,14 +881,14 @@ export function AnalyticsPage() {
                   </div>
                 </div>
 
-                <div className="pt-2 border-t border-white/5 space-y-2">
+                <div className="pt-2 border-t border-slate-200 dark:border-border space-y-2">
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-semibold text-text">Dynamic AI Auto-Detour</span>
                     <button
                       onClick={() => setSimReroute(!simReroute)}
                       className={cn(
                         'relative inline-flex h-5 w-9 items-center rounded-full transition-colors',
-                        simReroute ? 'bg-primary' : 'bg-surface-3'
+                        simReroute ? 'bg-primary' : 'bg-slate-200 dark:bg-surface-3'
                       )}
                     >
                       <span className={cn('inline-block h-3.5 w-3.5 transform rounded-full bg-white transition', simReroute ? 'translate-x-4' : 'translate-x-1')} />
@@ -903,29 +903,29 @@ export function AnalyticsPage() {
               {/* Simulation Output Dashboard */}
               <div className="lg:col-span-2 space-y-4">
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-                  <div className="app-card p-3 space-y-0.5 bg-surface border border-white/10 rounded-xl">
+                  <div className="app-card p-3 space-y-0.5 bg-surface border border-slate-200 dark:border-border rounded-xl shadow-2xs">
                     <div className="text-2xs text-text-muted">Unmanaged Delivery Rate</div>
                     <div className="text-lg font-bold text-danger">{simResults.onTimeWithoutAI}%</div>
-                    <div className="text-[10px] text-danger">Severe bottleneck drop</div>
+                    <div className="text-[10px] text-danger font-medium">Severe bottleneck drop</div>
                   </div>
-                  <div className="app-card p-3 space-y-0.5 bg-surface border border-white/10 rounded-xl">
+                  <div className="app-card p-3 space-y-0.5 bg-surface border border-slate-200 dark:border-border rounded-xl shadow-2xs">
                     <div className="text-2xs text-text-muted">With AI Auto-Detour</div>
                     <div className="text-lg font-bold text-success">{simResults.onTimeWithAI}%</div>
                     <div className="text-[10px] text-success font-semibold">Protected schedule</div>
                   </div>
-                  <div className="app-card p-3 space-y-0.5 bg-surface border border-white/10 rounded-xl">
+                  <div className="app-card p-3 space-y-0.5 bg-surface border border-slate-200 dark:border-border rounded-xl shadow-2xs">
                     <div className="text-2xs text-text-muted">Idle Hours Saved</div>
                     <div className="text-lg font-bold text-primary">{simResults.idleHoursSaved} hrs</div>
                     <div className="text-[10px] text-text-muted">Across active fleet</div>
                   </div>
-                  <div className="app-card p-3 space-y-0.5 bg-surface border border-white/10 rounded-xl">
+                  <div className="app-card p-3 space-y-0.5 bg-surface border border-slate-200 dark:border-border rounded-xl shadow-2xs">
                     <div className="text-2xs text-text-muted">Stranded Convoys</div>
                     <div className="text-lg font-bold text-warning">{simResults.strandedCount} units</div>
                     <div className="text-[10px] text-text-muted">{simReroute ? '0 Stranded (Safe)' : 'Requires SOS'}</div>
                   </div>
                 </div>
 
-                <div className="app-card p-4 bg-surface border border-white/10 rounded-xl">
+                <div className="app-card p-4 bg-surface border border-slate-200 dark:border-border rounded-xl shadow-xs">
                   <div className="flex items-center justify-between mb-3">
                     <span className="text-sm font-bold text-text">Simulated Delivery Reliability Curve</span>
                     <span className="text-2xs text-text-muted">Baseline vs Unmanaged vs AI Rerouted</span>
@@ -966,8 +966,8 @@ export function AnalyticsPage() {
           <div className="space-y-4">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               
-              <div className="app-card p-4 space-y-3 bg-surface border border-white/10 rounded-xl">
-                <div className="flex items-center justify-between border-b border-white/10 pb-2">
+              <div className="app-card p-4 space-y-3 bg-surface border border-slate-200 dark:border-border rounded-xl shadow-xs">
+                <div className="flex items-center justify-between border-b border-slate-200 dark:border-border pb-2">
                   <div className="flex items-center gap-2">
                     <Cpu className="h-4 w-4 text-primary" />
                     <span className="text-sm font-bold text-text">XGBoost Feature Importance Weights (v2.4)</span>
@@ -989,17 +989,17 @@ export function AnalyticsPage() {
                         <span className="font-semibold text-text">{f.feature}</span>
                         <span className="font-bold tabular-nums" style={{ color: f.color }}>{f.weight}%</span>
                       </div>
-                      <div className="h-2 bg-surface-3 rounded-full overflow-hidden">
+                      <div className="h-2 bg-slate-100 dark:bg-surface-3 rounded-full overflow-hidden">
                         <div className="h-full rounded-full transition-all duration-700" style={{ width: `${f.weight * 2.5}%`, backgroundColor: f.color }} />
                       </div>
-                      <div className="text-[10px] text-text-muted">{f.desc}</div>
+                      <div className="text-[10px] text-text-dim">{f.desc}</div>
                     </div>
                   ))}
                 </div>
               </div>
 
-              <div className="app-card p-4 space-y-3 bg-surface border border-white/10 rounded-xl">
-                <div className="flex items-center justify-between border-b border-white/10 pb-2">
+              <div className="app-card p-4 space-y-3 bg-surface border border-slate-200 dark:border-border rounded-xl shadow-xs">
+                <div className="flex items-center justify-between border-b border-slate-200 dark:border-border pb-2">
                   <div className="flex items-center gap-2">
                     <CheckCircle2 className="h-4 w-4 text-success" />
                     <span className="text-sm font-bold text-text">Model Validation & Confusion Matrix</span>
@@ -1008,29 +1008,29 @@ export function AnalyticsPage() {
                 </div>
 
                 <div className="grid grid-cols-2 gap-2 text-center text-xs">
-                  <div className="p-3 rounded-lg bg-success/10 border border-success/20 space-y-0.5">
+                  <div className="p-3 rounded-xl bg-emerald-50 dark:bg-success/10 border border-emerald-200 dark:border-success/20 space-y-0.5 shadow-2xs">
                     <div className="text-2xs text-text-muted">True Positives (Landslide Correct)</div>
-                    <div className="text-xl font-bold text-success">842 Events</div>
-                    <div className="text-[10px] text-success">High precision verified</div>
+                    <div className="text-xl font-bold text-emerald-700 dark:text-success">842 Events</div>
+                    <div className="text-[10px] text-emerald-600 dark:text-success">High precision verified</div>
                   </div>
-                  <div className="p-3 rounded-lg bg-surface-2 border border-border space-y-0.5">
+                  <div className="p-3 rounded-xl bg-slate-50 dark:bg-surface-2 border border-slate-200 dark:border-border space-y-0.5 shadow-2xs">
                     <div className="text-2xs text-text-muted">False Positives (False Alarm)</div>
-                    <div className="text-xl font-bold text-warning">48 Events</div>
+                    <div className="text-xl font-bold text-amber-600 dark:text-warning">48 Events</div>
                     <div className="text-[10px] text-text-muted">5.4% false alert rate</div>
                   </div>
-                  <div className="p-3 rounded-lg bg-surface-2 border border-border space-y-0.5">
+                  <div className="p-3 rounded-xl bg-slate-50 dark:bg-surface-2 border border-slate-200 dark:border-border space-y-0.5 shadow-2xs">
                     <div className="text-2xs text-text-muted">False Negatives (Missed)</div>
                     <div className="text-xl font-bold text-danger">12 Events</div>
                     <div className="text-[10px] text-danger">1.4% missed rate</div>
                   </div>
-                  <div className="p-3 rounded-lg bg-success/10 border border-success/20 space-y-0.5">
+                  <div className="p-3 rounded-xl bg-emerald-50 dark:bg-success/10 border border-emerald-200 dark:border-success/20 space-y-0.5 shadow-2xs">
                     <div className="text-2xs text-text-muted">True Negatives (Clear Correct)</div>
-                    <div className="text-xl font-bold text-success">3,120 Events</div>
-                    <div className="text-[10px] text-success">Safe highway routing</div>
+                    <div className="text-xl font-bold text-emerald-700 dark:text-success">3,120 Events</div>
+                    <div className="text-[10px] text-emerald-600 dark:text-success">Safe highway routing</div>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-3 gap-2 text-center text-xs pt-2 border-t border-white/5">
+                <div className="grid grid-cols-3 gap-2 text-center text-xs pt-2 border-t border-slate-200 dark:border-border">
                   <div>
                     <div className="text-[10px] text-text-muted">Overall Accuracy</div>
                     <div className="font-bold text-text mt-0.5">94.2%</div>
@@ -1057,21 +1057,21 @@ export function AnalyticsPage() {
           <div className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {DISTRICT_IMPACTS_DATA.map(d => (
-                <div key={d.id} className="app-card p-4 space-y-2 bg-surface border border-white/10 rounded-xl">
+                <div key={d.id} className="app-card p-4 space-y-2 bg-surface border border-slate-200 dark:border-border rounded-xl shadow-xs">
                   <div className="flex items-center justify-between">
                     <span className="font-bold text-sm text-text">{d.district}</span>
-                    <span className={cn('text-xs font-bold', d.riskTier === 'Critical' ? 'text-danger' : d.riskTier === 'High' ? 'text-amber-400' : 'text-success')}>
+                    <span className={cn('text-xs font-bold', d.riskTier === 'Critical' ? 'text-danger' : d.riskTier === 'High' ? 'text-amber-600 dark:text-amber-400' : 'text-emerald-600 dark:text-success')}>
                       {d.riskTier} Impact • {d.events} Events
                     </span>
                   </div>
-                  <div className="h-2.5 bg-surface-3 rounded-full overflow-hidden flex gap-px">
+                  <div className="h-2.5 bg-slate-100 dark:bg-surface-3 rounded-full overflow-hidden flex gap-px">
                     <div className="bg-success h-full" style={{ width: `${100 - d.heatScore}%` }} />
                     <div className="bg-danger  h-full" style={{ width: `${d.heatScore}%` }} />
                   </div>
                   <div className="flex justify-between text-2xs text-text-muted pt-1">
                     <span>Corridor: {d.highway}</span>
                     <span>Avg Delay: {d.avgDelayStr}</span>
-                    <span className="text-white font-mono font-semibold">Cost: {d.costImpact}</span>
+                    <span className="text-text font-mono font-semibold">Cost: {d.costImpact}</span>
                   </div>
                 </div>
               ))}
@@ -1083,9 +1083,9 @@ export function AnalyticsPage() {
 
       {/* ── PDF EXPORT SAMPLE REPORT DIALOG ──────────────────────────────── */}
       <Dialog open={pdfDialogOpen} onOpenChange={setPdfDialogOpen}>
-        <DialogContent className="max-w-2xl bg-[#0D1626] border border-white/15 text-white">
+        <DialogContent className="max-w-2xl bg-surface border border-border text-text">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 text-base font-bold text-white">
+            <DialogTitle className="flex items-center gap-2 text-base font-bold text-text">
               <Printer className="h-4 w-4 text-primary" />
               Executive Disruption & Financial Analytics Report
             </DialogTitle>
@@ -1094,11 +1094,11 @@ export function AnalyticsPage() {
             </DialogDescription>
           </DialogHeader>
 
-          <div className="p-4 rounded-xl bg-surface-2 border border-white/10 space-y-4 text-xs">
+          <div className="p-4 rounded-xl bg-surface-2 border border-border space-y-4 text-xs">
             {/* Header Metadata */}
-            <div className="flex justify-between border-b border-white/10 pb-3">
+            <div className="flex justify-between border-b border-border pb-3">
               <div>
-                <div className="font-bold text-white text-sm">NERA LOGISTICS INTELLIGENCE DOSSIER</div>
+                <div className="font-bold text-text text-sm">NERA LOGISTICS INTELLIGENCE DOSSIER</div>
                 <div className="text-2xs text-text-muted">Period: June 2026 (Monsoonal Deluge Phase 1)</div>
               </div>
               <div className="text-right text-2xs text-text-muted">
@@ -1109,15 +1109,15 @@ export function AnalyticsPage() {
 
             {/* 3 Executive Metrics */}
             <div className="grid grid-cols-3 gap-3 text-center py-1">
-              <div className="p-2.5 rounded-lg bg-surface-3">
+              <div className="p-2.5 rounded-xl bg-surface border border-border shadow-2xs">
                 <span className="text-[10px] text-text-muted block">Total Disruptions</span>
-                <strong className="text-base text-white">24 Events</strong>
+                <strong className="text-base text-text">24 Events</strong>
               </div>
-              <div className="p-2.5 rounded-lg bg-surface-3">
+              <div className="p-2.5 rounded-xl bg-surface border border-border shadow-2xs">
                 <span className="text-[10px] text-text-muted block">On-Time Reliability</span>
-                <strong className="text-base text-emerald-400">82.0%</strong>
+                <strong className="text-base text-emerald-600 dark:text-emerald-400">82.0%</strong>
               </div>
-              <div className="p-2.5 rounded-lg bg-surface-3">
+              <div className="p-2.5 rounded-xl bg-surface border border-border shadow-2xs">
                 <span className="text-[10px] text-text-muted block">Estimated Cost Saved</span>
                 <strong className="text-base text-primary">₹12.5 Lakhs</strong>
               </div>
@@ -1125,7 +1125,7 @@ export function AnalyticsPage() {
 
             {/* Key Findings */}
             <div className="space-y-1.5 text-2xs leading-relaxed text-text">
-              <div className="font-bold text-white text-xs">Key Executive Findings:</div>
+              <div className="font-bold text-text text-xs">Key Executive Findings:</div>
               <div>• <strong>Landslides constitute 45% of disruptions</strong> (12 incidents), heavily concentrated along NH-415 Km 42 in East Siang.</div>
               <div>• <strong>Jorhat & East Siang require highest infrastructure priority</strong>, suffering an average delay of 6.5 hours during monsoons.</div>
               <div>• AI dynamic rerouting via Route C North Bank bypass saved 163 fleet idle hours and prevented cold-chain vaccine spoilage.</div>

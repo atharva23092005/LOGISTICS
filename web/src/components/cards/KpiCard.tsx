@@ -44,8 +44,8 @@ export function KpiCard({
     <div
       onClick={onClick}
       className={cn(
-        'bg-surface border border-border/80 rounded-xl p-4 transition-all duration-150',
-        'hover:border-white/15',
+        'bg-surface border border-slate-200 dark:border-border rounded-xl p-4 transition-all duration-150 shadow-xs',
+        'hover:border-primary/40 hover:shadow-sm',
         onClick && 'cursor-pointer hover:bg-surface-2',
         className
       )}
@@ -69,7 +69,7 @@ export function KpiCard({
           </span>
         )}
       </div>
-      <div className="text-2xl font-bold text-white tabular-nums leading-tight mb-0.5">
+      <div className="text-2xl font-bold text-text tabular-nums leading-tight mb-0.5">
         {value}
       </div>
       <div className="text-[11px] font-medium text-text-muted uppercase tracking-wider">

@@ -16,6 +16,7 @@ import { useAlertStore } from '@/stores/alertStore'
 import { formatDateTime } from '@/utils/format'
 import { toast } from 'sonner'
 import { NotificationPanel } from './NotificationPanel'
+import { ThemeToggle } from '@/components/ui/ThemeToggle'
 
 // Module-level selectors
 const selUser             = (s: ReturnType<typeof useAppStore.getState>)   => s.user
@@ -186,6 +187,9 @@ export function TopBar({ onMenuToggle, mobileMenuOpen }: TopBarProps) {
               </>
             )}
           </div>
+
+          {/* Theme Toggle (Global Light/Dark Switcher) */}
+          <ThemeToggle />
 
           {/* User Dropdown Menu (shadcn / Radix) */}
           <DropdownMenu>

@@ -51,7 +51,7 @@ export function LayerControl() {
         onClick={() => setOpen(!open)}
         className={cn(
           'flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold shadow-lg transition-all duration-200 border',
-          'bg-[#0D1626]/85 backdrop-blur-md border-white/10 hover:border-white/20 text-text hover:text-white',
+          'bg-surface/85 backdrop-blur-md border-border hover:border-border text-text hover:text-white',
           open && 'ring-2 ring-primary/40 border-primary/50'
         )}
       >
@@ -62,7 +62,7 @@ export function LayerControl() {
 
       {/* ── Dropdown Glass Menu (Only visible when toggled) ───────────────── */}
       {open && (
-        <div className="absolute top-10 left-0 w-56 rounded-2xl bg-[#0D1626]/90 backdrop-blur-xl border border-white/10 p-3 shadow-2xl space-y-2.5 animate-scale-in">
+        <div className="absolute top-10 left-0 w-56 rounded-2xl bg-surface/90 backdrop-blur-xl border border-border p-3 shadow-2xl space-y-2.5 animate-scale-in">
           {/* Basemap Styles */}
           <div>
             <div className="text-[9px] font-bold text-text-muted uppercase tracking-wider mb-1 px-1">
@@ -92,7 +92,7 @@ export function LayerControl() {
           </div>
 
           {/* Layer Toggles */}
-          <div className="pt-2 border-t border-white/10 space-y-0.5">
+          <div className="pt-2 border-t border-border space-y-0.5">
             <div className="text-[9px] font-bold text-text-muted uppercase tracking-wider mb-1 px-1">
               Active Layers
             </div>
@@ -128,7 +128,7 @@ export function LayerControl() {
           </div>
 
           {/* Recenter Button */}
-          <div className="pt-2 border-t border-white/10">
+          <div className="pt-2 border-t border-border">
             <button
               onClick={() => {
                 flyTo({ lat: 26.8, lng: 93.6 }, 7.4)

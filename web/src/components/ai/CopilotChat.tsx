@@ -1203,8 +1203,8 @@ function RenderCard({ card }: { card: CopilotCard }) {
     const isHazard = (card.maxSlope as number) > 15
     return (
       <div className="mt-2.5 p-3 rounded-lg bg-surface-2 border border-border space-y-2">
-        <div className="flex items-center justify-between border-b border-white/10 pb-1.5">
-          <span className="text-xs font-bold text-white flex items-center gap-1.5">
+        <div className="flex items-center justify-between border-b border-border pb-1.5">
+          <span className="text-xs font-bold text-text flex items-center gap-1.5">
             <Mountain className="h-3.5 w-3.5 text-primary" />
             {card.route as string}
           </span>
@@ -1214,19 +1214,19 @@ function RenderCard({ card }: { card: CopilotCard }) {
           </span>
         </div>
         <div className="grid grid-cols-3 gap-2 text-center text-xs">
-          <div className="bg-white/5 p-1.5 rounded-md">
+          <div className="bg-surface-3 p-1.5 rounded-md">
             <div className="text-[9px] text-text-muted">Peak Altitude</div>
-            <div className="font-bold text-white mt-0.5">{card.peakElev as number} m</div>
+            <div className="font-bold text-text mt-0.5">{card.peakElev as number} m</div>
           </div>
-          <div className="bg-white/5 p-1.5 rounded-md">
+          <div className="bg-surface-3 p-1.5 rounded-md">
             <div className="text-[9px] text-text-muted">Max Slope</div>
             <div className={cn('font-bold mt-0.5', isHazard ? 'text-danger' : 'text-success')}>
               {card.maxSlope as number}°
             </div>
           </div>
-          <div className="bg-white/5 p-1.5 rounded-md">
+          <div className="bg-surface-3 p-1.5 rounded-md">
             <div className="text-[9px] text-text-muted">Total Ascent</div>
-            <div className="font-bold text-white mt-0.5">+{card.totalAscent as number} m</div>
+            <div className="font-bold text-text mt-0.5">+{card.totalAscent as number} m</div>
           </div>
         </div>
       </div>
@@ -1586,16 +1586,25 @@ export function CopilotChat({ onClose, initialContext = {} }: CopilotChatProps) 
                         {/* Markdown text */}
                         <div className={cn(
                           'prose prose-sm max-w-none leading-relaxed text-xs relative',
-                          msg.role === 'user' ? 'text-white prose-invert' : 'text-text prose-invert'
+                          msg.role === 'user' ? 'text-white prose-invert' : 'text-text dark:prose-invert'
                         )}>
                           <ReactMarkdown components={{
                             p:      ({ children }) => <p className="mb-1.5 last:mb-0">{children}</p>,
-                            strong: ({ children }) => <strong className="font-bold text-white">{children}</strong>,
-                            h1:     ({ children }) => <h1 className="text-sm font-bold mt-2 mb-1 text-white">{children}</h1>,
-                            h2:     ({ children }) => <h2 className="text-xs font-bold mt-1.5 mb-0.5 text-white">{children}</h2>,
-                            h3:     ({ children }) => <h3 className="text-xs font-bold mt-1 mb-0.5 text-white">{children}</h3>,
+                            strong: ({ children }) => <strong className={cn("font-bold", msg.role === 'user' ? 'text-white' : 'text-text')}>{children}</strong>,
+                            h1:     ({ children }) => <h1 className={cn("text-sm font-bold mt-2 mb-1", msg.role === 'user' ? 'text-white' : 'text-text')}>{children}</h1>,
+                            h2:     ({ children }) => <h2 className={cn("text-xs font-bold mt-1.5 mb-0.5", msg.role === 'user' ? 'text-white' : 'text-text')}>{children}</h2>,
+                            h3:     ({ children }) => <h3 className={cn("text-xs font-bold mt-1 mb-0.5", msg.role === 'user' ? 'text-white' : 'text-text')}>{children}</h3>,
                             li:     ({ children }) => <li className="ml-3 list-disc my-0.5">{children}</li>,
-                            code:   ({ children }) => <code className="bg-white/10 px-1.5 py-0.5 rounded text-[11px] text-primary">{children}</code>,
+                            code:   ({ children }) => (
+                              <code className={cn(
+                                "px-1.5 py-0.5 rounded text-[11px] font-mono",
+                                msg.role === 'user'
+                                  ? "bg-white/20 text-white"
+                                  : "bg-primary/10 text-primary border border-primary/20"
+                              )}>
+                                {children}
+                              </code>
+                            ),
                             table:  ({ children }) => <table className="text-[11px] w-full border-collapse my-1.5">{children}</table>,
                             th:     ({ children }) => <th className="border-b border-border px-2 py-1 text-left font-semibold text-text-muted">{children}</th>,
                             td:     ({ children }) => <td className="border-b border-border/40 px-2 py-1">{children}</td>,
