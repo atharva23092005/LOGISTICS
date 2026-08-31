@@ -69,6 +69,29 @@ export default {
           foreground: '#FFFFFF',
         },
 
+        // ── Landing redesign: topographic identity (additive, landing-only) ──
+        spruce: {
+          DEFAULT: '#0E5F54',
+          700:     '#0B4C43',
+          600:     '#0E5F54',
+          500:     '#12897A',
+          400:     '#3DB39E',
+          300:     '#7CC9BC',
+          100:     '#D3E5E0',
+          wash:    '#E9F1EE',
+        },
+        paper: {
+          DEFAULT: '#F4F6F4',
+          deep:    '#EDF0EE',
+          dark:    '#0A1A1E',
+        },
+        ink: {
+          DEFAULT: '#0C1B22',
+          900:     '#0A171D',
+          800:     '#12252C',
+          700:     '#1B333B',
+        },
+
         // ── Landing page specific tokens ────────────────────────────────────
         'landing-bg': 'rgb(var(--background) / <alpha-value>)',
         'landing-bg-alt': 'rgb(var(--surface-2) / <alpha-value>)',
@@ -112,6 +135,7 @@ export default {
 
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
+        display: ['"Space Grotesk"', 'Inter', 'system-ui', 'sans-serif'],
         mono: ['"JetBrains Mono"', '"Fira Code"', 'monospace'],
       },
 

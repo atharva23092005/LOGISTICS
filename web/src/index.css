@@ -5,6 +5,8 @@
 @keyframes slide-in-right{ from { transform:translateX(100%); } to { transform:translateX(0); } }
 @keyframes slide-in-left { from { transform:translateX(-100%); } to { transform:translateX(0); } }
 @keyframes fade-in       { from { opacity:0; } to { opacity:1; } }
+@keyframes route-draw    { to { stroke-dashoffset: 0; } }
+@keyframes rise-fade     { from { opacity:0; transform: translateY(10px); } to { opacity:1; transform: translateY(0); } }
 
 @tailwind base;
 @tailwind components;
@@ -224,6 +226,24 @@
     -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 30%, #000 60%, transparent 100%);
   }
 
+  /* ── Landing redesign: topographic route & reveal helpers ──────────────── */
+  .route-draw {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: route-draw 2.2s cubic-bezier(0.65, 0, 0.35, 1) 0.35s forwards;
+  }
+  .reveal-rise {
+    animation: rise-fade 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  .contour-mask-b {
+    mask-image: linear-gradient(to bottom, transparent, #000 22%, #000 78%, transparent);
+    -webkit-mask-image: linear-gradient(to bottom, transparent, #000 22%, #000 78%, transparent);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .route-draw { animation: none; stroke-dashoffset: 0; }
+    .reveal-rise { animation: none; }
+  }
+
   /* ── Ambient Soft Glows ────────────────────────────────────────────── */
   .ambient-glow-blue {
     background: radial-gradient(650px circle at 50% 20%, rgba(37, 99, 235, 0.06), transparent 70%);
@@ -237,6 +257,39 @@
   }
   .dark .ambient-glow-cyan {
     background: radial-gradient(550px circle at 80% 40%, rgba(6, 182, 212, 0.10), transparent 70%);
+  }
+
+  /* ── Core Landing Theme Solid Tokens ───────────────────────────────── */
+  .bg-spruce {
+    background-color: #0E5F54;
+    color: #FFFFFF;
+  }
+  .bg-spruce:hover {
+    background-color: #0B4C43;
+  }
+  .text-spruce {
+    color: #0E5F54;
+  }
+  .dark .text-spruce {
+    color: #3DB39E;
+  }
+  .bg-paper {
+    background-color: #F4F6F4;
+  }
+  .dark .bg-paper {
+    background-color: #0A171D;
+  }
+  .bg-paper-deep {
+    background-color: #EDF0EE;
+  }
+  .dark .bg-paper-deep {
+    background-color: #12252C;
+  }
+  .text-ink {
+    color: #0C1B22;
+  }
+  .dark .text-ink {
+    color: #F8FAFC;
   }
 }
 

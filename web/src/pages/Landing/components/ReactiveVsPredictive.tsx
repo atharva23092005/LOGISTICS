@@ -1,128 +1,80 @@
-import { ArrowDown, XCircle, CheckCircle2, ShieldAlert, Sparkles, ArrowRight } from 'lucide-react'
+import { CheckCircle2 } from 'lucide-react'
+import { Section, Eyebrow, Heading } from './primitives'
 
-const TRADITIONAL_STEPS = [
-  'Disaster occurs on remote mountain highway',
-  'Road completely blocked by 200m landslide',
-  'Delayed info reaches control room (4–6 hours later)',
-  'Medical & food convoys get stranded in hazard zone',
-  'Manual phone-based rerouting under zero signal',
-  'Critical regional supply chain breakdown',
-]
-
-const NERA_STEPS = [
-  'Multi-source ingestion: IMD radar + ISRO 0.5m DEM + GPS telemetry',
-  'XGBoost ML engine predicts 78% landslide risk 6–12h ahead',
-  'Autonomous hazard polygon broadcast to drivers & command center',
-  'At-risk inbound convoys identified & notified instantaneously',
-  'Terrain-safe multi-modal alternate corridors (Route C) calculated',
-  'Automated priority dispatch executed for essential supplies',
-  'Offline field officer confirmation on ground clearance via PWA',
+const STEPS = [
+  {
+    n: '01',
+    title: 'Ingest',
+    desc: 'IMD Doppler radar, ISRO 0.5 m elevation and live GPS telemetry stream into one model.',
+  },
+  {
+    n: '02',
+    title: 'Predict',
+    desc: 'XGBoost scores landslide and flood risk 6–12 hours ahead, segment by segment.',
+  },
+  {
+    n: '03',
+    title: 'Reroute',
+    desc: 'Terrain-safe corridors are computed and at-risk convoys are notified instantly.',
+  },
+  {
+    n: '04',
+    title: 'Respond',
+    desc: 'Priority dispatch executes; field officers confirm ground clearance offline.',
+  },
 ]
 
 export function ReactiveVsPredictive() {
   return (
-    <section id="how-it-works" className="py-20 md:py-28 relative overflow-hidden border-t border-slate-200 dark:border-white/10">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        
-        {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto space-y-3 mb-14">
-          <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-blue-50 dark:bg-primary/10 border border-blue-200 dark:border-primary/25 text-blue-700 dark:text-primary text-xs font-semibold">
-            <Sparkles className="h-3.5 w-3.5" />
-            <span>OPERATIONAL PARADIGM SHIFT</span>
-          </div>
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 dark:text-white tracking-tight">
-            Move From Reacting to Disruptions to Anticipating Them.
-          </h2>
-          <p className="text-sm text-slate-600 dark:text-text-muted leading-relaxed">
-            See how NERA transforms standard emergency logistics from slow, reactive crisis mitigation into a predictive, self-healing supply network.
+    <Section id="approach" className="border-t border-slate-200 dark:border-white/10">
+      <div className="max-w-2xl">
+        <Eyebrow>The approach</Eyebrow>
+        <Heading className="mt-6 text-3xl sm:text-4xl">From reacting to anticipating.</Heading>
+        <p className="mt-5 text-[15px] leading-relaxed text-slate-600 dark:text-slate-400">
+          The old way is a chain of delays: a road fails, and it's 4–6 hours before the control
+          room even knows — by which point convoys are stranded and rerouting happens by phone,
+          under no signal. NERA runs the loop in reverse, before the failure.
+        </p>
+      </div>
+
+      {/* Predictive pipeline */}
+      <ol className="mt-14 grid grid-cols-1 gap-y-8 sm:grid-cols-2 lg:grid-cols-4 lg:gap-x-6">
+        {STEPS.map((s, i) => (
+          <li key={s.n} className="relative">
+            {/* connector */}
+            {i < STEPS.length - 1 && (
+              <span
+                aria-hidden="true"
+                className="absolute left-11 top-4 hidden h-px w-[calc(100%-1.5rem)] bg-gradient-to-r from-spruce/40 to-slate-200 dark:to-white/10 lg:block"
+              />
+            )}
+            <div className="flex items-center gap-3">
+              <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full border border-spruce/30 bg-spruce-wash font-mono text-[11px] font-semibold text-spruce dark:border-spruce-400/30 dark:bg-spruce-400/10 dark:text-spruce-400">
+                {s.n}
+              </span>
+              <h3 className="font-display text-lg font-medium tracking-tight text-ink dark:text-white">
+                {s.title}
+              </h3>
+            </div>
+            <p className="mt-3 pr-4 text-[14px] leading-relaxed text-slate-600 dark:text-slate-400 lg:pl-11">
+              {s.desc}
+            </p>
+          </li>
+        ))}
+      </ol>
+
+      {/* Outcome */}
+      <div className="mt-14 flex flex-col items-start justify-between gap-4 rounded-2xl border border-spruce/20 bg-spruce-wash px-6 py-5 dark:border-spruce-400/20 dark:bg-spruce-400/5 sm:flex-row sm:items-center">
+        <div className="flex items-center gap-3">
+          <CheckCircle2 className="h-5 w-5 flex-shrink-0 text-spruce dark:text-spruce-400" strokeWidth={1.8} />
+          <p className="text-[14px] font-medium text-ink dark:text-white">
+            94.2% disruption avoidance, with zero stranded critical cargo.
           </p>
         </div>
-
-        {/* 2-Column Comparison Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 items-stretch">
-          
-          {/* ── LEFT: TRADITIONAL REACTIVE RESPONSE ── */}
-          <div className="rounded-2xl border border-rose-200 dark:border-rose-500/25 bg-rose-50/40 dark:bg-[#120B10]/80 p-5 sm:p-6 space-y-4 shadow-sm dark:shadow-xl flex flex-col justify-between">
-            <div className="space-y-3.5">
-              <div className="flex items-center justify-between pb-3 border-b border-rose-200/80 dark:border-rose-500/20">
-                <div className="flex items-center gap-2.5">
-                  <div className="h-8 w-8 rounded-xl bg-rose-100 dark:bg-rose-500/15 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-500/30 flex items-center justify-center">
-                    <XCircle className="h-4.5 w-4.5" />
-                  </div>
-                  <div>
-                    <h3 className="text-sm font-bold text-slate-900 dark:text-white">Traditional Response</h3>
-                    <span className="text-[11px] text-rose-700 dark:text-rose-400 font-semibold">Reactive & Siloed Manual Operations</span>
-                  </div>
-                </div>
-                <span className="text-2xs font-mono font-bold px-2 py-0.5 rounded bg-rose-100 dark:bg-rose-500/10 text-rose-800 dark:text-rose-400 border border-rose-200 dark:border-rose-500/25">
-                  LEGACY
-                </span>
-              </div>
-
-              <div className="space-y-2 pt-2">
-                {TRADITIONAL_STEPS.map((step, idx) => (
-                  <div key={step} className="flex items-start gap-2.5 text-xs text-slate-600 dark:text-text-muted">
-                    <div className="h-5 w-5 rounded-full bg-rose-100 dark:bg-rose-500/10 text-rose-700 dark:text-rose-400 flex items-center justify-center font-bold text-[10px] flex-shrink-0 mt-0.5 border border-rose-200 dark:border-rose-500/20 font-mono">
-                      {idx + 1}
-                    </div>
-                    <div className="bg-white dark:bg-surface/80 border border-rose-100 dark:border-white/5 p-2.5 rounded-xl flex-1 text-slate-700 dark:text-text-muted shadow-sm">
-                      {step}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="p-3.5 rounded-xl bg-rose-100/60 dark:bg-rose-500/10 border border-rose-200 dark:border-rose-500/25 text-center">
-              <span className="text-xs font-bold text-rose-800 dark:text-rose-400">
-                Outcome: 6+ Hours Average Delivery Delay & Critical Cargo Stranded
-              </span>
-            </div>
-          </div>
-
-          {/* ── RIGHT: NERA PREDICTIVE INTELLIGENCE ── */}
-          <div className="rounded-2xl border border-blue-200 dark:border-primary/40 bg-blue-50/40 dark:bg-[#091526]/85 p-5 sm:p-6 space-y-4 shadow-sm dark:shadow-xl dark:shadow-primary/5 flex flex-col justify-between">
-            <div className="space-y-3.5">
-              <div className="flex items-center justify-between pb-3 border-b border-blue-200/80 dark:border-primary/30">
-                <div className="flex items-center gap-2.5">
-                  <div className="h-8 w-8 rounded-xl bg-blue-100 dark:bg-primary/20 text-blue-600 dark:text-primary border border-blue-200 dark:border-primary/40 flex items-center justify-center">
-                    <CheckCircle2 className="h-4.5 w-4.5" />
-                  </div>
-                  <div>
-                    <h3 className="text-sm font-bold text-slate-900 dark:text-white">NERA Intelligence Platform</h3>
-                    <span className="text-[11px] text-emerald-700 dark:text-emerald-400 font-semibold">Predictive & Autonomous Self-Healing</span>
-                  </div>
-                </div>
-                <span className="text-2xs font-mono font-bold px-2 py-0.5 rounded bg-blue-100 dark:bg-primary/20 text-blue-800 dark:text-primary border border-blue-200 dark:border-primary/30">
-                  AI-POWERED
-                </span>
-              </div>
-
-              <div className="space-y-2 pt-2">
-                {NERA_STEPS.map((step, idx) => (
-                  <div key={step} className="flex items-start gap-2.5 text-xs text-slate-800 dark:text-text">
-                    <div className="h-5 w-5 rounded-full bg-emerald-100 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 flex items-center justify-center font-bold text-[10px] flex-shrink-0 mt-0.5 border border-emerald-200 dark:border-emerald-500/30 font-mono">
-                      ✓
-                    </div>
-                    <div className="bg-white dark:bg-surface-2/95 border border-slate-200/80 dark:border-white/10 p-2.5 rounded-xl flex-1 font-medium text-slate-900 dark:text-white shadow-sm">
-                      {step}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="p-3.5 rounded-xl bg-emerald-100/60 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/30 text-center">
-              <span className="text-xs font-bold text-emerald-800 dark:text-emerald-400">
-                Outcome: 94.2% Disruption Avoidance & Zero Stranded Critical Cargo
-              </span>
-            </div>
-          </div>
-
-        </div>
-
+        <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-spruce dark:text-spruce-400">
+          Measured on prototype network
+        </span>
       </div>
-    </section>
+    </Section>
   )
 }
-

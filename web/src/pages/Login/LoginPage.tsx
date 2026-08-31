@@ -2,18 +2,15 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import {
   Zap, Eye, EyeOff, Shield, ArrowRight, Lock, Mail,
-  CheckCircle2, KeyRound, Radio, Cpu, ChevronRight,
-  Truck, Building2, BarChart3, Smartphone, Sparkles, ArrowLeft
+  CheckCircle2, KeyRound, Radio, Smartphone, Truck,
+  Building2, BarChart3, ArrowLeft, Compass
 } from 'lucide-react'
 import { toast } from 'sonner'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Badge } from '@/components/ui/badge'
 import { ThemeToggle } from '@/components/ui/ThemeToggle'
 import { Modal } from '@/components/ui/modal'
 import { useAppStore } from '@/stores/appStore'
 import { cn } from '@/utils/cn'
+import { WavyPatternField, Eyebrow, btnPrimary, btnSecondary } from '../Landing/components/primitives'
 import type { User, UserRole } from '@/types'
 
 interface DemoAccount {
@@ -22,7 +19,6 @@ interface DemoAccount {
   roleKey: UserRole
   district: string
   icon: React.ElementType
-  color: string
   user: User
   password: string
 }
@@ -34,7 +30,6 @@ const DEMO_ACCOUNTS: DemoAccount[] = [
     roleKey: 'dispatcher',
     district: 'Guwahati HQ',
     icon: Zap,
-    color: 'text-primary bg-primary/10 border-primary/30',
     password: 'demo',
     user: { id: 'u1', name: 'Rajesh Kumar', email: 'dispatcher@ner-logistics.in', role: 'dispatcher', district: 'Guwahati' },
   },
@@ -44,7 +39,6 @@ const DEMO_ACCOUNTS: DemoAccount[] = [
     roleKey: 'district_admin',
     district: 'East Siang Sector',
     icon: Building2,
-    color: 'text-warning bg-warning/10 border-warning/30',
     password: 'demo',
     user: { id: 'u2', name: 'Tsering Norbu', email: 'district.admin@ner-logistics.in', role: 'district_admin', district: 'East Siang' },
   },
@@ -54,7 +48,6 @@ const DEMO_ACCOUNTS: DemoAccount[] = [
     roleKey: 'senior_official',
     district: 'Statewide HQ',
     icon: BarChart3,
-    color: 'text-info bg-info/10 border-info/30',
     password: 'demo',
     user: { id: 'u3', name: 'Dr. Amit Sharma', email: 'senior.official@ner-logistics.in', role: 'senior_official', district: 'Statewide HQ' },
   },
@@ -64,7 +57,6 @@ const DEMO_ACCOUNTS: DemoAccount[] = [
     roleKey: 'field_officer',
     district: 'Pasighat Sector',
     icon: Smartphone,
-    color: 'text-success bg-success/10 border-success/30',
     password: 'demo',
     user: { id: 'u4', name: 'Priya Das', email: 'field.officer@ner-logistics.in', role: 'field_officer', district: 'East Siang' },
   },
@@ -74,7 +66,6 @@ const DEMO_ACCOUNTS: DemoAccount[] = [
     roleKey: 'driver',
     district: 'Dibrugarh Corridor',
     icon: Truck,
-    color: 'text-amber-500 bg-amber-500/10 border-amber-500/30',
     password: 'demo',
     user: { id: 'u5', name: 'Sanjay Taye', email: 'driver@ner-logistics.in', role: 'driver', district: 'Dibrugarh', assignedVehicleId: 'v4' },
   },
@@ -129,7 +120,7 @@ export function LoginPage() {
       navigateAfterAuth('dispatcher')
     } else {
       toast.error('Invalid Credentials', {
-        description: 'Please use one of the demo accounts or enter a valid email.',
+        description: 'Please select one of the demo profiles or enter a valid email.',
       })
       setLoading(false)
     }
@@ -138,7 +129,7 @@ export function LoginPage() {
   const handleSelectDemo = (acc: DemoAccount) => {
     setEmail(acc.user.email)
     setPassword(acc.password)
-    toast.info(`Loaded ${acc.label} credentials`)
+    toast.info(`Loaded credentials for ${acc.label}`)
   }
 
   const handleInstantLogin = (acc: DemoAccount) => {
@@ -150,324 +141,340 @@ export function LoginPage() {
   }
 
   return (
-    <div className="min-h-dvh w-full flex flex-col lg:flex-row bg-background text-text selection:bg-primary/20 selection:text-primary font-sans antialiased overflow-x-hidden">
+    <div className="relative min-h-screen w-full overflow-x-hidden bg-paper font-sans text-ink antialiased selection:bg-spruce/20 selection:text-spruce-700 dark:bg-ink-900 dark:text-slate-200 dark:selection:bg-spruce-400/25 dark:selection:text-white">
+      
+      {/* Thin equidistant wave pattern backdrop — darkened */}
+      <WavyPatternField className="text-slate-900/[0.22] dark:text-white/[0.16]" rows={20} step={42} strokeWidth={1} />
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-spruce/20 to-transparent" />
 
-      {/* ── LEFT HALF: MISSION INTELLIGENCE & DEMO ACCOUNTS ── */}
-      <div className="lg:w-5/12 xl:w-1/2 flex flex-col justify-between p-6 sm:p-10 lg:p-12 border-b lg:border-b-0 lg:border-r border-border bg-surface-2/40 relative overflow-hidden">
-        
-        {/* Subtle tactical background pattern */}
-        <div className="absolute inset-0 bg-tactical-grid opacity-30 pointer-events-none" />
-        <div className="absolute top-1/4 -left-20 w-96 h-96 ambient-glow-blue pointer-events-none" />
-
-        {/* Brand Header */}
-        <div className="relative z-10 space-y-6">
-          <div className="flex items-center justify-between">
+      {/* ── Top Navigation Bar ── */}
+      <header className="relative z-20 border-b border-slate-200/80 bg-paper/80 backdrop-blur-md dark:border-white/10 dark:bg-ink-900/80">
+        <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between px-6 sm:px-8">
+          <div className="flex items-center gap-4">
             <Link
               to="/"
-              className="inline-flex items-center gap-2.5 text-xs font-semibold text-text-muted hover:text-text transition-colors group"
+              className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white/80 px-2.5 py-1.5 text-xs font-medium text-slate-600 shadow-2xs transition-colors hover:border-slate-300 hover:text-ink dark:border-white/10 dark:bg-ink-800/70 dark:text-slate-300 dark:hover:text-white"
             >
-              <div className="h-7 w-7 rounded-lg bg-surface border border-border flex items-center justify-center group-hover:border-primary/40 transition-colors shadow-sm">
-                <ArrowLeft className="h-3.5 w-3.5" />
-              </div>
+              <ArrowLeft className="h-3.5 w-3.5" />
               <span>Back to Overview</span>
             </Link>
 
-            <Badge variant="outline" className="hidden sm:inline-flex items-center gap-1.5 py-1 px-2.5 bg-surface border-border text-2xs font-mono text-text-muted">
-              <Radio className="h-2.5 w-2.5 text-success animate-status-pulse" />
-              <span>LIVE TELEMETRY V2.5</span>
-            </Badge>
-          </div>
+            <div className="hidden h-4 w-px bg-slate-200 dark:bg-white/10 sm:block" />
 
-          <div className="space-y-2 pt-2">
-            <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-xl bg-primary/10 border border-primary/30 flex items-center justify-center text-primary shadow-sm">
-                <Zap className="h-5 w-5" />
-              </div>
-              <div>
-                <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-text">NER LOGISTICS</h1>
-                <p className="text-xs text-text-muted">Critical Terrain Transport Intelligence System</p>
-              </div>
+            <div className="hidden sm:flex items-center gap-2">
+              <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-spruce text-white font-display font-bold text-xs">
+                N
+              </span>
+              <span className="font-display font-semibold tracking-tight text-ink dark:text-white text-sm">
+                NERA Logistics Intelligence
+              </span>
             </div>
-
-            <p className="text-xs sm:text-sm text-text-muted leading-relaxed max-w-lg pt-1">
-              Real-time multi-hazard routing, proactive landslide prediction, and resilient offline fleet dispatch across the 8 North Eastern states.
-            </p>
           </div>
-        </div>
 
-        {/* Demo Fast-Switch Cards */}
-        <div className="relative z-10 my-8 space-y-3">
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] font-semibold uppercase tracking-wider text-text-muted font-mono flex items-center gap-1.5">
-              <KeyRound className="h-3 w-3 text-primary" /> Fast Demo Authentication
+          <div className="flex items-center gap-3">
+            <span className="hidden md:inline-flex items-center gap-1.5 rounded-md bg-spruce/10 px-2.5 py-1 font-mono text-[10px] font-semibold text-spruce dark:bg-spruce-400/10 dark:text-spruce-300">
+              <Radio className="h-3 w-3 text-emerald-500 animate-pulse" />
+              TELEMETRY GATEWAY ACTIVE
             </span>
-            <span className="text-[10px] text-text-dim">Click card to autofill • Click arrow to jump</span>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-2">
-            {DEMO_ACCOUNTS.map((acc) => {
-              const Icon = acc.icon
-              const isSelected = email === acc.user.email
-              return (
-                <div
-                  key={acc.roleKey}
-                  onClick={() => handleSelectDemo(acc)}
-                  className={cn(
-                    'p-3 rounded-xl border transition-all cursor-pointer flex items-center justify-between gap-3 group',
-                    isSelected
-                      ? 'bg-surface border-primary ring-1 ring-primary/30 shadow-sm'
-                      : 'bg-surface/70 hover:bg-surface border-border hover:border-border-subtle shadow-none'
-                  )}
-                >
-                  <div className="flex items-center gap-3 min-w-0">
-                    <div className={cn('h-8 w-8 rounded-lg border flex items-center justify-center flex-shrink-0', acc.color)}>
-                      <Icon className="h-4 w-4" />
-                    </div>
-                    <div className="min-w-0">
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs font-semibold text-text truncate">{acc.label}</span>
-                        {isSelected && (
-                          <span className="h-1.5 w-1.5 rounded-full bg-primary flex-shrink-0" />
-                        )}
-                      </div>
-                      <div className="text-[11px] text-text-muted truncate">{acc.district} • {acc.roleName}</div>
-                    </div>
-                  </div>
-
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      handleInstantLogin(acc)
-                    }}
-                    title={`Instant login as ${acc.label}`}
-                    className="p-1.5 rounded-lg bg-surface-2 hover:bg-primary hover:text-white text-text-muted border border-border transition-all flex-shrink-0 opacity-80 group-hover:opacity-100"
-                  >
-                    <ArrowRight className="h-3.5 w-3.5" />
-                  </button>
-                </div>
-              )
-            })}
-          </div>
-        </div>
-
-        {/* Footer Security Badges */}
-        <div className="relative z-10 pt-4 border-t border-border/80 flex flex-wrap items-center justify-between gap-3 text-[11px] text-text-dim">
-          <div className="flex items-center gap-2">
-            <Shield className="h-3.5 w-3.5 text-success" />
-            <span>NDMA & MoRTH Compliant Telemetry Gateway</span>
-          </div>
-          <div className="font-mono text-2xs">AES-256 GCM • TLS 1.3</div>
-        </div>
-      </div>
-
-      {/* ── RIGHT HALF: MINIMAL LOGIN FORM ── */}
-      <div className="lg:w-7/12 xl:w-1/2 flex flex-col justify-between p-6 sm:p-10 lg:p-16 bg-background relative">
-        
-        {/* Top bar controls */}
-        <div className="flex items-center justify-between pb-6 sm:pb-8">
-          <div className="text-xs text-text-muted">
-            Need an official account?{' '}
-            <Link to="/register" className="font-semibold text-primary hover:underline">
-              Register Corridor ID
-            </Link>
-          </div>
-
-          <div className="flex items-center gap-2">
             <ThemeToggle />
           </div>
         </div>
+      </header>
 
-        {/* Form Container */}
-        <div className="w-full max-w-md mx-auto my-auto space-y-6">
-          <div className="space-y-2">
-            <h2 className="text-2xl font-bold tracking-tight text-text">Operator Sign In</h2>
-            <p className="text-xs sm:text-sm text-text-muted">
-              Enter your authorized department email to access the command dashboard.
-            </p>
-          </div>
-
-          <form onSubmit={handleLoginSubmit} className="space-y-4">
-            {/* Email Field */}
-            <div className="space-y-1.5">
-              <Label htmlFor="email" className="text-xs font-medium text-text">
-                Official Email Address
-              </Label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-text-muted pointer-events-none" />
-                <Input
-                  id="email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="operator@ner-logistics.in"
-                  className="pl-9 text-xs h-10 bg-surface border-border focus-visible:ring-primary"
-                  required
-                />
-              </div>
+      {/* ── Main Auth Portal Content ── */}
+      <main className="relative z-10 mx-auto w-full max-w-6xl px-6 py-10 sm:px-8 sm:py-14">
+        <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-12 items-start">
+          
+          {/* ── Left Column: Demo Profiles & System Context (7 cols) ── */}
+          <div className="lg:col-span-7 space-y-6">
+            <div>
+              <Eyebrow tone="spruce">Command Portal</Eyebrow>
+              <h1 className="mt-4 font-display text-3xl font-semibold tracking-tight text-ink dark:text-white sm:text-4xl">
+                Authorized Personnel Sign In
+              </h1>
+              <p className="mt-3 text-[14.5px] leading-relaxed text-slate-600 dark:text-slate-400 max-w-xl">
+                Access real-time multi-hazard routing, landslide telemetry, and offline fleet synchronization across the 8 North Eastern states.
+              </p>
             </div>
 
-            {/* Password Field */}
-            <div className="space-y-1.5">
-              <div className="flex items-center justify-between">
-                <Label htmlFor="password" className="text-xs font-medium text-text">
-                  Security Passkey / Password
-                </Label>
-                <button
-                  type="button"
-                  onClick={() => setForgotOpen(true)}
-                  className="text-2xs text-primary hover:underline font-medium"
-                >
-                  Forgot passkey?
-                </button>
-              </div>
-              <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-text-muted pointer-events-none" />
-                <Input
-                  id="password"
-                  type={showPassword ? 'text' : 'password'}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
-                  className="pl-9 pr-10 text-xs h-10 bg-surface border-border focus-visible:ring-primary"
-                  required
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted hover:text-text p-0.5"
-                  title={showPassword ? 'Hide password' : 'Show password'}
-                >
-                  {showPassword ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
-                </button>
-              </div>
-            </div>
-
-            {/* Remember Me & Terms Checkbox */}
-            <div className="flex items-center justify-between pt-1">
-              <label className="flex items-center gap-2 cursor-pointer select-none">
-                <input
-                  type="checkbox"
-                  checked={rememberMe}
-                  onChange={(e) => setRememberMe(e.target.checked)}
-                  className="rounded border-border text-primary focus:ring-primary h-3.5 w-3.5"
-                />
-                <span className="text-xs text-text-muted">Keep terminal session active</span>
-              </label>
-
-              <Badge variant="outline" className="text-[10px] text-text-dim border-border bg-surface-2">
-                Demo Pass: <span className="font-mono text-primary font-bold ml-1">demo</span>
-              </Badge>
-            </div>
-
-            {/* Submit Button */}
-            <Button
-              type="submit"
-              disabled={loading}
-              className="w-full h-10 text-xs font-semibold gap-2 bg-primary hover:bg-primary/90 text-white shadow-sm transition-all"
-            >
-              {loading ? (
+            {/* Demo Fast-Switch Section */}
+            <div className="rounded-2xl border border-slate-200/90 bg-paper-deep p-5 shadow-2xs dark:border-white/10 dark:bg-ink-800/60 sm:p-6">
+              <div className="flex items-center justify-between border-b border-slate-200/80 pb-3 dark:border-white/10">
                 <div className="flex items-center gap-2">
-                  <div className="h-3.5 w-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  <span>Verifying Authorization…</span>
+                  <KeyRound className="h-4 w-4 text-spruce dark:text-spruce-400" />
+                  <span className="font-mono text-[11px] font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-300">
+                    Fast Demo Accounts
+                  </span>
                 </div>
-              ) : (
-                <>
-                  <span>Authenticate & Launch Workspace</span>
-                  <ArrowRight className="h-3.5 w-3.5" />
-                </>
-              )}
-            </Button>
-          </form>
-
-          {/* Quick Public Portal Access Link */}
-          <div className="p-3.5 rounded-xl border border-border bg-surface flex items-center justify-between gap-3 text-xs">
-            <div className="flex items-center gap-2.5">
-              <div className="h-8 w-8 rounded-lg bg-info/10 border border-info/30 flex items-center justify-center text-info flex-shrink-0">
-                <Cpu className="h-4 w-4" />
+                <span className="text-[11px] text-slate-500 dark:text-slate-400">
+                  Click card to load · Arrow for instant access
+                </span>
               </div>
-              <div>
-                <div className="font-semibold text-text">Public Citizen Portal</div>
-                <div className="text-[11px] text-text-muted">Anonymous highway status & travel advisories</div>
+
+              <div className="mt-4 space-y-2.5">
+                {DEMO_ACCOUNTS.map((acc) => {
+                  const Icon = acc.icon
+                  const isSelected = email.toLowerCase() === acc.user.email.toLowerCase()
+
+                  return (
+                    <div
+                      key={acc.roleKey}
+                      onClick={() => handleSelectDemo(acc)}
+                      className={cn(
+                        'group flex items-center justify-between gap-3.5 rounded-xl border p-3 transition-all cursor-pointer select-none',
+                        isSelected
+                          ? 'border-spruce bg-white shadow-xs ring-1 ring-spruce/30 dark:border-spruce-400 dark:bg-ink-900 dark:ring-spruce-400/30'
+                          : 'border-slate-200/80 bg-white/70 hover:border-slate-300 hover:bg-white dark:border-white/5 dark:bg-ink-800/40 dark:hover:border-white/15 dark:hover:bg-ink-800/80'
+                      )}
+                    >
+                      <div className="flex items-center gap-3 min-w-0">
+                        <div
+                          className={cn(
+                            'flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg border transition-colors',
+                            isSelected
+                              ? 'border-spruce/30 bg-spruce/10 text-spruce dark:border-spruce-400/30 dark:bg-spruce-400/15 dark:text-spruce-300'
+                              : 'border-slate-200 bg-paper text-slate-500 group-hover:text-ink dark:border-white/10 dark:bg-ink-900 dark:text-slate-400 dark:group-hover:text-white'
+                          )}
+                        >
+                          <Icon className="h-4.5 w-4.5" />
+                        </div>
+                        <div className="min-w-0">
+                          <div className="flex items-center gap-2">
+                            <span className="font-medium text-xs sm:text-sm text-ink dark:text-white truncate">
+                              {acc.label}
+                            </span>
+                            {isSelected && (
+                              <span className="flex h-1.5 w-1.5 rounded-full bg-spruce-500 dark:bg-spruce-400" />
+                            )}
+                          </div>
+                          <div className="text-[11px] text-slate-500 dark:text-slate-400 truncate">
+                            {acc.district} · {acc.roleName}
+                          </div>
+                        </div>
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          handleInstantLogin(acc)
+                        }}
+                        title={`Instant login as ${acc.label}`}
+                        className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-500 transition-all hover:border-spruce hover:bg-spruce hover:text-white dark:border-white/10 dark:bg-ink-900 dark:text-slate-400 dark:hover:bg-spruce-500 dark:hover:text-white shadow-2xs"
+                      >
+                        <ArrowRight className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
+                  )
+                })}
               </div>
             </div>
-            <Link
-              to="/public"
-              className="text-2xs font-semibold px-2.5 py-1.5 rounded-lg bg-surface-2 hover:bg-surface-3 border border-border text-text transition-colors flex-shrink-0"
-            >
-              View Public
-            </Link>
+
+            {/* Security & Protocol notice */}
+            <div className="flex flex-wrap items-center justify-between gap-3 border-t border-slate-200/80 pt-4 font-mono text-[11px] text-slate-500 dark:border-white/10 dark:text-slate-400">
+              <div className="flex items-center gap-2">
+                <Shield className="h-3.5 w-3.5 text-spruce dark:text-spruce-400" />
+                <span>NDMA & MoRTH Compliant Gateway</span>
+              </div>
+              <div>AES-256 GCM · TLS 1.3</div>
+            </div>
+          </div>
+
+          {/* ── Right Column: Sign In Form (5 cols) ── */}
+          <div className="lg:col-span-5">
+            <div className="relative rounded-2xl border border-slate-200/90 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-ink-800/80 sm:p-8">
+              
+              <div className="flex items-center justify-between border-b border-slate-100 pb-4 dark:border-white/10">
+                <div>
+                  <h2 className="font-display text-xl font-semibold tracking-tight text-ink dark:text-white">
+                    Operator Login
+                  </h2>
+                  <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
+                    Enter departmental credentials
+                  </p>
+                </div>
+                <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-spruce/10 text-spruce dark:bg-spruce-400/10 dark:text-spruce-300">
+                  <Lock className="h-4 w-4" />
+                </span>
+              </div>
+
+              <form onSubmit={handleLoginSubmit} className="mt-6 space-y-4">
+                {/* Email Field */}
+                <div className="space-y-1.5">
+                  <label htmlFor="email" className="block text-[12px] font-medium text-slate-700 dark:text-slate-300">
+                    Official Email Address
+                  </label>
+                  <div className="relative">
+                    <Mail className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                    <input
+                      id="email"
+                      type="email"
+                      required
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="officer@ner-logistics.in"
+                      className="w-full rounded-lg border border-slate-200 bg-paper px-3.5 py-2.5 pl-9 text-sm text-ink placeholder:text-slate-400 focus:border-spruce focus:outline-none focus:ring-2 focus:ring-spruce/20 dark:border-white/10 dark:bg-ink-900 dark:text-white dark:focus:border-spruce-400 dark:focus:ring-spruce-400/20 transition-all"
+                    />
+                  </div>
+                </div>
+
+                {/* Password Field */}
+                <div className="space-y-1.5">
+                  <div className="flex items-center justify-between">
+                    <label htmlFor="pass" className="block text-[12px] font-medium text-slate-700 dark:text-slate-300">
+                      Secret Key / Password
+                    </label>
+                    <button
+                      type="button"
+                      onClick={() => setForgotOpen(true)}
+                      className="text-[11px] font-medium text-spruce hover:underline dark:text-spruce-400"
+                    >
+                      Forgot key?
+                    </button>
+                  </div>
+                  <div className="relative">
+                    <Lock className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                    <input
+                      id="pass"
+                      type={showPassword ? 'text' : 'password'}
+                      required
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder="••••••••"
+                      className="w-full rounded-lg border border-slate-200 bg-paper px-3.5 py-2.5 pl-9 pr-10 text-sm text-ink placeholder:text-slate-400 focus:border-spruce focus:outline-none focus:ring-2 focus:ring-spruce/20 dark:border-white/10 dark:bg-ink-900 dark:text-white dark:focus:border-spruce-400 dark:focus:ring-spruce-400/20 transition-all"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-ink dark:hover:text-white"
+                      aria-label={showPassword ? 'Hide password' : 'Show password'}
+                    >
+                      {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </button>
+                  </div>
+                </div>
+
+                {/* Remember me option */}
+                <div className="flex items-center gap-2 pt-1">
+                  <input
+                    id="remember"
+                    type="checkbox"
+                    checked={rememberMe}
+                    onChange={(e) => setRememberMe(e.target.checked)}
+                    className="h-4 w-4 rounded border-slate-300 text-spruce focus:ring-spruce dark:border-white/20 dark:bg-ink-900"
+                  />
+                  <label htmlFor="remember" className="text-xs text-slate-600 dark:text-slate-400 cursor-pointer select-none">
+                    Remember terminal session on this hardware
+                  </label>
+                </div>
+
+                {/* Submit Button */}
+                <div className="pt-2">
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className={cn(btnPrimary, 'w-full py-2.5 text-[14px] disabled:opacity-70 shadow-xs')}
+                  >
+                    {loading ? (
+                      <span className="flex items-center gap-2">
+                        <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                        Authenticating...
+                      </span>
+                    ) : (
+                      <span className="flex items-center gap-2">
+                        Sign In to Command Center
+                        <ArrowRight className="h-4 w-4" />
+                      </span>
+                    )}
+                  </button>
+                </div>
+              </form>
+
+              {/* Register Callout */}
+              <div className="mt-6 rounded-xl border border-slate-200/80 bg-paper p-3.5 text-center text-xs text-slate-600 dark:border-white/10 dark:bg-ink-900/60 dark:text-slate-400">
+                Need an authorized department account?{' '}
+                <Link to="/register" className="font-semibold text-spruce hover:underline dark:text-spruce-400">
+                  Register Corridor ID →
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
+      </main>
 
-        {/* Bottom copyright */}
-        <div className="pt-6 text-center text-2xs text-text-dim">
-          North East Regional Logistics Optimization Engine • State Emergency Response System
-        </div>
-      </div>
-
-      {/* ── FORGOT PASSWORD MODAL ── */}
+      {/* Forgot Password Modal */}
       <Modal
         open={forgotOpen}
-        onClose={() => { setForgotOpen(false); setForgotSent(false) }}
-        title="Reset Operator Passkey"
-        description="Verify your registered disaster response nodal email address"
-        size="sm"
+        onClose={() => {
+          setForgotOpen(false)
+          setForgotSent(false)
+          setForgotEmail('')
+        }}
+        title="Reset Operator Key"
+        description="Departmental Security Verification"
       >
-        <div className="space-y-4 pt-1">
+        <div className="space-y-4 text-xs sm:text-sm">
           {!forgotSent ? (
-            <div className="space-y-3">
-              <p className="text-xs text-text-muted">
-                Enter your department email address and we will generate an emergency cryptographic one-time passkey.
+            <>
+              <p className="text-slate-600 dark:text-slate-400">
+                Enter your registered official email address. An emergency security verification link will be routed to your nodal coordinator.
               </p>
               <div className="space-y-1.5">
-                <Label htmlFor="forgot-email" className="text-xs">Nodal Email Address</Label>
-                <Input
-                  id="forgot-email"
+                <label className="text-xs font-medium text-slate-700 dark:text-slate-300">
+                  Registered Official Email
+                </label>
+                <input
                   type="email"
                   value={forgotEmail}
                   onChange={(e) => setForgotEmail(e.target.value)}
                   placeholder="officer@ner-logistics.in"
-                  className="text-xs bg-surface border-border"
+                  className="w-full rounded-lg border border-slate-200 bg-paper px-3 py-2 text-sm text-ink focus:border-spruce focus:outline-none focus:ring-1 focus:ring-spruce dark:border-white/10 dark:bg-ink-900 dark:text-white"
                 />
               </div>
               <div className="flex justify-end gap-2 pt-2">
-                <Button variant="outline" size="sm" onClick={() => setForgotOpen(false)} className="text-xs">
+                <button
+                  type="button"
+                  onClick={() => setForgotOpen(false)}
+                  className="rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-medium text-slate-600 hover:bg-slate-50 dark:border-white/10 dark:text-slate-300 dark:hover:bg-ink-800"
+                >
                   Cancel
-                </Button>
-                <Button
-                  size="sm"
+                </button>
+                <button
+                  type="button"
                   onClick={() => {
                     if (forgotEmail.includes('@')) {
                       setForgotSent(true)
-                      toast.success('Reset link dispatched')
+                      toast.success('Security dispatch code dispatched to nodal desk')
                     } else {
-                      toast.error('Enter a valid email')
+                      toast.error('Please enter a valid email')
                     }
                   }}
-                  className="text-xs bg-primary text-white"
+                  className={cn(btnPrimary, 'h-8 px-4 text-xs')}
                 >
-                  Send Reset Token
-                </Button>
+                  Send Reset Request
+                </button>
               </div>
-            </div>
+            </>
           ) : (
             <div className="text-center py-4 space-y-3">
-              <CheckCircle2 className="h-10 w-10 text-success mx-auto" />
-              <div>
-                <h3 className="text-sm font-bold text-text">Dispatch Link Sent</h3>
-                <p className="text-xs text-text-muted mt-1">
-                  Instructions dispatched to <span className="font-mono text-text">{forgotEmail}</span>.
-                </p>
+              <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 dark:bg-emerald-950 dark:text-emerald-400">
+                <CheckCircle2 className="h-6 w-6" />
               </div>
-              <Button size="sm" onClick={() => { setForgotOpen(false); setForgotSent(false) }} className="w-full text-xs">
-                Back to Sign In
-              </Button>
+              <h3 className="font-semibold text-sm text-ink dark:text-white">Security Request Dispatched</h3>
+              <p className="text-xs text-slate-600 dark:text-slate-400">
+                A verification token has been routed to <strong>{forgotEmail}</strong>. Please check your official inbox.
+              </p>
+              <button
+                type="button"
+                onClick={() => setForgotOpen(false)}
+                className={cn(btnPrimary, 'h-8 px-4 text-xs mt-2')}
+              >
+                Return to Login
+              </button>
             </div>
           )}
         </div>
       </Modal>
-
     </div>
   )
 }
